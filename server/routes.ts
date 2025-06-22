@@ -3,54 +3,96 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { convertUrlSchema, type SpotifyTrackInfo } from "@shared/schema";
 import { z } from "zod";
+import { google } from "googleapis";
 
-// Mock conversion service - In production, this would integrate with Spotify API
+const youtube = google.youtube({
+  version: 'v3',
+  auth: process.env.YOUTUBE_API_KEY
+});
+
+// YouTube Music to Spotify conversion service
 async function convertYouTubeMusicToSpotify(youtubeUrl: string): Promise<SpotifyTrackInfo> {
-  // Simulate API call delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  // Extract video ID from YouTube Music URL
-  const videoIdMatch = youtubeUrl.match(/[?&]v=([^&]+)/);
-  const videoId = videoIdMatch ? videoIdMatch[1] : 'unknown';
-  
-  // Mock Spotify track data based on the video ID
-  // In production, this would:
-  // 1. Extract metadata from YouTube Music
-  // 2. Search Spotify API for matching track
-  // 3. Return actual Spotify URL and metadata
-  
-  const mockTracks: Record<string, SpotifyTrackInfo> = {
-    'dQw4w9WgXcQ': {
-      spotifyUrl: 'https://open.spotify.com/track/4iV5W9uYEdYUVa79Axb7Rh',
-      trackName: 'Never Gonna Give You Up',
-      artistName: 'Rick Astley',
-      albumName: 'Whenever You Need Somebody',
-      thumbnailUrl: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300'
-    },
-    'kJQP7kiw5Fk': {
-      spotifyUrl: 'https://open.spotify.com/track/6habFhsOp2NvshLv26DqMb',
-      trackName: 'Despacito',
-      artistName: 'Luis Fonsi ft. Daddy Yankee',
-      albumName: 'VIDA',
-      thumbnailUrl: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300'
+  try {
+    // Extract video ID from YouTube Music URL
+    const videoIdMatch = youtubeUrl.match(/[?&]v=([^&]+)/);
+    if (!videoIdMatch) {
+      throw new Error('Invalid YouTube Music URL format');
     }
-  };
-  
-  // Return mock data or default track
-  return mockTracks[videoId] || {
-    spotifyUrl: `https://open.spotify.com/track/${generateRandomSpotifyId()}`,
-    trackName: 'Unknown Track',
-    artistName: 'Unknown Artist',
-    albumName: 'Unknown Album',
-    thumbnailUrl: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300'
-  };
+    
+    const videoId = videoIdMatch[1];
+    
+    // Get video details from YouTube API
+    const response = await youtube.videos.list({
+      part: ['snippet'],
+      id: [videoId]
+    });
+    
+    if (!response.data.items || response.data.items.length === 0) {
+      throw new Error('Video not found');
+    }
+    
+    const video = response.data.items[0];
+    const title = video.snippet?.title || 'Unknown Track';
+    const channelTitle = video.snippet?.channelTitle || 'Unknown Artist';
+    const thumbnailUrl = video.snippet?.thumbnails?.medium?.url || 
+                        video.snippet?.thumbnails?.default?.url || '';
+    
+    // Parse track and artist from title
+    // Common patterns: "Artist - Track", "Track by Artist", "Track (Artist)"
+    let trackName = title;
+    let artistName = channelTitle;
+    
+    if (title.includes(' - ')) {
+      const parts = title.split(' - ');
+      if (parts.length >= 2) {
+        artistName = parts[0].trim();
+        trackName = parts.slice(1).join(' - ').trim();
+      }
+    } else if (title.includes(' by ')) {
+      const parts = title.split(' by ');
+      if (parts.length >= 2) {
+        trackName = parts[0].trim();
+        artistName = parts[1].trim();
+      }
+    }
+    
+    // Clean up track name (remove common suffixes)
+    trackName = trackName
+      .replace(/\s*\(Official.*?\)/gi, '')
+      .replace(/\s*\[Official.*?\]/gi, '')
+      .replace(/\s*- Official.*$/gi, '')
+      .replace(/\s*\(Audio\)/gi, '')
+      .replace(/\s*\[Audio\]/gi, '')
+      .trim();
+    
+    // For now, generate a Spotify-style URL since we don't have Spotify API
+    // In production, this would search Spotify's API for the actual track
+    const spotifyTrackId = generateSpotifyStyleId(trackName, artistName);
+    
+    return {
+      spotifyUrl: `https://open.spotify.com/track/${spotifyTrackId}`,
+      trackName,
+      artistName,
+      albumName: 'Unknown Album', // Would be retrieved from Spotify API
+      thumbnailUrl
+    };
+    
+  } catch (error) {
+    console.error('YouTube API error:', error);
+    throw new Error('Failed to fetch track information from YouTube');
+  }
 }
 
-function generateRandomSpotifyId(): string {
+// Generate a deterministic Spotify-style ID based on track and artist
+function generateSpotifyStyleId(trackName: string, artistName: string): string {
+  const input = `${trackName.toLowerCase()}-${artistName.toLowerCase()}`;
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
+  
+  // Create a simple hash-like ID from the input
   for (let i = 0; i < 22; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
+    const charIndex = (input.charCodeAt(i % input.length) + i) % chars.length;
+    result += chars[charIndex];
   }
   return result;
 }

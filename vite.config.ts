@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url); // ES module __filename equiv
 const __dirname = path.dirname(__filename); // ES module __dirname equivalent
 
 export default defineConfig({
-  base: '/linkfy/', // Add base path for GitHub Pages
+  base: '/', // Change base path to root
   plugins: [
     react(),
     runtimeErrorOverlay(),

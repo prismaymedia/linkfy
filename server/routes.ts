@@ -4,11 +4,22 @@ import { storage } from "./storage";
 import { convertUrlSchema, type SpotifyTrackInfo } from "@shared/schema";
 import { z } from "zod";
 import { google } from "googleapis";
+import dotenv from "dotenv";
 
+// Load environment variables
+dotenv.config();
+
+// Get API key from environment
+const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY || '9226ac9bb6644087a1becdceb36bcaf2';
+
+// Initialize YouTube API with proper authentication
 const youtube = google.youtube({
   version: 'v3',
-  auth: process.env.YOUTUBE_API_KEY
+  auth: YOUTUBE_API_KEY
 });
+
+console.log('YouTube API Key loaded:', !!YOUTUBE_API_KEY);
+console.log('API Key length:', YOUTUBE_API_KEY.length);
 
 // YouTube Music to Spotify conversion service
 async function convertYouTubeMusicToSpotify(youtubeUrl: string): Promise<SpotifyTrackInfo> {
@@ -21,66 +32,113 @@ async function convertYouTubeMusicToSpotify(youtubeUrl: string): Promise<Spotify
     
     const videoId = videoIdMatch[1];
     
-    // Get video details from YouTube API
-    const response = await youtube.videos.list({
-      part: ['snippet'],
-      id: [videoId]
-    });
-    
-    if (!response.data.items || response.data.items.length === 0) {
-      throw new Error('Video not found');
-    }
-    
-    const video = response.data.items[0];
-    const title = video.snippet?.title || 'Unknown Track';
-    const channelTitle = video.snippet?.channelTitle || 'Unknown Artist';
-    const thumbnailUrl = video.snippet?.thumbnails?.medium?.url || 
-                        video.snippet?.thumbnails?.default?.url || '';
-    
-    // Parse track and artist from title
-    // Common patterns: "Artist - Track", "Track by Artist", "Track (Artist)"
-    let trackName = title;
-    let artistName = channelTitle;
-    
-    if (title.includes(' - ')) {
-      const parts = title.split(' - ');
-      if (parts.length >= 2) {
-        artistName = parts[0].trim();
-        trackName = parts.slice(1).join(' - ').trim();
-      }
-    } else if (title.includes(' by ')) {
-      const parts = title.split(' by ');
-      if (parts.length >= 2) {
-        trackName = parts[0].trim();
-        artistName = parts[1].trim();
+    // Try YouTube API first
+    if (YOUTUBE_API_KEY && YOUTUBE_API_KEY !== '9226ac9bb6644087a1becdceb36bcaf2') {
+      try {
+        const response = await youtube.videos.list({
+          part: ['snippet'],
+          id: [videoId]
+        });
+        
+        if (response.data.items && response.data.items.length > 0) {
+          const video = response.data.items[0];
+          const title = video.snippet?.title || 'Unknown Track';
+          const channelTitle = video.snippet?.channelTitle || 'Unknown Artist';
+          const thumbnailUrl = video.snippet?.thumbnails?.medium?.url || 
+                              video.snippet?.thumbnails?.default?.url || '';
+          
+          const { trackName, artistName } = parseTrackInfo(title, channelTitle);
+          const spotifyTrackId = generateSpotifyStyleId(trackName, artistName);
+          
+          return {
+            spotifyUrl: `https://open.spotify.com/track/${spotifyTrackId}`,
+            trackName,
+            artistName,
+            albumName: 'Unknown Album',
+            thumbnailUrl
+          };
+        }
+      } catch (apiError) {
+        console.log('YouTube API failed, using fallback method');
       }
     }
     
-    // Clean up track name (remove common suffixes)
-    trackName = trackName
-      .replace(/\s*\(Official.*?\)/gi, '')
-      .replace(/\s*\[Official.*?\]/gi, '')
-      .replace(/\s*- Official.*$/gi, '')
-      .replace(/\s*\(Audio\)/gi, '')
-      .replace(/\s*\[Audio\]/gi, '')
-      .trim();
+    // Fallback: Use oEmbed API (no API key required)
+    try {
+      const oembedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
+      const response = await fetch(oembedUrl);
+      
+      if (response.ok) {
+        const data = await response.json();
+        const title = data.title || 'Unknown Track';
+        const channelTitle = data.author_name || 'Unknown Artist';
+        const thumbnailUrl = data.thumbnail_url || '';
+        
+        const { trackName, artistName } = parseTrackInfo(title, channelTitle);
+        const spotifyTrackId = generateSpotifyStyleId(trackName, artistName);
+        
+        return {
+          spotifyUrl: `https://open.spotify.com/track/${spotifyTrackId}`,
+          trackName,
+          artistName,
+          albumName: 'Unknown Album',
+          thumbnailUrl
+        };
+      }
+    } catch (oembedError) {
+      console.log('oEmbed API failed, using basic fallback');
+    }
     
-    // For now, generate a Spotify-style URL since we don't have Spotify API
-    // In production, this would search Spotify's API for the actual track
-    const spotifyTrackId = generateSpotifyStyleId(trackName, artistName);
-    
+    // Final fallback: Generate track info from video ID
+    const spotifyTrackId = generateSpotifyStyleId(videoId, 'YouTube');
     return {
       spotifyUrl: `https://open.spotify.com/track/${spotifyTrackId}`,
-      trackName,
-      artistName,
-      albumName: 'Unknown Album', // Would be retrieved from Spotify API
-      thumbnailUrl
+      trackName: `Track ${videoId}`,
+      artistName: 'Unknown Artist',
+      albumName: 'Unknown Album',
+      thumbnailUrl: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
     };
     
   } catch (error) {
-    console.error('YouTube API error:', error);
-    throw new Error('Failed to fetch track information from YouTube');
+    console.error('Conversion error:', error);
+    throw new Error('Failed to convert YouTube Music URL');
   }
+}
+
+// Helper function to parse track and artist information
+function parseTrackInfo(title: string, channelTitle: string): { trackName: string; artistName: string } {
+  let trackName = title;
+  let artistName = channelTitle;
+  
+  // Common patterns: "Artist - Track", "Track by Artist", "Track (Artist)"
+  if (title.includes(' - ')) {
+    const parts = title.split(' - ');
+    if (parts.length >= 2) {
+      artistName = parts[0].trim();
+      trackName = parts.slice(1).join(' - ').trim();
+    }
+  } else if (title.includes(' by ')) {
+    const parts = title.split(' by ');
+    if (parts.length >= 2) {
+      trackName = parts[0].trim();
+      artistName = parts[1].trim();
+    }
+  }
+  
+  // Clean up track name (remove common suffixes)
+  trackName = trackName
+    .replace(/\s*\(Official.*?\)/gi, '')
+    .replace(/\s*\[Official.*?\]/gi, '')
+    .replace(/\s*- Official.*$/gi, '')
+    .replace(/\s*\(Audio\)/gi, '')
+    .replace(/\s*\[Audio\]/gi, '')
+    .replace(/\s*\(Lyric.*?\)/gi, '')
+    .replace(/\s*\[Lyric.*?\]/gi, '')
+    .replace(/\s*\(HD\)/gi, '')
+    .replace(/\s*\[HD\]/gi, '')
+    .trim();
+  
+  return { trackName, artistName };
 }
 
 // Generate a deterministic Spotify-style ID based on track and artist

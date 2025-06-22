@@ -1,20 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { convertUrlSchema, type ConvertUrlRequest, type SpotifyTrackInfo } from "@shared/schema";
+import { convertUrlSchema, type ConvertUrlRequest, type SpotifyTrackInfo, type YouTubeTrackInfo } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { SiYoutubemusic } from "react-icons/si";
-import { Loader2 } from "lucide-react";
+import { Loader2, Music } from "lucide-react";
 import ResultCard from "./result-card";
 
 export default function ConversionForm() {
   const [spotifyResult, setSpotifyResult] = useState<SpotifyTrackInfo | null>(null);
+  const [youtubePreview, setYoutubePreview] = useState<YouTubeTrackInfo | null>(null);
+  const [isLoadingPreview, setIsLoadingPreview] = useState(false);
   const { toast } = useToast();
 
   const form = useForm<ConvertUrlRequest>({
@@ -44,6 +46,35 @@ export default function ConversionForm() {
       });
     },
   });
+
+  // Fetch YouTube track preview when URL changes
+  const fetchYouTubePreview = async (url: string) => {
+    if (!url || !convertUrlSchema.safeParse({ youtubeUrl: url }).success) {
+      setYoutubePreview(null);
+      return;
+    }
+
+    setIsLoadingPreview(true);
+    try {
+      const response = await apiRequest("POST", "/api/youtube-info", { youtubeUrl: url });
+      const data = await response.json() as YouTubeTrackInfo;
+      setYoutubePreview(data);
+    } catch (error) {
+      setYoutubePreview(null);
+    } finally {
+      setIsLoadingPreview(false);
+    }
+  };
+
+  // Watch for URL changes
+  const watchedUrl = form.watch("youtubeUrl");
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      fetchYouTubePreview(watchedUrl);
+    }, 500); // Debounce for 500ms
+
+    return () => clearTimeout(timeoutId);
+  }, [watchedUrl]);
 
   const onSubmit = (data: ConvertUrlRequest) => {
     convertMutation.mutate(data);
@@ -97,6 +128,41 @@ export default function ConversionForm() {
           </Form>
         </CardContent>
       </Card>
+
+      {/* YouTube Track Preview */}
+      {youtubePreview && (
+        <Card className="bg-white rounded-2xl shadow-lg mb-6">
+          <CardHeader className="pb-3">
+            <div className="flex items-center">
+              <SiYoutubemusic className="text-youtube text-xl mr-2" />
+              <h3 className="text-lg font-semibold text-gray-800">YouTube Track Preview</h3>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <div className="flex items-center space-x-4">
+              <img 
+                src={youtubePreview.thumbnailUrl} 
+                alt="YouTube thumbnail"
+                className="w-16 h-16 rounded-lg object-cover shadow-md"
+              />
+              <div className="flex-1 min-w-0">
+                <h4 className="font-medium text-gray-900 truncate">
+                  {youtubePreview.trackName}
+                </h4>
+                <p className="text-sm text-gray-600 truncate">
+                  {youtubePreview.artistName}
+                </p>
+                <p className="text-xs text-gray-500 truncate">
+                  Original: {youtubePreview.originalTitle}
+                </p>
+              </div>
+              {isLoadingPreview && (
+                <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {spotifyResult && <ResultCard result={spotifyResult} />}
     </>

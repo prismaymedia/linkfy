@@ -274,6 +274,86 @@ function generateSpotifyStyleId(trackName: string, artistName: string): string {
 
 export async function registerRoutes(app: Express): Promise<Server> {
   
+  // Get YouTube track info without converting
+  app.post("/api/youtube-info", async (req, res) => {
+    try {
+      const validatedData = convertUrlSchema.parse(req.body);
+      const videoIdMatch = validatedData.youtubeUrl.match(/[?&]v=([^&]+)/);
+      
+      if (!videoIdMatch) {
+        return res.status(400).json({ message: "Invalid YouTube Music URL format" });
+      }
+      
+      const videoId = videoIdMatch[1];
+      
+      // Try YouTube API first
+      if (YOUTUBE_API_KEY) {
+        try {
+          const response = await youtube.videos.list({
+            part: ['snippet'],
+            id: [videoId]
+          });
+          
+          if (response.data.items && response.data.items.length > 0) {
+            const video = response.data.items[0];
+            const title = video.snippet?.title || 'Unknown Track';
+            const channelTitle = video.snippet?.channelTitle || 'Unknown Artist';
+            const thumbnailUrl = video.snippet?.thumbnails?.medium?.url || 
+                                 video.snippet?.thumbnails?.default?.url || '';
+            
+            const { trackName, artistName } = parseTrackInfo(title, channelTitle);
+            
+            return res.json({
+              trackName,
+              artistName,
+              thumbnailUrl,
+              originalTitle: title
+            });
+          }
+        } catch (apiError) {
+          console.log('YouTube API failed, using oEmbed fallback');
+        }
+      }
+      
+      // Fallback to oEmbed
+      try {
+        const oembedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
+        const response = await fetch(oembedUrl);
+        
+        if (response.ok) {
+          const data = await response.json();
+          const title = data.title || 'Unknown Track';
+          const channelTitle = data.author_name || 'Unknown Artist';
+          const thumbnailUrl = data.thumbnail_url || '';
+          
+          const { trackName, artistName } = parseTrackInfo(title, channelTitle);
+          
+          return res.json({
+            trackName,
+            artistName,
+            thumbnailUrl,
+            originalTitle: title
+          });
+        }
+      } catch (oembedError) {
+        console.log('oEmbed API failed');
+      }
+      
+      res.status(404).json({ message: "Could not fetch track information" });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ 
+          message: error.errors[0]?.message || "Invalid input" 
+        });
+      }
+      
+      console.error('YouTube info error:', error);
+      res.status(500).json({ 
+        message: "Failed to fetch track information" 
+      });
+    }
+  });
+
   // Convert YouTube Music URL to Spotify URL
   app.post("/api/convert", async (req, res) => {
     try {

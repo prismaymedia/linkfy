@@ -39,3 +39,10 @@ export interface SpotifyTrackInfo {
   albumName: string;
   thumbnailUrl: string;
 }
+
+export interface YouTubeTrackInfo {
+  trackName: string;
+  artistName: string;
+  thumbnailUrl: string;
+  originalTitle: string;
+}

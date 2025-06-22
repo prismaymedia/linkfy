@@ -9,8 +9,10 @@ import dotenv from "dotenv";
 // Load environment variables
 dotenv.config();
 
-// Get API key from environment
-const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY || '9226ac9bb6644087a1becdceb36bcaf2';
+// Get API keys from environment
+const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
+const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
+const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
 
 // Initialize YouTube API with proper authentication
 const youtube = google.youtube({
@@ -19,7 +21,105 @@ const youtube = google.youtube({
 });
 
 console.log('YouTube API Key loaded:', !!YOUTUBE_API_KEY);
-console.log('API Key length:', YOUTUBE_API_KEY.length);
+console.log('Spotify credentials loaded:', !!SPOTIFY_CLIENT_ID && !!SPOTIFY_CLIENT_SECRET);
+
+// Spotify API functions
+async function getSpotifyAccessToken(): Promise<string> {
+  const response = await fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': `Basic ${Buffer.from(`${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`).toString('base64')}`
+    },
+    body: 'grant_type=client_credentials'
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('Spotify token error:', response.status, errorText);
+    throw new Error(`Failed to get Spotify access token: ${response.status}`);
+  }
+
+  const data = await response.json();
+  console.log('Spotify access token obtained successfully');
+  return data.access_token;
+}
+
+async function searchSpotifyTrack(trackName: string, artistName: string): Promise<SpotifyTrackInfo | null> {
+  try {
+    const accessToken = await getSpotifyAccessToken();
+    
+    // Try multiple search strategies
+    const searchQueries = [
+      `"${trackName}" "${artistName}"`,
+      `track:"${trackName}" artist:"${artistName}"`,
+      `${trackName} ${artistName}`,
+      trackName // Fallback to just track name
+    ];
+
+    for (const query of searchQueries) {
+      const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=5`;
+      console.log(`Searching Spotify with query: ${query}`);
+
+      const response = await fetch(searchUrl, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      });
+
+      if (!response.ok) {
+        console.error('Spotify search failed:', response.status, response.statusText);
+        continue;
+      }
+
+      const data = await response.json();
+      console.log(`Found ${data.tracks?.items?.length || 0} tracks for query: ${query}`);
+      
+      if (data.tracks?.items?.length > 0) {
+        // Find best match by comparing track names and artists
+        for (const track of data.tracks.items) {
+          const spotifyTrackName = track.name.toLowerCase();
+          const spotifyArtistNames = track.artists.map((artist: any) => artist.name.toLowerCase());
+          
+          const trackNameSimilar = spotifyTrackName.includes(trackName.toLowerCase()) || 
+                                  trackName.toLowerCase().includes(spotifyTrackName);
+          const artistNameSimilar = spotifyArtistNames.some((spotifyArtist: string) => 
+            spotifyArtist.includes(artistName.toLowerCase()) || 
+            artistName.toLowerCase().includes(spotifyArtist)
+          );
+
+          if (trackNameSimilar || artistNameSimilar) {
+            console.log(`Found matching track: ${track.name} by ${track.artists.map((a: any) => a.name).join(', ')}`);
+            return {
+              spotifyUrl: track.external_urls.spotify,
+              trackName: track.name,
+              artistName: track.artists.map((artist: any) => artist.name).join(', '),
+              albumName: track.album.name,
+              thumbnailUrl: track.album.images?.[0]?.url || track.album.images?.[1]?.url || ''
+            };
+          }
+        }
+        
+        // If no good match found, return first result
+        const track = data.tracks.items[0];
+        console.log(`Using first result: ${track.name} by ${track.artists.map((a: any) => a.name).join(', ')}`);
+        return {
+          spotifyUrl: track.external_urls.spotify,
+          trackName: track.name,
+          artistName: track.artists.map((artist: any) => artist.name).join(', '),
+          albumName: track.album.name,
+          thumbnailUrl: track.album.images?.[0]?.url || track.album.images?.[1]?.url || ''
+        };
+      }
+    }
+
+    console.log('No Spotify tracks found for any search query');
+    return null;
+  } catch (error) {
+    console.error('Spotify API error:', error);
+    return null;
+  }
+}
 
 // YouTube Music to Spotify conversion service
 async function convertYouTubeMusicToSpotify(youtubeUrl: string): Promise<SpotifyTrackInfo> {
@@ -33,7 +133,7 @@ async function convertYouTubeMusicToSpotify(youtubeUrl: string): Promise<Spotify
     const videoId = videoIdMatch[1];
     
     // Try YouTube API first
-    if (YOUTUBE_API_KEY && YOUTUBE_API_KEY !== '9226ac9bb6644087a1becdceb36bcaf2') {
+    if (YOUTUBE_API_KEY) {
       try {
         const response = await youtube.videos.list({
           part: ['snippet'],
@@ -44,18 +144,27 @@ async function convertYouTubeMusicToSpotify(youtubeUrl: string): Promise<Spotify
           const video = response.data.items[0];
           const title = video.snippet?.title || 'Unknown Track';
           const channelTitle = video.snippet?.channelTitle || 'Unknown Artist';
-          const thumbnailUrl = video.snippet?.thumbnails?.medium?.url || 
-                              video.snippet?.thumbnails?.default?.url || '';
+          const youtubeThumbnailUrl = video.snippet?.thumbnails?.medium?.url || 
+                                     video.snippet?.thumbnails?.default?.url || '';
           
           const { trackName, artistName } = parseTrackInfo(title, channelTitle);
-          const spotifyTrackId = generateSpotifyStyleId(trackName, artistName);
           
+          // Search for real Spotify track
+          if (SPOTIFY_CLIENT_ID && SPOTIFY_CLIENT_SECRET) {
+            const spotifyResult = await searchSpotifyTrack(trackName, artistName);
+            if (spotifyResult) {
+              return spotifyResult;
+            }
+          }
+          
+          // Fallback if Spotify search fails
+          const spotifyTrackId = generateSpotifyStyleId(trackName, artistName);
           return {
             spotifyUrl: `https://open.spotify.com/track/${spotifyTrackId}`,
             trackName,
             artistName,
             albumName: 'Unknown Album',
-            thumbnailUrl
+            thumbnailUrl: youtubeThumbnailUrl
           };
         }
       } catch (apiError) {
@@ -75,8 +184,16 @@ async function convertYouTubeMusicToSpotify(youtubeUrl: string): Promise<Spotify
         const thumbnailUrl = data.thumbnail_url || '';
         
         const { trackName, artistName } = parseTrackInfo(title, channelTitle);
-        const spotifyTrackId = generateSpotifyStyleId(trackName, artistName);
         
+        // Search for real Spotify track
+        if (SPOTIFY_CLIENT_ID && SPOTIFY_CLIENT_SECRET) {
+          const spotifyResult = await searchSpotifyTrack(trackName, artistName);
+          if (spotifyResult) {
+            return spotifyResult;
+          }
+        }
+        
+        const spotifyTrackId = generateSpotifyStyleId(trackName, artistName);
         return {
           spotifyUrl: `https://open.spotify.com/track/${spotifyTrackId}`,
           trackName,

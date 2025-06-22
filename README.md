@@ -1,4 +1,4 @@
-# YouTube Music to Spotify Converter
+# Linkfy
 
 A React application that converts YouTube Music URLs to Spotify URLs with real-time track preview and authentic metadata extraction.
 
@@ -31,7 +31,7 @@ A React application that converts YouTube Music URLs to Spotify URLs with real-t
 1. Clone the repository:
 ```bash
 git clone <your-repo-url>
-cd youtube-spotify-converter
+cd linkfy
 ```
 
 2. Install dependencies:

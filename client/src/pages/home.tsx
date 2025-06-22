@@ -13,7 +13,7 @@ export default function Home() {
             <ArrowRight className="text-gray-400 mx-2" size={20} />
             <SiSpotify className="text-spotify text-2xl ml-2" />
           </div>
-          <h1 className="text-2xl font-semibold text-gray-800 mb-2">Music Link Converter</h1>
+          <h1 className="text-2xl font-semibold text-gray-800 mb-2">Linkfy</h1>
           <p className="text-gray-600 text-sm">Convert YouTube Music links to Spotify instantly</p>
         </div>
 

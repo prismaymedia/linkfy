@@ -2,7 +2,7 @@
 
 A React application that converts YouTube Music URLs to Spotify URLs with real-time track preview and authentic metadata extraction.
 
-[![Run on Replit](https://replit.com/badge/github/YOUR_USERNAME/linkfy)](https://replit.com/new/github/YOUR_USERNAME/linkfy)
+[![Run on Replit](https://replit.com/badge/github)](https://replit.com/new/github)
 
 ## Features
 
@@ -30,7 +30,7 @@ A React application that converts YouTube Music URLs to Spotify URLs with real-t
 
 ### Quick Start with Replit
 
-Click the "Run on Replit" button above to instantly fork and run this project in your browser. No local setup required!
+Click the "Run on Replit" button above, then paste this repository's GitHub URL to instantly fork and run this project in your browser. No local setup required!
 
 ### Local Installation
 

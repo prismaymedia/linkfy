@@ -15,6 +15,14 @@ A React application that converts YouTube Music URLs to Spotify URLs with real-t
 
 ## Demo
 
+🔗 [Live demo](https://danielaesc.github.io/linkfy/)
+
+1. Paste a YouTube Music URL (e.g., `https://music.youtube.com/watch?v=dQw4w9WgXcQ`)
+2. See instant track preview with thumbnail and metadata
+3. Click "Convert to Spotify" to find the matching track
+4. Copy the Spotify URL with one click
+
+
 1. Paste a YouTube Music URL (e.g., `https://music.youtube.com/watch?v=dQw4w9WgXcQ`)
 2. See instant track preview with thumbnail and metadata
 3. Click "Convert to Spotify" to find the matching track

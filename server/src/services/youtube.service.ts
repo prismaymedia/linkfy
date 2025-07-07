@@ -9,6 +9,7 @@ export class YoutubeService {
     private readonly youtube: any;
 
     constructor(
+        //TODO: remove this dependency if not needed
         private readonly spotifyService: SpotifyService,
     ) {
         this.youtube = google.youtube({ version: 'v3', auth: process.env.YOUTUBE_API_KEY });

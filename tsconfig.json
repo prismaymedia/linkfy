@@ -4,6 +4,12 @@
   "compilerOptions": {
     "incremental": true,
     "tsBuildInfoFile": "./node_modules/typescript/tsbuildinfo",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2023",
     "noEmit": true,
     "module": "ESNext",
     "strict": true,
@@ -14,6 +20,7 @@
     "allowImportingTsExtensions": true,
     "moduleResolution": "bundler",
     "baseUrl": ".",
+    "outDir": "./dist",
     "types": ["node", "vite/client"],
     "paths": {
       "@/*": ["./client/src/*"],

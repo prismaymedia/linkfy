@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { google } from 'googleapis';
-import { SpotifyService } from './spotify.service';
 import { parseTrackInfo, generateSpotifyStyleId } from '../utils/track-utils';
 import { SpotifyTrackInfo } from '../../../shared/schema';
 
@@ -9,8 +8,6 @@ export class YoutubeService {
     private readonly youtube: any;
 
     constructor(
-        //TODO: remove this dependency if not needed
-        private readonly spotifyService: SpotifyService,
     ) {
         this.youtube = google.youtube({ version: 'v3', auth: process.env.YOUTUBE_API_KEY });
     }

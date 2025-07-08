@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist/server",
+    "build": "vite build && esbuild server/src/main.ts --platform=node --packages=external --bundle --format=esm --outdir=dist/server",
     "deploy": "gh-pages -d dist/public",
     "nest:dev": "NODE_ENV=development tsx server/src/main.ts",
     "nest:start": "NODE_ENV=production node dist/server/main.js",

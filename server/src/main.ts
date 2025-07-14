@@ -5,9 +5,15 @@ import { AppModule } from './app.module';
 import { json, urlencoded } from 'express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ExecutionContext, CallHandler, NestInterceptor, ArgumentsHost, ExceptionFilter } from '@nestjs/common';
+import cors from 'cors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }));
 
   app.use(json());
   app.use(urlencoded({ extended: false }));

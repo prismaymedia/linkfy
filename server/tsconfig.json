@@ -3,7 +3,10 @@
   "compilerOptions": {
     "module": "CommonJS",
     "moduleResolution": "node",
-    "outDir": "../dist/server"
+    "outDir": "../dist",
+    "rootDir": "..",
+    "sourceMap": true
   },
-  "include": ["src/**/*", "../shared/**/*"]
+  "include": ["src/**/*", "../shared/**/*"],
+  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
 } 

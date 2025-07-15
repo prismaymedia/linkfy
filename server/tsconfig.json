@@ -1,12 +1,26 @@
 {
-  "extends": "../tsconfig.json",
   "compilerOptions": {
+    "incremental": true,
+    "tsBuildInfoFile": "./node_modules/typescript/tsbuildinfo",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2021",
+    "noEmit": false,
     "module": "CommonJS",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
     "moduleResolution": "node",
-    "outDir": "../dist",
-    "rootDir": "..",
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "paths": {
+      "@shared/*": ["./shared/*"]
+    },
     "sourceMap": true
   },
   "include": ["src/**/*", "../shared/**/*"],
   "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
-} 
+}

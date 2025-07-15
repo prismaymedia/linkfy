@@ -39,7 +39,7 @@ export class AppController {
       return await this.youtubeService.getYoutubeInfo(validated.youtubeUrl);
     } catch (error) {
       if (error instanceof ZodError) {
-        throw new BadRequestException(error.errors[0]?.message || 'Invalid input');
+        throw new BadRequestException(error.issues[0]?.message || 'Invalid input');
       }
       throw new InternalServerErrorException('Failed to fetch track information');
     }
@@ -66,7 +66,7 @@ export class AppController {
       return await this.conversionService.getOrCreateConversion(validated.youtubeUrl);
     } catch (error) {
       if (error instanceof ZodError) {
-        throw new BadRequestException(error.errors[0]?.message || 'Invalid input');
+        throw new BadRequestException(error.issues[0]?.message || 'Invalid input');
       }
       throw new InternalServerErrorException('Failed to convert URL');
     }

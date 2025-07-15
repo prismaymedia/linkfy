@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "nest:dev": "NODE_ENV=development ts-node -P server/tsconfig.json server/src/main.ts",
-    "nest:start": "NODE_ENV=production node dist/server/main.js",
-    "nest:check": "tsc",
+    "nest:dev": "nest start --watch",
+    "nest:build": "tsc -p server/tsconfig.json",
+    "nest:start": "npm run nest:build && NODE_ENV=production node dist/server/src/main.js",
+    "nest:check": "tsc -p server/tsconfig.json --noEmit",
     "nest:db:push": "drizzle-kit push",
     "nest:test:e2e": "jest --config server/test/jest-e2e.json",
     "nest:test": "jest",

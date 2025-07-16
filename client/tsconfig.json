@@ -6,10 +6,8 @@
     "lib": ["esnext", "dom", "dom.iterable"],
     "jsx": "preserve",
     "types": ["vite/client"],
-    "baseUrl": "src",
     "paths": {
-      "@/*": ["*"]
-    },
-    "module": "esnext"
+      "@/*": ["./src/*"]
+    }
   }
 } 

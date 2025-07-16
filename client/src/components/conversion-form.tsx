@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { convertUrlSchema, type ConvertUrlRequest, type SpotifyTrackInfo, type YouTubeTrackInfo } from "../../../shared/schema";
+import { convertUrlSchema, type ConvertUrlRequest, type SpotifyTrackInfo, type YouTubeTrackInfo } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";

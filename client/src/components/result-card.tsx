@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { SiSpotify } from "react-icons/si";
 import { Copy, Check } from "lucide-react";
-import type { SpotifyTrackInfo } from "../../../shared/schema";
+import type { SpotifyTrackInfo } from "@shared/schema";
 
 interface ResultCardProps {
   result: SpotifyTrackInfo;

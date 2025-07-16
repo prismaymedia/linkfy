@@ -20,28 +20,36 @@ export class YoutubeService {
     }> {
         console.log('➡️ getYoutubeInfo():', youtubeUrl);
 
-        const videoIdMatch = youtubeUrl.match(/[?&]v=([^&]+)/);
-        if (!videoIdMatch) {
-            console.error('❌ Invalid YouTube URL format');
-            throw new Error('Invalid YouTube Music URL format');
-        }
-        const videoId = videoIdMatch[1];
-        console.log('🎥 Video ID extraído:', videoId);
-
         try {
-            const response = await this.youtube.videos.list({
+            const url = new URL(youtubeUrl);
+            let id: string;
+            let apiMethod: 'videos' | 'playlists';
+
+            if (url.pathname === '/watch' && url.searchParams.has('v')) {
+                id = url.searchParams.get('v')!;
+                apiMethod = 'videos';
+            } else if (url.pathname === '/playlist' && url.searchParams.has('list')) {
+                id = url.searchParams.get('list')!;
+                apiMethod = 'playlists';
+            } else {
+                throw new Error('Invalid YouTube Music URL format');
+            }
+
+            console.log(`🎥 ${apiMethod === 'videos' ? 'Video' : 'Playlist'} ID extracted:`, id);
+
+            const response = await this.youtube[apiMethod].list({
                 part: ['snippet'],
-                id: [videoId],
+                id: [id],
             });
             console.log('📦 YouTube API response:', response.data);
 
             if (response.data.items && response.data.items.length > 0) {
-                const video = response.data.items[0];
-                const title = video.snippet?.title || 'Unknown Track';
-                const channelTitle = video.snippet?.channelTitle || 'Unknown Artist';
+                const item = response.data.items[0];
+                const title = item.snippet?.title || 'Unknown Track';
+                const channelTitle = item.snippet?.channelTitle || 'Unknown Artist';
                 const thumbnailUrl =
-                    video.snippet?.thumbnails?.medium?.url ||
-                    video.snippet?.thumbnails?.default?.url ||
+                    item.snippet?.thumbnails?.medium?.url ||
+                    item.snippet?.thumbnails?.default?.url ||
                     '';
 
                 console.log('🎵 Title:', title);
@@ -57,7 +65,7 @@ export class YoutubeService {
                     originalTitle: title,
                 };
             } else {
-                console.warn('⚠️ No items found for video ID');
+                console.warn('⚠️ No items found for ID');
             }
         } catch (error) {
             console.error('❌ Error en YouTube API:', error);
@@ -65,7 +73,7 @@ export class YoutubeService {
 
         // fallback a oEmbed
         try {
-            const oembedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
+            const oembedUrl = `https://www.youtube.com/oembed?url=${youtubeUrl}&format=json`;
             console.log('📡 Fallback oEmbed URL:', oembedUrl);
 
             const response = await fetch(oembedUrl);

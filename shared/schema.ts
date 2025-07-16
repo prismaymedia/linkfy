@@ -21,8 +21,15 @@ export const convertUrlSchema = z.object({
     .url("Please enter a valid URL")
     .refine(
       (url) => {
-        const youtubeMusicPattern = /^https:\/\/music\.youtube\.com\/(watch\?v=|playlist\?list=)/;
-        return youtubeMusicPattern.test(url);
+        try {
+          const urlObj = new URL(url);
+          if (urlObj.hostname !== 'music.youtube.com') return false;
+          if (urlObj.pathname === '/watch' && urlObj.searchParams.has('v')) return true;
+          if (urlObj.pathname === '/playlist' && urlObj.searchParams.has('list')) return true;
+          return false;
+        } catch {
+          return false;
+        }
       },
       "Please enter a valid YouTube Music URL"
     ),

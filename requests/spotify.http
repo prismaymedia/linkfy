@@ -1,5 +1,5 @@
 ### Convert YouTube video to Spotify information
-POST http://localhost:5000/api/convert
+POST {{baseUrl}}/api/convert
 Content-Type: application/json
 
 {

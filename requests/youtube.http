@@ -1,5 +1,5 @@
 ### Get information from a YouTube video
-POST http://localhost:5000/api/youtube-info
+POST {{baseUrl}}/api/youtube-info
 Content-Type: application/json
 
 {

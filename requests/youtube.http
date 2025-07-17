@@ -1,0 +1,9 @@
+### Get information from a YouTube video
+POST {{baseUrl}}/api/youtube-info
+Content-Type: application/json
+
+{
+  "youtubeUrl": "https://music.youtube.com/watch?v=Z3L5M7GHAkw"
+}
+
+

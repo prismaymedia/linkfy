@@ -1,6 +1,5 @@
 version: 2
 updates:
-  # Root
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
@@ -13,38 +12,6 @@ updates:
       prettier:
         patterns:
           - '*prettier*'
-      security-all:
-        applies-to: 'security-updates'
-        patterns:
-          - '*'
-      version-all:
-        applies-to: 'version-updates'
-        patterns:
-          - '*'
-
-  # Frontend
-  - package-ecosystem: 'npm'
-    directory: '/client'
-    schedule:
-      interval: 'weekly'
-    open-pull-requests-limit: 2
-    groups:
-      security-all:
-        applies-to: 'security-updates'
-        patterns:
-          - '*'
-      version-all:
-        applies-to: 'version-updates'
-        patterns:
-          - '*'
-
-  # Backend
-  - package-ecosystem: 'npm'
-    directory: '/server'
-    schedule:
-      interval: 'weekly'
-    open-pull-requests-limit: 2
-    groups:
       security-all:
         applies-to: 'security-updates'
         patterns:

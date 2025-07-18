@@ -14,7 +14,7 @@ export const conversions = pgTable("conversions", {
 
 export const insertConversionSchema = createInsertSchema(conversions).pick({
   youtubeUrl: true,
-});
+}) as unknown as z.ZodType<any, any, any>;
 
 export const convertUrlSchema = z.object({
   youtubeUrl: z.string()

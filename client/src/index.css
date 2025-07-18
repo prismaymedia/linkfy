@@ -1,6 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@layer theme, base, components, utilities;
 
 :root {
   --background: hsl(0, 0%, 100%);
@@ -55,41 +55,45 @@
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: var(--border);
   }
 
   body {
-    @apply font-sans antialiased bg-background text-foreground;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    background-color: var(--background);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
-/* Custom utility classes */
-.text-spotify {
-  color: #1DB954;
-}
+@layer utilities {
+  .text-spotify {
+    color: #1DB954;
+  }
 
-.text-youtube {
-  color: #FF0000;
-}
+  .text-youtube {
+    color: #FF0000;
+  }
 
-.bg-spotify {
-  background-color: #1DB954;
-}
+  .bg-spotify {
+    background-color: #1DB954;
+  }
 
-.bg-surface {
-  background-color: #FAFAFA;
-}
+  .bg-surface {
+    background-color: #FAFAFA;
+  }
 
-.focus\:ring-spotify:focus {
-  --tw-ring-color: #1DB954;
-}
+  .focus\:ring-spotify:focus {
+    --tw-ring-color: #1DB954;
+  }
 
-.focus\:border-spotify:focus {
-  --tw-border-opacity: 1;
-  border-color: #1DB954;
-}
+  .focus\:border-spotify:focus {
+    --tw-border-opacity: 1;
+    border-color: #1DB954;
+  }
 
-.hover\:bg-green-600:hover {
-  background-color: #16a34a;
+  .hover\:bg-green-600:hover {
+    background-color: #16a34a;
+  }
 }

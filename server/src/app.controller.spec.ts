@@ -25,7 +25,7 @@ describe('AppController', () => {
     controller = module.get<AppController>(AppController);
   });
 
-  it('debería retornar info de la canción para un body válido', async () => {
+  it('should return song info for a valid body', async () => {
     (youtubeService.getYoutubeInfo as jest.Mock).mockResolvedValue({
       trackName: 'Track',
       artistName: 'Artist',
@@ -42,13 +42,13 @@ describe('AppController', () => {
     });
   });
 
-  it('debería lanzar BadRequestException si el body es inválido', async () => {
+  it('should throw BadRequestException if the body is invalid', async () => {
     await expect(controller.getYoutubeInfo({ youtubeUrl: 123 }))
       .rejects
       .toThrow(BadRequestException);
   });
 
-  it('debería lanzar InternalServerErrorException si el servicio falla', async () => {
+  it('should throw InternalServerErrorException if the service fails', async () => {
     (youtubeService.getYoutubeInfo as jest.Mock).mockRejectedValue(new Error('fail'));
     await expect(controller.getYoutubeInfo({ youtubeUrl: 'https://music.youtube.com/watch?v=abc' }))
       .rejects

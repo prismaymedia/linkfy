@@ -20,7 +20,7 @@ describe('YouTube Info Endpoint (e2e)', () => {
     await app.init();
   });
 
-  it('debería retornar info de la canción para una URL válida', async () => {
+  it('Should return song information for a valid URL.', async () => {
     const response = await request(app.getHttpServer())
       .post('/api/youtube-info')
       .send({ youtubeUrl: 'https://music.youtube.com/watch?v=dQw4w9WgXcQ' });
@@ -32,7 +32,7 @@ describe('YouTube Info Endpoint (e2e)', () => {
     expect(response.body).toHaveProperty('originalTitle');
   });
 
-  it('debería retornar error si falta el parámetro', async () => {
+  it('should return error if the parameter is missing', async () => {
     const response = await request(app.getHttpServer())
       .post('/api/youtube-info')
       .send({});

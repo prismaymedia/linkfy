@@ -10,6 +10,8 @@
     "dev:server": "npm run nest:dev --workspace=server",
     "build:server": "npm run nest:build --workspace=server",
     "start:server": "npm run nest:start --workspace=server",
+    "test:server": "npm run nest:test --workspace=server",
+    "test:e2e:server": "npm run nest:test:e2e --workspace=server",
     "lint": "npm run lint --workspaces --if-present",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },

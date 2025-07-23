@@ -13,6 +13,11 @@ export class ConversionService {
     async getOrCreateConversion(youtubeUrl: string): Promise<SpotifyTrackInfo> {
         console.log('🔄 [ConversionService] Iniciando conversión para:', youtubeUrl);
 
+        if (!this.isValidYoutubeUrl(youtubeUrl)) {
+            console.warn('❌ [ConversionService] URL inválida:', youtubeUrl);
+            throw new BadRequestException('La URL de YouTube no es válida');
+        }
+
         const existing = await this.storageService.getConversionByYoutubeUrl(youtubeUrl);
         if (existing?.spotifyUrl) {
             console.log('✅ [ConversionService] Conversión existente encontrada:', existing);
@@ -44,5 +49,10 @@ export class ConversionService {
 
         console.log('💾 [ConversionService] Conversión guardada:', conversion);
         return spotifyInfo;
+    }
+
+    private isValidYoutubeUrl(url: string): boolean {
+        const regex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|shorts\/)?[a-zA-Z0-9_-]{11}$/;
+        return regex.test(url);
     }
 }

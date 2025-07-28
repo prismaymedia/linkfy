@@ -1,0 +1,31 @@
+name: Test - Frontend & Backend
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run backend unit tests
+        run: yarn test:server
+
+      - name: Run backend e2e tests
+        run: yarn test:e2e:server

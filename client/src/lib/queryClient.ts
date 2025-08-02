@@ -1,6 +1,6 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
 
-const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {

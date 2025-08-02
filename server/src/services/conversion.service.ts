@@ -1,5 +1,6 @@
 import { Injectable, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { YoutubeService } from './youtube.service';
+import { SpotifyService } from './spotify.service';
 import { SpotifyTrackInfo } from '../../../shared/schema';
 import { StorageService } from './storage.service';
 
@@ -7,6 +8,7 @@ import { StorageService } from './storage.service';
 export class ConversionService {
     constructor(
         private readonly youtubeService: YoutubeService,
+        private readonly spotifyService: SpotifyService,
         private readonly storageService: StorageService,
     ) { }
 
@@ -30,29 +32,31 @@ export class ConversionService {
             };
         }
 
-        let spotifyInfo: SpotifyTrackInfo;
-        try {
-            console.log('➡️ [ConversionService] Llamando a youtubeService.convertToSpotify...');
-            spotifyInfo = await this.youtubeService.convertToSpotify(youtubeUrl);
-            console.log('✅ [ConversionService] Resultado de convertToSpotify:', spotifyInfo);
-        } catch (error) {
-            console.error('❌ [ConversionService] Error en convertToSpotify:', error);
-            throw new InternalServerErrorException('No se pudo convertir la URL de YouTube Music');
+        const youtubeInfo = await this.youtubeService.getYoutubeInfo(youtubeUrl);
+        if (!youtubeInfo) {
+            throw new InternalServerErrorException('No se pudo obtener la información de YouTube');
         }
 
-        const conversion = await this.storageService.createConversion({ youtubeUrl });
-        conversion.spotifyUrl = spotifyInfo.spotifyUrl;
-        conversion.trackName = spotifyInfo.trackName;
-        conversion.artistName = spotifyInfo.artistName;
-        conversion.albumName = spotifyInfo.albumName;
-        conversion.thumbnailUrl = spotifyInfo.thumbnailUrl;
+        const spotifyInfo = await this.spotifyService.searchSpotifyTrack(youtubeInfo.trackName, youtubeInfo.artistName);
+        if (!spotifyInfo) {
+            throw new InternalServerErrorException('No se pudo encontrar la canción en Spotify');
+        }
+
+        const conversion = await this.storageService.createConversion({
+            youtubeUrl,
+            spotifyUrl: spotifyInfo.spotifyUrl,
+            trackName: spotifyInfo.trackName,
+            artistName: spotifyInfo.artistName,
+            albumName: spotifyInfo.albumName,
+            thumbnailUrl: spotifyInfo.thumbnailUrl,
+        });
 
         console.log('💾 [ConversionService] Conversión guardada:', conversion);
         return spotifyInfo;
     }
 
     private isValidYoutubeUrl(url: string): boolean {
-        const regex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|shorts\/)?[a-zA-Z0-9_-]{11}$/;
+        const regex = /^(https?:\/\/)?(music\.)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|shorts\/)?[a-zA-Z0-9_-]{11}$/;
         return regex.test(url);
     }
 }

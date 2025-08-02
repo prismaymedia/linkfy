@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
+    "start": "vite",
     "build": "vite build",
     "deploy": "gh-pages -d dist/public"
   },

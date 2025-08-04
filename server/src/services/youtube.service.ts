@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { google } from 'googleapis';
-import { parseTrackInfo, generateSpotifyStyleId } from '../utils/track-utils';
-import { SpotifyTrackInfo } from '../../../shared/schema';
+import { parseTrackInfo } from '../utils/track-utils';
 
 @Injectable()
 export class YoutubeService {
+    private readonly logger = new Logger(YoutubeService.name);
     private readonly youtube: any;
 
     constructor(
@@ -18,7 +18,7 @@ export class YoutubeService {
         thumbnailUrl: string;
         originalTitle: string;
     }> {
-        console.log('➡️ getYoutubeInfo():', youtubeUrl);
+        this.logger.log('➡️ getYoutubeInfo(): ' + youtubeUrl);
 
         try {
             const url = new URL(youtubeUrl);
@@ -35,13 +35,13 @@ export class YoutubeService {
                 throw new Error('Invalid YouTube Music URL format');
             }
 
-            console.log(`🎥 ${apiMethod === 'videos' ? 'Video' : 'Playlist'} ID extracted:`, id);
+            this.logger.log(`🎥 ${apiMethod === 'videos' ? 'Video' : 'Playlist'} ID extracted: ` + id);
 
             const response = await this.youtube[apiMethod].list({
                 part: ['snippet'],
                 id: [id],
             });
-            console.log('📦 YouTube API response:', response.data);
+            this.logger.log('📦 YouTube API response: ' + response.data);
 
             if (response.data.items && response.data.items.length > 0) {
                 const item = response.data.items[0];
@@ -52,11 +52,11 @@ export class YoutubeService {
                     item.snippet?.thumbnails?.default?.url ||
                     '';
 
-                console.log('🎵 Title:', title);
-                console.log('👤 Channel:', channelTitle);
+                this.logger.log('🎵 Title: ' + title);
+                this.logger.log('👤 Channel: ' + channelTitle);
 
                 const { trackName, artistName } = parseTrackInfo(title, channelTitle);
-                console.log('🎶 Parsed track:', trackName, '| Artist:', artistName);
+                this.logger.log('🎶 Parsed track: ' + trackName + ' | Artist: ' + artistName);
 
                 return {
                     trackName,
@@ -65,16 +65,16 @@ export class YoutubeService {
                     originalTitle: title,
                 };
             } else {
-                console.warn('⚠️ No items found for ID');
+                this.logger.warn('⚠️ No items found for ID');
             }
         } catch (error) {
-            console.error('❌ Error en YouTube API:', error);
+            this.logger.error('❌ Error en YouTube API:', error);
         }
 
         // fallback a oEmbed
         try {
             const oembedUrl = `https://www.youtube.com/oembed?url=${youtubeUrl}&format=json`;
-            console.log('📡 Fallback oEmbed URL:', oembedUrl);
+            this.logger.log('📡 Fallback oEmbed URL: ' + oembedUrl);
 
             const response = await fetch(oembedUrl);
 
@@ -84,8 +84,8 @@ export class YoutubeService {
                 const channelTitle = data.author_name || 'Unknown Artist';
                 const thumbnailUrl = data.thumbnail_url || '';
 
-                console.log('📨 oEmbed Title:', title);
-                console.log('📨 oEmbed Channel:', channelTitle);
+                this.logger.log('📨 oEmbed Title: ' + title);
+                this.logger.log('📨 oEmbed Channel: ' + channelTitle);
 
                 const { trackName, artistName } = parseTrackInfo(title, channelTitle);
 
@@ -96,14 +96,14 @@ export class YoutubeService {
                     originalTitle: title,
                 };
             } else {
-                console.warn('⚠️ oEmbed response not OK:', response.status);
+                this.logger.warn('⚠️ oEmbed response not OK: ' + response.status);
             }
         } catch (error) {
-            console.error('❌ Error en oEmbed fallback:', error);
+            this.logger.error('❌ Error en oEmbed fallback:', error);
         }
 
         throw new Error('Could not fetch track information');
     }
 
-    
+
 }

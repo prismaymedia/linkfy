@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, BadRequestException, InternalServerErrorException, Logger } from '@nestjs/common';
 import { YoutubeService } from './youtube.service';
 import { SpotifyService } from './spotify.service';
 import { SpotifyTrackInfo } from '../../../shared/schema';
@@ -6,6 +6,8 @@ import { StorageService } from './storage.service';
 
 @Injectable()
 export class ConversionService {
+    private readonly logger = new Logger(ConversionService.name);
+
     constructor(
         private readonly youtubeService: YoutubeService,
         private readonly spotifyService: SpotifyService,
@@ -13,16 +15,16 @@ export class ConversionService {
     ) { }
 
     async getOrCreateConversion(youtubeUrl: string): Promise<SpotifyTrackInfo> {
-        console.log('🔄 [ConversionService] Iniciando conversión para:', youtubeUrl);
+        this.logger.log('🔄 Iniciando conversión para: ' + youtubeUrl);
 
         if (!this.isValidYoutubeUrl(youtubeUrl)) {
-            console.warn('❌ [ConversionService] URL inválida:', youtubeUrl);
+            this.logger.warn('❌ URL inválida: ' + youtubeUrl);
             throw new BadRequestException('La URL de YouTube no es válida');
         }
 
         const existing = await this.storageService.getConversionByYoutubeUrl(youtubeUrl);
         if (existing?.spotifyUrl) {
-            console.log('✅ [ConversionService] Conversión existente encontrada:', existing);
+            this.logger.log('✅ Conversión existente encontrada: ' + existing);
             return {
                 spotifyUrl: existing.spotifyUrl ?? '',
                 trackName: existing.trackName ?? '',
@@ -51,7 +53,7 @@ export class ConversionService {
             thumbnailUrl: spotifyInfo.thumbnailUrl,
         });
 
-        console.log('💾 [ConversionService] Conversión guardada:', conversion);
+        this.logger.log('💾 Conversión guardada: ' + conversion);
         return spotifyInfo;
     }
 

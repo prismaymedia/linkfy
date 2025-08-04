@@ -1,8 +1,10 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { SpotifyTrackInfo } from '../../../shared/schema';
 
 @Injectable()
 export class SpotifyService {
+    private readonly logger = new Logger(SpotifyService.name);
+
     private readonly clientId: string;
     private readonly clientSecret: string;
 
@@ -23,7 +25,7 @@ export class SpotifyService {
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error('Spotify token error:', response.status, errorText);
+            this.logger.error('Spotify token error:', response.status, errorText);
             throw new InternalServerErrorException('Failed to get Spotify access token');
         }
 
@@ -51,7 +53,7 @@ export class SpotifyService {
                 });
 
                 if (!response.ok) {
-                    console.error('Spotify search failed:', response.status, response.statusText);
+                    this.logger.error('Spotify search failed:', response.status, response.statusText);
                     continue;
                 }
 
@@ -81,10 +83,10 @@ export class SpotifyService {
                 return this.mapSpotifyTrack(items[0]);
             }
 
-            console.log('No Spotify tracks found for any search query');
+            this.logger.log('No Spotify tracks found for any search query');
             return null;
         } catch (error) {
-            console.error('Spotify API error:', error);
+            this.logger.error('Spotify API error:', error);
             return null;
         }
     }
@@ -99,7 +101,7 @@ export class SpotifyService {
         };
     }
 
-    
+
 
     private parseTrackInfo(title: string, channelTitle: string): { trackName: string; artistName: string } {
         let trackName = title;

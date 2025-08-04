@@ -51,7 +51,7 @@ async function bootstrap() {
   }
 
   app.useGlobalInterceptors(new LoggingInterceptor());
-// Filtro global de excepciones con tipos
+  // Global exception filtering with types
   class GlobalExceptionFilter implements ExceptionFilter {
     catch(exception: any, host: ArgumentsHost) {
       const ctx = host.switchToHttp();
@@ -75,7 +75,7 @@ async function bootstrap() {
 
   const port = process.env.PORT || 3000;
   await app.listen(port, '0.0.0.0');
-  console.log('Swagger docs en http://localhost:' + port + '/docs');
-  console.log('Servidor NestJS corriendo en http://localhost:' + port);
+  console.log('Swagger docs at http://localhost:' + port + '/docs');
+  console.log('NestJS server running at http://localhost:' + port);
 }
 bootstrap();

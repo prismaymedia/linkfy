@@ -4,8 +4,8 @@
   "license": "MIT",
   "scripts": {
     "nest:dev": "nest start --watch --path tsconfig.json",
-    "nest:build": "tsc -p tsconfig.json",
-    "nest:start": "NODE_ENV=production node ../dist/server/src/main.js",
+    "nest:build": "nest build --path tsconfig.json",
+    "nest:start": "NODE_ENV=production node dist/server/src/main.js",
     "nest:check": "tsc -p tsconfig.json --noEmit",
     "nest:db:push": "drizzle-kit push",
     "nest:test": "jest --config jest.config.json",

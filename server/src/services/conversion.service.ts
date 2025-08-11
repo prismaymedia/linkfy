@@ -15,16 +15,16 @@ export class ConversionService {
     ) { }
 
     async getOrCreateConversion(youtubeUrl: string): Promise<SpotifyTrackInfo> {
-        this.logger.log('🔄 Iniciando conversión para: ' + youtubeUrl);
+        console.log('🔄 [ConversionService] Starting conversion for:', youtubeUrl);
 
         if (!this.isValidYoutubeUrl(youtubeUrl)) {
-            this.logger.warn('❌ URL inválida: ' + youtubeUrl);
-            throw new BadRequestException('La URL de YouTube no es válida');
+            console.warn('❌ [ConversionService] Invalid URL:', youtubeUrl);
+            throw new BadRequestException('The YouTube URL is not valid');
         }
 
         const existing = await this.storageService.getConversionByYoutubeUrl(youtubeUrl);
         if (existing?.spotifyUrl) {
-            this.logger.log('✅ Conversión existente encontrada: ' + existing);
+            console.log('✅ [ConversionService] Existing conversion found:', existing);
             return {
                 spotifyUrl: existing.spotifyUrl ?? '',
                 trackName: existing.trackName ?? '',
@@ -36,12 +36,12 @@ export class ConversionService {
 
         const youtubeInfo = await this.youtubeService.getYoutubeInfo(youtubeUrl);
         if (!youtubeInfo) {
-            throw new InternalServerErrorException('No se pudo obtener la información de YouTube');
+            throw new InternalServerErrorException('Could not retrieve YouTube information');
         }
 
         const spotifyInfo = await this.spotifyService.searchSpotifyTrack(youtubeInfo.trackName, youtubeInfo.artistName);
         if (!spotifyInfo) {
-            throw new InternalServerErrorException('No se pudo encontrar la canción en Spotify');
+            throw new InternalServerErrorException('Could not find the song on Spotify');
         }
 
         const conversion = await this.storageService.createConversion({
@@ -53,7 +53,7 @@ export class ConversionService {
             thumbnailUrl: spotifyInfo.thumbnailUrl,
         });
 
-        this.logger.log('💾 Conversión guardada: ' + conversion);
+        console.log('💾 [ConversionService] Conversion saved:', conversion);
         return spotifyInfo;
     }
 

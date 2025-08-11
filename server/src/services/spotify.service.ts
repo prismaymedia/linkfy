@@ -106,7 +106,7 @@ export class SpotifyService {
     private parseTrackInfo(title: string, channelTitle: string): { trackName: string; artistName: string } {
         let trackName = title;
         let artistName = channelTitle;
-        // Patrones comunes: "Artist - Track", "Track by Artist", "Track (Artist)"
+        // Common patterns: "Artist - Track", "Track by Artist", "Track (Artist)"
         if (title.includes(' - ')) {
             const parts = title.split(' - ');
             if (parts.length >= 2) {
@@ -120,7 +120,7 @@ export class SpotifyService {
                 artistName = parts[1].trim();
             }
         }
-        // Limpiar el nombre del track (quitar sufijos comunes)
+        // Clean the track name (remove common suffixes)
         trackName = trackName
             .replace(/\s*\(Official.*?\)/gi, '')
             .replace(/\s*\[Official.*?\]/gi, '')

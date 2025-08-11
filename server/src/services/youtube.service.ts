@@ -68,10 +68,10 @@ export class YoutubeService {
                 console.warn('⚠️ No items found for ID');
             }
         } catch (error) {
-            console.error('❌ Error en YouTube API:', error);
+            console.error('❌ Error in YouTube API:', error);
         }
 
-        // fallback a oEmbed
+        // fallback to oEmbed
         try {
             const oembedUrl = `https://www.youtube.com/oembed?url=${youtubeUrl}&format=json`;
             console.log('📡 Fallback oEmbed URL:', oembedUrl);
@@ -99,11 +99,11 @@ export class YoutubeService {
                 console.warn('⚠️ oEmbed response not OK:', response.status);
             }
         } catch (error) {
-            console.error('❌ Error en oEmbed fallback:', error);
+            console.error('❌ Error in oEmbed fallback:', error);
         }
 
         throw new Error('Could not fetch track information');
     }
 
-    
+
 }

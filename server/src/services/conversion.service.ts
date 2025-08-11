@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, BadRequestException, InternalServerErrorException, Logger } from '@nestjs/common';
 import { YoutubeService } from './youtube.service';
 import { SpotifyService } from './spotify.service';
 import { SpotifyTrackInfo } from '../../../shared/schema';
@@ -6,6 +6,8 @@ import { StorageService } from './storage.service';
 
 @Injectable()
 export class ConversionService {
+    private readonly logger = new Logger(ConversionService.name);
+
     constructor(
         private readonly youtubeService: YoutubeService,
         private readonly spotifyService: SpotifyService,

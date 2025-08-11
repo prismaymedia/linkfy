@@ -4,11 +4,12 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { json, urlencoded } from 'express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { ExecutionContext, CallHandler, NestInterceptor, ArgumentsHost, ExceptionFilter } from '@nestjs/common';
+import { ExecutionContext, CallHandler, NestInterceptor, ArgumentsHost, ExceptionFilter, Logger } from '@nestjs/common';
 import cors from 'cors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const logger = new Logger('Bootstrap');
 
   app.use(cors({
     origin: "http://localhost:5173",
@@ -42,7 +43,7 @@ async function bootstrap() {
           if (logLine.length > 80) {
             logLine = logLine.slice(0, 79) + '…';
           }
-          console.log(logLine);
+          logger.log(logLine);
         }
       });
 

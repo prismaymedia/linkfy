@@ -4,6 +4,7 @@ import {
   Body,
   BadRequestException,
   InternalServerErrorException,
+  Logger
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -21,6 +22,8 @@ import { convertUrlSchema } from '../../../shared/schema';
 @ApiTags('Conversion')
 @Controller('api')
 export class AppController {
+  private readonly logger = new Logger(AppController.name);
+
   constructor(
     private readonly conversionService: ConversionService,
     private readonly youtubeService: YoutubeService,
@@ -128,7 +131,7 @@ export class AppController {
     },
   })
   async convert(@Body() body: any) {
-    console.log('🟢 [AppController] Body received in /api/convert:', body);
+    this.logger.log('🟢 [AppController] Body received in /api/convert:', body);
     try {
       const validated = convertUrlSchema.parse(body);
       return await this.conversionService.getOrCreateConversion(validated.youtubeUrl);

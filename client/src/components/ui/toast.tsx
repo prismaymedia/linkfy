@@ -4,23 +4,29 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '../../hooks/use-mobile';
 
 const ToastProvider = ToastPrimitives.Provider;
 
 const ToastViewport = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Viewport>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Viewport>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Viewport
-    ref={ref}
-    className={cn(
-      // Toast en el flujo normal del DOM, debajo de la información
-      'flex flex-col items-center w-full max-w-xs p-4',
-      className,
-    )}
-    {...props}
-  />
-));
+>(({ className, ...props }, ref) => {
+  const isMobile = useIsMobile();
+
+  return (
+    <ToastPrimitives.Viewport
+      ref={ref}
+      className={cn(
+        isMobile
+          ? 'absolute top-4 left-4 flex flex-col items-start w-auto max-w-md p-4 bg-white rounded-lg z-50'
+          : 'fixed bottom-4 right-4 flex flex-col items-end w-full max-w-xs p-4 bg-white rounded-lg z-50',
+        className,
+      )}
+      {...props}
+    />
+  );
+});
 ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
 
 const toastVariants = cva(

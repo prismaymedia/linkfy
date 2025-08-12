@@ -1,12 +1,12 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
-import { fileURLToPath } from "url"; // Import for ES module __dirname equivalent
+import { fileURLToPath } from "url";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 import tailwindcss from "@tailwindcss/vite";
 
-const __filename = fileURLToPath(import.meta.url); // ES module __filename equivalent
-const __dirname = path.dirname(__filename); // ES module __dirname equivalent
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default defineConfig({
   base: process.env.NODE_ENV === "production" ? "/linkfy/" : "/",
@@ -18,7 +18,7 @@ export default defineConfig({
       process.env.REPL_ID !== undefined
       ? [
         await import("@replit/vite-plugin-cartographer").then((m) =>
-          m.cartographer(),
+          m.cartographer()
         ),
       ]
       : []),
@@ -31,8 +31,25 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: path.resolve(__dirname, "dist/public"), // Client build output to dist/public
+    rollupOptions: {
+      input: {
+        popup: path.resolve(__dirname, "popup.html"),
+      },
+      output: {
+        entryFileNames: "popup.js",
+        chunkFileNames: "chunk-[hash].js",
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name === "style.css") {
+            return "popup.css";
+          }
+          return assetInfo.name || "assets/[name]-[hash][extname]";
+        },
+      },
+    },
+    outDir: path.resolve(__dirname, "../chrome-addon/dist"),
     emptyOutDir: true,
+    target: "es2015",
+    assetsInlineLimit: 0,
   },
   server: {
     fs: {

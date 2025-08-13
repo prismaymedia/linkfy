@@ -6,6 +6,7 @@
   "scripts": {
     "dev:client": "npm run dev --workspace=client",
     "build:client": "npm run build --workspace=client",
+    "build:extension:client": "npm run build:extension --workspace=client",
     "start:client": "npm run start --workspace=client",
     "dev:server": "npm run nest:dev --workspace=server",
     "build:server": "npm run nest:build --workspace=server",

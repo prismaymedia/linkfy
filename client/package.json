@@ -7,6 +7,8 @@
     "dev": "vite",
     "start": "vite",
     "build": "vite build",
+    "build:web": "vite build",
+    "build:extension": "vite build --config vite.extension.config.ts",
     "deploy": "gh-pages -d dist/public"
   },
   "dependencies": {

@@ -2,26 +2,16 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import { fileURLToPath } from "url";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 import tailwindcss from "@tailwindcss/vite";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default defineConfig({
-  base: process.env.NODE_ENV === "production" ? "/linkfy/" : "/",
+  base: "./",
   plugins: [
     react(),
     tailwindcss(),
-    runtimeErrorOverlay(),
-    ...(process.env.NODE_ENV !== "production" &&
-      process.env.REPL_ID !== undefined
-      ? [
-        await import("@replit/vite-plugin-cartographer").then((m) =>
-          m.cartographer()
-        ),
-      ]
-      : []),
   ],
   resolve: {
     alias: {
@@ -31,13 +21,24 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: "dist",
-    target: "esnext",
-  },
-  server: {
-    fs: {
-      strict: true,
-      deny: ["**/.*"],
+    rollupOptions: {
+      input: {
+        popup: path.resolve(__dirname, "popup.html"),
+      },
+      output: {
+        entryFileNames: "popup.js",
+        chunkFileNames: "chunk-[hash].js",
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name === "style.css") {
+            return "popup.css";
+          }
+          return assetInfo.name || "assets/[name]-[hash][extname]";
+        },
+      },
     },
+    outDir: path.resolve(__dirname, "../chrome-addon/dist"),
+    emptyOutDir: true,
+    target: "es2015",
+    assetsInlineLimit: 0,
   },
-});
+}); 

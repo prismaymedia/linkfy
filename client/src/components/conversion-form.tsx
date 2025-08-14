@@ -34,7 +34,7 @@ export default function ConversionForm() {
     },
     onSuccess: (result) => {
       setSpotifyResult(result);
-      setPreviousUrl(form.getValues("youtubeUrl")); // Guardar la URL actual como anterior
+      setPreviousUrl(form.getValues("youtubeUrl")); // Save current URL as previous
       toast({
         title: "Success!",
         description: "Successfully converted to Spotify!",

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -17,6 +17,7 @@ export default function ConversionForm() {
   const [spotifyResult, setSpotifyResult] = useState<SpotifyTrackInfo | null>(null);
   const [youtubePreview, setYoutubePreview] = useState<YouTubeTrackInfo | null>(null);
   const [isLoadingPreview, setIsLoadingPreview] = useState(false);
+  const [previousUrl, setPreviousUrl] = useState<string>("");
   const { toast } = useToast();
 
   const form = useForm<ConvertUrlRequest>({
@@ -33,6 +34,7 @@ export default function ConversionForm() {
     },
     onSuccess: (result) => {
       setSpotifyResult(result);
+      setPreviousUrl(form.getValues("youtubeUrl")); // Save current URL as previous
       toast({
         title: "Success!",
         description: "Successfully converted to Spotify!",
@@ -68,13 +70,23 @@ export default function ConversionForm() {
 
   // Watch for URL changes
   const watchedUrl = form.watch("youtubeUrl");
+  
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      fetchYouTubePreview(watchedUrl);
-    }, 500); // Debounce for 500ms
+      if (watchedUrl !== previousUrl) {
+        if (watchedUrl && watchedUrl.trim() !== "") {
+          fetchYouTubePreview(watchedUrl);
+        }
+      }
+    }, 500);
 
     return () => clearTimeout(timeoutId);
-  }, [watchedUrl]);
+  }, [watchedUrl, previousUrl]);
+
+  const isButtonEnabled = watchedUrl && 
+    watchedUrl.trim() !== "" && 
+    !convertMutation.isPending && 
+    watchedUrl !== previousUrl;
 
   const onSubmit = (data: ConvertUrlRequest) => {
     convertMutation.mutate(data);
@@ -112,8 +124,8 @@ export default function ConversionForm() {
 
               <Button
                 type="submit"
-                disabled={convertMutation.isPending}
-                className="w-full bg-spotify hover:bg-green-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
+                disabled={!isButtonEnabled}
+                className="w-full bg-spotify hover:bg-green-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed"
               >
                 {convertMutation.isPending ? (
                   <>

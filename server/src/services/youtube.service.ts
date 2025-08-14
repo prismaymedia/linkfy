@@ -57,6 +57,9 @@ export class YoutubeService {
 
                 const { trackName, artistName } = parseTrackInfo(title, channelTitle);
                 this.logger.log('🎶 Parsed track: ' + trackName + ' | Artist: ' + artistName);
+                this.logger.log('🔍 DEBUG - Raw title from YouTube: "' + title + '"');
+                this.logger.log('🔍 DEBUG - Raw channel from YouTube: "' + channelTitle + '"');
+                this.logger.log('🔍 DEBUG - After parsing - Track: "' + trackName + '" | Artist: "' + artistName + '"');
 
                 return {
                     trackName,

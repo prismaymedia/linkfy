@@ -10,13 +10,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { SiYoutubemusic } from "react-icons/si";
-import { Loader2, Music } from "lucide-react";
+import { Loader2, Music, AlertCircle } from "lucide-react";
 import ResultCard from "./result-card";
 
 export default function ConversionForm() {
   const [spotifyResult, setSpotifyResult] = useState<SpotifyTrackInfo | null>(null);
   const [youtubePreview, setYoutubePreview] = useState<YouTubeTrackInfo | null>(null);
   const [isLoadingPreview, setIsLoadingPreview] = useState(false);
+  const [lastProcessedUrl, setLastProcessedUrl] = useState<string>("");
   const { toast } = useToast();
 
   const form = useForm<ConvertUrlRequest>({
@@ -33,6 +34,8 @@ export default function ConversionForm() {
     },
     onSuccess: (result) => {
       setSpotifyResult(result);
+      // Store the successfully processed URL
+      setLastProcessedUrl(form.getValues("youtubeUrl"));
       toast({
         title: "Success!",
         description: "Successfully converted to Spotify!",
@@ -80,6 +83,12 @@ export default function ConversionForm() {
     convertMutation.mutate(data);
   };
 
+  // Check if the current URL is the same as the last processed URL
+  const isDuplicateUrl = lastProcessedUrl && watchedUrl === lastProcessedUrl;
+  
+  // Check if the form is valid and not a duplicate
+  const isFormValid = form.formState.isValid && !isDuplicateUrl;
+
   return (
     <>
       <Card className="bg-white rounded-2xl shadow-lg mb-6">
@@ -110,16 +119,28 @@ export default function ConversionForm() {
                 )}
               />
 
+              {/* Duplicate URL warning */}
+              {isDuplicateUrl && (
+                <div className="flex items-center space-x-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                  <AlertCircle className="h-4 w-4 text-amber-600" />
+                  <span className="text-sm text-amber-700">
+                    This URL has already been converted. Enter a different YouTube Music URL to convert.
+                  </span>
+                </div>
+              )}
+
               <Button
                 type="submit"
-                disabled={convertMutation.isPending}
-                className="w-full bg-spotify hover:bg-green-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200"
+                disabled={convertMutation.isPending || !isFormValid}
+                className="w-full bg-spotify hover:bg-green-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
                 {convertMutation.isPending ? (
                   <>
                     Converting...
                     <Loader2 className="ml-2 h-4 w-4 animate-spin" />
                   </>
+                ) : isDuplicateUrl ? (
+                  "URL Already Converted"
                 ) : (
                   "Convert to Spotify"
                 )}

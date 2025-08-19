@@ -1,53 +1,70 @@
-import { useState, useEffect, useRef } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { convertUrlSchema, type ConvertUrlRequest, type SpotifyTrackInfo, type YouTubeTrackInfo } from "../../../shared/schema";
-import { apiRequest } from "@/lib/queryClient";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
-import { SiYoutubemusic } from "react-icons/si";
-import { Loader2, Music, AlertCircle } from "lucide-react";
-import ResultCard from "./result-card";
+import { useState, useEffect, useRef } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
+import {
+  convertUrlSchema,
+  type ConvertUrlRequest,
+  type SpotifyTrackInfo,
+  type YouTubeTrackInfo,
+} from '../../../shared/schema';
+import { apiRequest } from '@/lib/queryClient';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { useToast } from '@/hooks/use-toast';
+import { SiYoutubemusic } from 'react-icons/si';
+import { Loader2, Music, AlertCircle } from 'lucide-react';
+import ResultCard from './result-card';
 
 export default function ConversionForm() {
-  const [spotifyResult, setSpotifyResult] = useState<SpotifyTrackInfo | null>(null);
-  const [youtubePreview, setYoutubePreview] = useState<YouTubeTrackInfo | null>(null);
+  const [spotifyResult, setSpotifyResult] = useState<SpotifyTrackInfo | null>(
+    null,
+  );
+  const [youtubePreview, setYoutubePreview] = useState<YouTubeTrackInfo | null>(
+    null,
+  );
   const [isLoadingPreview, setIsLoadingPreview] = useState(false);
-  const [lastProcessedUrl, setLastProcessedUrl] = useState<string>("");
+  const [lastProcessedUrl, setLastProcessedUrl] = useState<string>('');
+
   const { toast } = useToast();
 
   const form = useForm<ConvertUrlRequest>({
     resolver: zodResolver(convertUrlSchema),
     defaultValues: {
-      youtubeUrl: "",
+      youtubeUrl: '',
     },
   });
 
   const convertMutation = useMutation({
     mutationFn: async (data: ConvertUrlRequest) => {
-      const response = await apiRequest("POST", "/api/convert", data);
-      return await response.json() as SpotifyTrackInfo;
+      const response = await apiRequest('POST', '/api/convert', data);
+      return (await response.json()) as SpotifyTrackInfo;
     },
     onSuccess: (result) => {
       setSpotifyResult(result);
 
       // Store the successfully processed URL
-      setLastProcessedUrl(form.getValues("youtubeUrl"));
-        
+      setLastProcessedUrl(form.getValues('youtubeUrl'));
+
       toast({
-        title: "Success!",
-        description: "Successfully converted to Spotify!",
+        title: 'Success!',
+        description: 'Successfully converted to Spotify!',
       });
     },
     onError: (error: any) => {
       toast({
-        title: "Conversion Failed",
-        description: error.message || "Please try again.",
-        variant: "destructive",
+        title: 'Conversion Failed',
+        description: error.message || 'Please try again.',
+        variant: 'destructive',
       });
     },
   });
@@ -61,8 +78,10 @@ export default function ConversionForm() {
 
     setIsLoadingPreview(true);
     try {
-      const response = await apiRequest("POST", "/api/youtube-info", { youtubeUrl: url });
-      const data = await response.json() as YouTubeTrackInfo;
+      const response = await apiRequest('POST', '/api/youtube-info', {
+        youtubeUrl: url,
+      });
+      const data = (await response.json()) as YouTubeTrackInfo;
       setYoutubePreview(data);
     } catch (error) {
       setYoutubePreview(null);
@@ -72,24 +91,27 @@ export default function ConversionForm() {
   };
 
   // Watch for URL changes
-  const watchedUrl = form.watch("youtubeUrl");
-  
+  const watchedUrl = form.watch('youtubeUrl');
+
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      if (watchedUrl !== previousUrl) {
-        if (watchedUrl && watchedUrl.trim() !== "") {
-          fetchYouTubePreview(watchedUrl);
-        }
+      if (
+        watchedUrl &&
+        watchedUrl.trim() !== '' &&
+        watchedUrl !== lastProcessedUrl
+      ) {
+        fetchYouTubePreview(watchedUrl);
       }
     }, 500);
 
     return () => clearTimeout(timeoutId);
-  }, [watchedUrl, previousUrl]);
+  }, [watchedUrl, lastProcessedUrl]);
 
-  const isButtonEnabled = watchedUrl && 
-    watchedUrl.trim() !== "" && 
-    !convertMutation.isPending && 
-    watchedUrl !== previousUrl;
+  const isButtonEnabled =
+    watchedUrl &&
+    watchedUrl.trim() !== '' &&
+    !convertMutation.isPending &&
+    watchedUrl !== lastProcessedUrl;
 
   const onSubmit = (data: ConvertUrlRequest) => {
     convertMutation.mutate(data);
@@ -97,7 +119,7 @@ export default function ConversionForm() {
 
   // Check if the current URL is the same as the last processed URL
   const isDuplicateUrl = lastProcessedUrl && watchedUrl === lastProcessedUrl;
-  
+
   // Check if the form is valid and not a duplicate
   const isFormValid = form.formState.isValid && !isDuplicateUrl;
 
@@ -136,7 +158,8 @@ export default function ConversionForm() {
                 <div className="flex items-center space-x-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
                   <AlertCircle className="h-4 w-4 text-amber-600" />
                   <span className="text-sm text-amber-700">
-                    This URL has already been converted. Enter a different YouTube Music URL to convert.
+                    This URL has already been converted. Enter a different
+                    YouTube Music URL to convert.
                   </span>
                 </div>
               )}
@@ -152,9 +175,9 @@ export default function ConversionForm() {
                     <Loader2 className="ml-2 h-4 w-4 animate-spin" />
                   </>
                 ) : isDuplicateUrl ? (
-                  "URL Already Converted"
+                  'URL Already Converted'
                 ) : (
-                  "Convert to Spotify"
+                  'Convert to Spotify'
                 )}
               </Button>
             </form>
@@ -168,13 +191,15 @@ export default function ConversionForm() {
           <CardHeader className="pb-3">
             <div className="flex items-center">
               <SiYoutubemusic className="text-youtube text-xl mr-2" />
-              <h3 className="text-lg font-semibold text-gray-800">YouTube Track Preview</h3>
+              <h3 className="text-lg font-semibold text-gray-800">
+                YouTube Track Preview
+              </h3>
             </div>
           </CardHeader>
           <CardContent className="pt-0">
             <div className="flex items-center space-x-4">
-              <img 
-                src={youtubePreview.thumbnailUrl} 
+              <img
+                src={youtubePreview.thumbnailUrl}
                 alt="YouTube thumbnail"
                 className="w-16 h-16 rounded-lg object-cover shadow-md"
               />

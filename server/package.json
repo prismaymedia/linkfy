@@ -29,7 +29,7 @@
     "drizzle-zod": "^0.8.2",
     "express": "^5.1.0",
     "express-session": "^1.18.1",
-    "googleapis": "^155.0.1",
+    "googleapis": "^156.0.0",
     "memorystore": "^1.6.7",
     "node-fetch": "^3.3.2",
     "passport": "^0.7.0",

@@ -24,14 +24,15 @@ export class StorageService implements IStorage {
 
     async createConversion(insertConversion: InsertConversion): Promise<Conversion> {
         const id = this.currentId++;
+        const payload = insertConversion as any;
         const conversion: Conversion = {
-            ...insertConversion,
             id,
-            spotifyUrl: "",
-            trackName: null,
-            artistName: null,
-            albumName: null,
-            thumbnailUrl: null
+            youtubeUrl: payload.youtubeUrl,
+            spotifyUrl: payload.spotifyUrl ?? '',
+            trackName: payload.trackName ?? null,
+            artistName: payload.artistName ?? null,
+            albumName: payload.albumName ?? null,
+            thumbnailUrl: payload.thumbnailUrl ?? null,
         };
         this.conversions.set(id, conversion);
         return conversion;

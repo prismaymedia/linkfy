@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -34,8 +34,10 @@ export default function ConversionForm() {
     },
     onSuccess: (result) => {
       setSpotifyResult(result);
+
       // Store the successfully processed URL
       setLastProcessedUrl(form.getValues("youtubeUrl"));
+        
       toast({
         title: "Success!",
         description: "Successfully converted to Spotify!",
@@ -71,13 +73,23 @@ export default function ConversionForm() {
 
   // Watch for URL changes
   const watchedUrl = form.watch("youtubeUrl");
+  
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      fetchYouTubePreview(watchedUrl);
-    }, 500); // Debounce for 500ms
+      if (watchedUrl !== previousUrl) {
+        if (watchedUrl && watchedUrl.trim() !== "") {
+          fetchYouTubePreview(watchedUrl);
+        }
+      }
+    }, 500);
 
     return () => clearTimeout(timeoutId);
-  }, [watchedUrl]);
+  }, [watchedUrl, previousUrl]);
+
+  const isButtonEnabled = watchedUrl && 
+    watchedUrl.trim() !== "" && 
+    !convertMutation.isPending && 
+    watchedUrl !== previousUrl;
 
   const onSubmit = (data: ConvertUrlRequest) => {
     convertMutation.mutate(data);

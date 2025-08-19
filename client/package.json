@@ -9,7 +9,7 @@
     "build": "vite build",
     "build:web": "vite build",
     "build:extension": "vite build --config vite.extension.config.ts",
-    "deploy": "gh-pages -d dist/public"
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",

@@ -8,6 +8,7 @@
     "build:client": "npm run build --workspace=client",
     "build:extension:client": "npm run build:extension --workspace=client",
     "start:client": "npm run start --workspace=client",
+    "deploy:client": "npm run deploy --workspace=client",
     "dev:server": "npm run nest:dev --workspace=server",
     "build:server": "npm run nest:build --workspace=server",
     "start:server": "npm run nest:start --workspace=server",

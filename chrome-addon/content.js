@@ -1,11 +1,11 @@
 document.addEventListener('copy', async () => {
   try {
     const text = await navigator.clipboard.readText();
-    console.log('[Content] Texto copiado:', text);
+    console.log('[Content] Copied text:', text);
 
-    // Mandar al background
+    // Send to background
     chrome.runtime.sendMessage({ type: 'SAVE_COPIED', text });
   } catch (err) {
-    console.error('Error al leer portapapeles:', err);
+    console.error('Error reading clipboard:', err);
   }
 });

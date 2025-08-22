@@ -1,0 +1,38 @@
+name: Format code with Prettier
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies with yarn
+        run: yarn install
+
+      - name: Run Prettier formatter
+        run: yarn prettier:format
+
+      - name: Commit and push changes if any
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'style(prettier): format code with GA'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

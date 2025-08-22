@@ -12,9 +12,13 @@ async function bootstrap() {
   const logger = new Logger('Bootstrap');
 
   app.use(cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://prismaymedia.github.io",
+    ],
     credentials: true,
   }));
+
 
   app.use(json());
   app.use(urlencoded({ extended: false }));

@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
-import { SiSpotify } from "react-icons/si";
-import { Copy, Check } from "lucide-react";
-import type { SpotifyTrackInfo } from "../../../shared/schema";
+import { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/hooks/use-toast';
+import { SiSpotify } from 'react-icons/si';
+import { Copy, Check } from 'lucide-react';
+import type { SpotifyTrackInfo } from '../../../shared/schema';
 
 interface ResultCardProps {
   result: SpotifyTrackInfo;
@@ -20,18 +20,18 @@ export default function ResultCard({ result }: ResultCardProps) {
       await navigator.clipboard.writeText(result.spotifyUrl);
       setCopied(true);
       toast({
-        title: "Copied!",
-        description: "Link copied to clipboard!",
+        title: 'Copied!',
+        description: 'Link copied to clipboard!',
       });
-      
+
       setTimeout(() => {
         setCopied(false);
       }, 2000);
     } catch (error) {
       toast({
-        title: "Failed to copy",
-        description: "Please try again.",
-        variant: "destructive",
+        title: 'Failed to copy',
+        description: 'Please try again.',
+        variant: 'destructive',
       });
     }
   };
@@ -41,13 +41,15 @@ export default function ResultCard({ result }: ResultCardProps) {
       <CardContent className="p-6">
         <div className="flex items-center mb-4">
           <SiSpotify className="text-spotify text-xl mr-2" />
-          <h3 className="text-lg font-semibold text-gray-800">Spotify Track Found</h3>
+          <h3 className="text-lg font-semibold text-gray-800">
+            Spotify Track Found
+          </h3>
         </div>
-        
+
         {/* Track Preview */}
         <div className="flex items-center space-x-4 mb-4">
-          <img 
-            src={result.thumbnailUrl} 
+          <img
+            src={result.thumbnailUrl}
             alt="Track thumbnail"
             className="w-16 h-16 rounded-lg object-cover shadow-md"
           />
@@ -58,9 +60,7 @@ export default function ResultCard({ result }: ResultCardProps) {
             <p className="text-sm text-gray-600 truncate">
               {result.artistName}
             </p>
-            <p className="text-xs text-gray-500 truncate">
-              {result.albumName}
-            </p>
+            <p className="text-xs text-gray-500 truncate">{result.albumName}</p>
           </div>
         </div>
 

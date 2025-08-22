@@ -1,6 +1,6 @@
-import ConversionForm from "@/components/conversion-form";
-import { Music, ArrowRight } from "lucide-react";
-import { SiYoutubemusic, SiSpotify } from "react-icons/si";
+import ConversionForm from '@/components/conversion-form';
+import { Music, ArrowRight } from 'lucide-react';
+import { SiYoutubemusic, SiSpotify } from 'react-icons/si';
 
 export default function Home() {
   return (
@@ -14,7 +14,9 @@ export default function Home() {
             <SiSpotify className="text-spotify text-2xl ml-2" />
           </div>
           <h1 className="text-2xl font-semibold text-gray-800 mb-2">Linkfy</h1>
-          <p className="text-gray-600 text-sm">Convert YouTube Music links to Spotify instantly</p>
+          <p className="text-gray-600 text-sm">
+            Convert YouTube Music links to Spotify instantly
+          </p>
         </div>
 
         {/* Conversion Form */}

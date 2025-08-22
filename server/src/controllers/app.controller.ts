@@ -4,7 +4,7 @@ import {
   Body,
   BadRequestException,
   InternalServerErrorException,
-  Logger
+  Logger,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -27,7 +27,7 @@ export class AppController {
   constructor(
     private readonly conversionService: ConversionService,
     private readonly youtubeService: YoutubeService,
-  ) { }
+  ) {}
 
   @Post('youtube-info')
   @ApiOperation({ summary: 'Get information from a YouTube Music URL' })
@@ -49,10 +49,12 @@ export class AppController {
     description: 'YouTube track info successfully retrieved',
     schema: {
       example: {
-        trackName: 'John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
+        trackName:
+          'John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
         artistName: 'IMAGINE. (Ultimate Mix, 2020)',
         thumbnailUrl: 'https://i.ytimg.com/vi/YkgkThdzX-8/mqdefault.jpg',
-        originalTitle: 'IMAGINE. (Ultimate Mix, 2020) - John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
+        originalTitle:
+          'IMAGINE. (Ultimate Mix, 2020) - John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
       },
     },
   })
@@ -80,9 +82,13 @@ export class AppController {
       return await this.youtubeService.getYoutubeInfo(validated.youtubeUrl);
     } catch (error) {
       if (error instanceof ZodError) {
-        throw new BadRequestException(error.issues[0]?.message || 'Invalid input');
+        throw new BadRequestException(
+          error.issues[0]?.message || 'Invalid input',
+        );
       }
-      throw new InternalServerErrorException('Failed to fetch track information');
+      throw new InternalServerErrorException(
+        'Failed to fetch track information',
+      );
     }
   }
 
@@ -107,7 +113,8 @@ export class AppController {
     schema: {
       example: {
         spotifyUrl: 'https://open.spotify.com/track/syszkzt3466rytG53xGD3M',
-        trackName: 'John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
+        trackName:
+          'John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
         artistName: 'IMAGINE. (Ultimate Mix, 2020)',
         albumName: 'Unknown Album',
         thumbnailUrl: 'https://i.ytimg.com/vi/YkgkThdzX-8/mqdefault.jpg',
@@ -134,10 +141,14 @@ export class AppController {
     this.logger.log('🟢 [AppController] Body received in /api/convert:', body);
     try {
       const validated = convertUrlSchema.parse(body);
-      return await this.conversionService.getOrCreateConversion(validated.youtubeUrl);
+      return await this.conversionService.getOrCreateConversion(
+        validated.youtubeUrl,
+      );
     } catch (error) {
       if (error instanceof ZodError) {
-        throw new BadRequestException(error.issues[0]?.message || 'Invalid input');
+        throw new BadRequestException(
+          error.issues[0]?.message || 'Invalid input',
+        );
       }
       throw new InternalServerErrorException('Failed to convert URL');
     }

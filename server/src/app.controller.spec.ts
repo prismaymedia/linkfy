@@ -2,7 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from '../src/controllers/app.controller';
 import { YoutubeService } from '../src/services/youtube.service';
 import { ConversionService } from '../src/services/conversion.service';
-import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import {
+  BadRequestException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { ZodError } from 'zod';
 
 describe('AppController', () => {
@@ -33,7 +36,9 @@ describe('AppController', () => {
       originalTitle: 'Title',
     });
 
-    const result = await controller.getYoutubeInfo({ youtubeUrl: 'https://music.youtube.com/watch?v=abc' });
+    const result = await controller.getYoutubeInfo({
+      youtubeUrl: 'https://music.youtube.com/watch?v=abc',
+    });
     expect(result).toEqual({
       trackName: 'Track',
       artistName: 'Artist',
@@ -43,15 +48,19 @@ describe('AppController', () => {
   });
 
   it('should throw BadRequestException if the body is invalid', async () => {
-    await expect(controller.getYoutubeInfo({ youtubeUrl: 123 }))
-      .rejects
-      .toThrow(BadRequestException);
+    await expect(
+      controller.getYoutubeInfo({ youtubeUrl: 123 }),
+    ).rejects.toThrow(BadRequestException);
   });
 
   it('should throw InternalServerErrorException if the service fails', async () => {
-    (youtubeService.getYoutubeInfo as jest.Mock).mockRejectedValue(new Error('fail'));
-    await expect(controller.getYoutubeInfo({ youtubeUrl: 'https://music.youtube.com/watch?v=abc' }))
-      .rejects
-      .toThrow(InternalServerErrorException);
+    (youtubeService.getYoutubeInfo as jest.Mock).mockRejectedValue(
+      new Error('fail'),
+    );
+    await expect(
+      controller.getYoutubeInfo({
+        youtubeUrl: 'https://music.youtube.com/watch?v=abc',
+      }),
+    ).rejects.toThrow(InternalServerErrorException);
   });
 });

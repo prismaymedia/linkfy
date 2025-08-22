@@ -1,15 +1,15 @@
 {
   "extends": "../tsconfig.json",
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
+  "exclude": ["node_modules", "build", "dist"],
   "compilerOptions": {
     "lib": ["esnext", "dom", "dom.iterable"],
     "jsx": "preserve",
-    "types": ["vite/client"],
+    "types": ["vite/client", "vitest/globals"],
     "baseUrl": "src",
     "paths": {
       "@/*": ["*"]
     },
     "module": "esnext"
   }
-} 
+}

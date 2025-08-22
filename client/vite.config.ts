@@ -8,7 +8,7 @@ import tailwindcss from "@tailwindcss/vite";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export default defineConfig({
+export default defineConfig(async () => ({
   base: process.env.NODE_ENV === "production" ? "/linkfy/" : "/",
   plugins: [
     react(),
@@ -17,9 +17,7 @@ export default defineConfig({
     ...(process.env.NODE_ENV !== "production" &&
       process.env.REPL_ID !== undefined
       ? [
-        await import("@replit/vite-plugin-cartographer").then((m) =>
-          m.cartographer()
-        ),
+        (await import("@replit/vite-plugin-cartographer")).cartographer(),
       ]
       : []),
   ],
@@ -40,4 +38,9 @@ export default defineConfig({
       deny: ["**/.*"],
     },
   },
-});
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: "./src/lib/test/setupTests.tsx",
+  },
+}));

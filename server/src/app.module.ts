@@ -15,5 +15,4 @@ import { StorageService } from './services/storage.service';
     StorageService,
   ],
 })
-export class AppModule { }
-
+export class AppModule {}

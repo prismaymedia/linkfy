@@ -4,21 +4,26 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { json, urlencoded } from 'express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { ExecutionContext, CallHandler, NestInterceptor, ArgumentsHost, ExceptionFilter, Logger } from '@nestjs/common';
+import {
+  ExecutionContext,
+  CallHandler,
+  NestInterceptor,
+  ArgumentsHost,
+  ExceptionFilter,
+  Logger,
+} from '@nestjs/common';
 import cors from 'cors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = new Logger('Bootstrap');
 
-  app.use(cors({
-    origin: [
-      "http://localhost:5173",
-      "https://prismaymedia.github.io",
-    ],
-    credentials: true,
-  }));
-
+  app.use(
+    cors({
+      origin: ['http://localhost:5173', 'https://prismaymedia.github.io'],
+      credentials: true,
+    }),
+  );
 
   app.use(json());
   app.use(urlencoded({ extended: false }));

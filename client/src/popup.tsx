@@ -1,7 +1,5 @@
-import { createRoot } from "react-dom/client";
-import AppExtension from "./AppExtension";
-import "./index.css";
+import { createRoot } from 'react-dom/client';
+import AppExtension from './AppExtension';
+import './index.css';
 
-createRoot(document.getElementById("root")!).render(
-  <AppExtension />
-); 
+createRoot(document.getElementById('root')!).render(<AppExtension />);

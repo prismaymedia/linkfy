@@ -22,11 +22,10 @@ A React application that converts YouTube Music URLs to Spotify URLs with real-t
 3. Click "Convert to Spotify" to find the matching track
 4. Copy the Spotify URL with one click
 
-
-1. Paste a YouTube Music URL (e.g., `https://music.youtube.com/watch?v=dQw4w9WgXcQ`)
-2. See instant track preview with thumbnail and metadata
-3. Click "Convert to Spotify" to find the matching track
-4. Copy the Spotify URL with one click
+5. Paste a YouTube Music URL (e.g., `https://music.youtube.com/watch?v=dQw4w9WgXcQ`)
+6. See instant track preview with thumbnail and metadata
+7. Click "Convert to Spotify" to find the matching track
+8. Copy the Spotify URL with one click
 
 ## Setup
 
@@ -43,22 +42,26 @@ Click the "Run on Replit" button above, then paste this repository's GitHub URL 
 ### Local Installation
 
 1. Clone the repository:
+
 ```bash
 git clone <your-repo-url>
 cd linkfy
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Configure environment variables:
+
 ```bash
 cp .env.example .env
 ```
 
 4. Add your API credentials to `.env`:
+
 ```env
 YOUTUBE_API_KEY=your_youtube_api_key
 SPOTIFY_CLIENT_ID=your_spotify_client_id
@@ -68,6 +71,7 @@ SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
 ### Getting API Keys
 
 #### YouTube Data API v3
+
 1. Go to [Google Cloud Console](https://console.cloud.google.com)
 2. Create a new project or select existing
 3. Enable YouTube Data API v3
@@ -75,6 +79,7 @@ SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
 5. Copy the API key to your `.env` file
 
 #### Spotify Web API
+
 1. Go to [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
 2. Create a new app
 3. Copy Client ID and Client Secret
@@ -83,6 +88,7 @@ SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
 ### Development
 
 Start the development server:
+
 ```bash
 npm run dev
 ```
@@ -92,9 +98,11 @@ The app will be available at `http://localhost:5000`
 ## API Endpoints
 
 ### `POST /api/youtube-info`
+
 Get YouTube track metadata without conversion.
 
 **Request:**
+
 ```json
 {
   "youtubeUrl": "https://music.youtube.com/watch?v=VIDEO_ID"
@@ -102,6 +110,7 @@ Get YouTube track metadata without conversion.
 ```
 
 **Response:**
+
 ```json
 {
   "trackName": "Never Gonna Give You Up",
@@ -112,9 +121,11 @@ Get YouTube track metadata without conversion.
 ```
 
 ### `POST /api/convert`
+
 Convert YouTube Music URL to Spotify track.
 
 **Request:**
+
 ```json
 {
   "youtubeUrl": "https://music.youtube.com/watch?v=VIDEO_ID"
@@ -122,6 +133,7 @@ Convert YouTube Music URL to Spotify track.
 ```
 
 **Response:**
+
 ```json
 {
   "spotifyUrl": "https://open.spotify.com/track/TRACK_ID",
@@ -172,6 +184,7 @@ MIT License - see LICENSE file for details
 ## Support
 
 For issues or questions, please open a GitHub issue with:
+
 - Description of the problem
 - Steps to reproduce
 - Expected vs actual behavior

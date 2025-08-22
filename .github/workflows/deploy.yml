@@ -22,6 +22,10 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Set environment variables for production
+        run: |
+          echo "VITE_API_URL=https://linkfy-production.up.railway.app" > client/.env.production
+
       - name: Build project
         run: npm run --workspace=client build
 

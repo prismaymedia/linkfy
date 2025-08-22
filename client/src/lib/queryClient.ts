@@ -1,6 +1,10 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
 
-const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const baseUrl =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.DEV
+    ? "http://localhost:3000"
+    : "https://linkfy-production.up.railway.app");
 
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
@@ -31,18 +35,18 @@ export const getQueryFn: <T>(options: {
   on401: UnauthorizedBehavior;
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
-  async ({ queryKey }) => {
-    const res = await fetch(`${baseUrl}${queryKey[0] as string}`, {
-      credentials: "include",
-    });
+    async ({ queryKey }) => {
+      const res = await fetch(`${baseUrl}${queryKey[0] as string}`, {
+        credentials: "include",
+      });
 
-    if (unauthorizedBehavior === "returnNull" && res.status === 401) {
-      return null;
-    }
+      if (unauthorizedBehavior === "returnNull" && res.status === 401) {
+        return null;
+      }
 
-    await throwIfResNotOk(res);
-    return await res.json();
-  };
+      await throwIfResNotOk(res);
+      return await res.json();
+    };
 
 export const queryClient = new QueryClient({
   defaultOptions: {

@@ -82,7 +82,7 @@ export default function MusicServiceSelector({
               <SelectValue placeholder="Select Service" />
             )}
           </SelectTrigger>
-          {/* 👇 fondo blanco + sombra + bordes redondeados */}
+
           <SelectContent
             position="popper"
             className="z-50 bg-white shadow-md rounded-md"
@@ -120,7 +120,7 @@ export default function MusicServiceSelector({
               <SelectValue placeholder="Select Service" />
             )}
           </SelectTrigger>
-          {/* 👇 mismo fix aquí */}
+
           <SelectContent
             position="popper"
             className="z-50 bg-white shadow-md rounded-md"

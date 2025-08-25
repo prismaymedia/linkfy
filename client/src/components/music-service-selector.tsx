@@ -65,7 +65,6 @@ export default function MusicServiceSelector({
 
   return (
     <div className="space-y-6">
-      {/* Source Service */}
       <div className="space-y-2">
         <Label htmlFor="source-service">From</Label>
         <Select
@@ -82,7 +81,7 @@ export default function MusicServiceSelector({
               <SelectValue placeholder="Select Service" />
             )}
           </SelectTrigger>
-          {/* 👇 fondo blanco + sombra + bordes redondeados */}
+
           <SelectContent
             position="popper"
             className="z-50 bg-white shadow-md rounded-md"
@@ -102,8 +101,6 @@ export default function MusicServiceSelector({
           </SelectContent>
         </Select>
       </div>
-
-      {/* Target Service */}
       <div className="space-y-2">
         <Label htmlFor="target-service">To</Label>
         <Select
@@ -120,7 +117,7 @@ export default function MusicServiceSelector({
               <SelectValue placeholder="Select Service" />
             )}
           </SelectTrigger>
-          {/* 👇 mismo fix aquí */}
+
           <SelectContent
             position="popper"
             className="z-50 bg-white shadow-md rounded-md"

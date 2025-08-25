@@ -13,7 +13,6 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-surface flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
             <SiYoutubemusic className="text-youtube text-2xl mr-2" />
@@ -26,7 +25,6 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Music Service Selector */}
         <div className="mb-6">
           <MusicServiceSelector
             sourceService={sourceService}
@@ -36,10 +34,8 @@ export default function Home() {
           />
         </div>
 
-        {/* Conversion Form */}
         <ConversionForm />
 
-        {/* Footer */}
         <div className="text-center mt-8">
           <p className="text-xs text-gray-500">
             Perfect for Chrome extension • Privacy-focused • No data stored

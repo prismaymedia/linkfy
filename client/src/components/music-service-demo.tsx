@@ -30,7 +30,9 @@ export default function MusicServiceDemo() {
           {/* Show selected services */}
           {(sourceService || targetService) && (
             <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-              <h4 className="text-sm font-medium text-gray-700 mb-2">Selected:</h4>
+              <h4 className="text-sm font-medium text-gray-700 mb-2">
+                Selected:
+              </h4>
               <p className="text-sm text-gray-600">
                 From: {sourceService || 'Not selected'}
               </p>

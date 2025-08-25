@@ -1,7 +1,7 @@
 {
   "rest-client.environmentVariables": {
     "$shared": {
-      "baseUrl": "http://localhost:3000"
+      "baseUrl": "https://linkfy-production.up.railway.app"
     },
     "local": {
       "baseUrl": "http://localhost:3000"

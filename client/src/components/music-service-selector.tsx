@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Select,
   SelectContent,
@@ -38,6 +38,11 @@ export default function MusicServiceSelector({
   onSourceChange,
   onTargetChange,
 }: MusicServiceSelectorProps) {
+  useEffect(() => {
+    if (!sourceService) onSourceChange('YouTube Music');
+    if (!targetService) onTargetChange('Spotify');
+  }, [sourceService, targetService, onSourceChange, onTargetChange]);
+
   const handleSourceChange = (value: string) => {
     const newSource = value === 'select' ? null : (value as MusicService);
     onSourceChange(newSource);
@@ -69,7 +74,7 @@ export default function MusicServiceSelector({
       <div className="space-y-2">
         <Label htmlFor="source-service">From</Label>
         <Select
-          value={sourceService || 'select'}
+          value={sourceService ?? undefined}
           onValueChange={handleSourceChange}
         >
           <SelectTrigger id="source-service" className="flex items-center">
@@ -83,11 +88,7 @@ export default function MusicServiceSelector({
             )}
           </SelectTrigger>
 
-          <SelectContent
-            position="popper"
-            className="z-50 bg-white shadow-md rounded-md"
-          >
-            <SelectItem value="select">Select Service</SelectItem>
+          <SelectContent className="z-50 bg-white shadow-md rounded-md">
             {getAvailableServices(targetService).map((service) => {
               const IconComponent = service.icon;
               return (
@@ -107,7 +108,7 @@ export default function MusicServiceSelector({
       <div className="space-y-2">
         <Label htmlFor="target-service">To</Label>
         <Select
-          value={targetService || 'select'}
+          value={targetService ?? undefined}
           onValueChange={handleTargetChange}
         >
           <SelectTrigger id="target-service" className="flex items-center">
@@ -121,11 +122,7 @@ export default function MusicServiceSelector({
             )}
           </SelectTrigger>
 
-          <SelectContent
-            position="popper"
-            className="z-50 bg-white shadow-md rounded-md"
-          >
-            <SelectItem value="select">Select Service</SelectItem>
+          <SelectContent className="z-50 bg-white shadow-md rounded-md">
             {getAvailableServices(sourceService).map((service) => {
               const IconComponent = service.icon;
               return (

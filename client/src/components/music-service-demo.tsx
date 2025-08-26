@@ -5,8 +5,12 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 type MusicService = 'YouTube Music' | 'Spotify' | 'SoundCloud';
 
 export default function MusicServiceDemo() {
-  const [sourceService, setSourceService] = useState<MusicService | null>(null);
-  const [targetService, setTargetService] = useState<MusicService | null>(null);
+  const [sourceService, setSourceService] = useState<MusicService | null>(
+    'YouTube Music',
+  );
+  const [targetService, setTargetService] = useState<MusicService | null>(
+    'Spotify',
+  );
 
   return (
     <div className="max-w-md mx-auto p-4">
@@ -28,19 +32,17 @@ export default function MusicServiceDemo() {
           />
 
           {/* Show selected services */}
-          {(sourceService || targetService) && (
-            <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-              <h4 className="text-sm font-medium text-gray-700 mb-2">
-                Selected:
-              </h4>
-              <p className="text-sm text-gray-600">
-                From: {sourceService || 'Not selected'}
-              </p>
-              <p className="text-sm text-gray-600">
-                To: {targetService || 'Not selected'}
-              </p>
-            </div>
-          )}
+          <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+            <h4 className="text-sm font-medium text-gray-700 mb-2">
+              Selected:
+            </h4>
+            <p className="text-sm text-gray-600">
+              From: {sourceService || 'Not selected'}
+            </p>
+            <p className="text-sm text-gray-600">
+              To: {targetService || 'Not selected'}
+            </p>
+          </div>
         </CardContent>
       </Card>
     </div>

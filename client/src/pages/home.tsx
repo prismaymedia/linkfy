@@ -1,8 +1,15 @@
 import ConversionForm from '@/components/conversion-form';
-import { Music, ArrowRight } from 'lucide-react';
+import MusicServiceSelector from '@/components/music-service-selector';
+import { ArrowRight } from 'lucide-react';
 import { SiYoutubemusic, SiSpotify } from 'react-icons/si';
+import { useState } from 'react';
+
+type MusicService = 'YouTube Music' | 'Spotify' | 'SoundCloud';
 
 export default function Home() {
+  const [sourceService, setSourceService] = useState<MusicService | null>(null);
+  const [targetService, setTargetService] = useState<MusicService | null>(null);
+
   return (
     <div className="min-h-screen bg-surface flex items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -17,6 +24,16 @@ export default function Home() {
           <p className="text-gray-600 text-sm">
             Convert YouTube Music links to Spotify instantly
           </p>
+        </div>
+
+        {/* Music Service Selector */}
+        <div className="mb-6">
+          <MusicServiceSelector
+            sourceService={sourceService}
+            targetService={targetService}
+            onSourceChange={setSourceService}
+            onTargetChange={setTargetService}
+          />
         </div>
 
         {/* Conversion Form */}

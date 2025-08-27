@@ -2,6 +2,7 @@ import request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { AppModule } from '../app.module';
+import { SupabaseService } from '../supabase/supabase.service';
 
 describe('YouTube Info Endpoint (e2e)', () => {
   let app: INestApplication;
@@ -12,9 +13,21 @@ describe('YouTube Info Endpoint (e2e)', () => {
     console.log = jest.fn();
     console.error = jest.fn();
 
+    // Mock SupabaseService
+    const mockSupabaseService = {
+      getClient: jest.fn().mockReturnValue({
+        from: jest.fn().mockReturnThis(),
+        select: jest.fn().mockReturnValue({ data: [], error: null }),
+        limit: jest.fn().mockReturnThis(),
+      }),
+    };
+
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    })
+      .overrideProvider(SupabaseService)
+      .useValue(mockSupabaseService)
+      .compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();

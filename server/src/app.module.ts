@@ -4,9 +4,10 @@ import { ConversionService } from './services/conversion.service';
 import { YoutubeService } from './services/youtube.service';
 import { SpotifyService } from './services/spotify.service';
 import { StorageService } from './services/storage.service';
+import { SupabaseModule } from './supabase/supabase.module';
 
 @Module({
-  imports: [],
+  imports: [SupabaseModule],
   controllers: [AppController],
   providers: [
     ConversionService,
@@ -15,4 +16,4 @@ import { StorageService } from './services/storage.service';
     StorageService,
   ],
 })
-export class AppModule {}
+export class AppModule { }

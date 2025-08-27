@@ -16,4 +16,4 @@ import { SupabaseModule } from './supabase/supabase.module';
     StorageService,
   ],
 })
-export class AppModule { }
+export class AppModule {}

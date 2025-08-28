@@ -1,0 +1,43 @@
+{
+  "home": {
+    "description": "Convierte enlaces de YouTube Music a Spotify al instante",
+    "footer": "Perfecto para la extensión de Chrome • Enfocado en la privacidad • Sin almacenar datos"
+  },
+  "conversion": {
+    "successTitle": "¡Éxito!",
+    "successDesc": "¡Convertido a Spotify con éxito!",
+    "errorTitle": "Error en la conversión",
+    "errorDesc": "Por favor, inténtalo de nuevo."
+  },
+  "form": {
+    "youtubeUrlLabel": "URL de YouTube Music",
+    "youtubeUrlPlaceholder": "https://music.youtube.com/watch?v=...",
+    "duplicateUrlWarning": "Esta URL ya fue convertida. Ingresa una URL diferente de YouTube Music para convertir.",
+    "converting": "Convirtiendo...",
+    "urlAlreadyConverted": "URL ya convertida",
+    "convertButton": "Convertir a Spotify"
+  },
+  "preview": {
+    "youtubeTrack": "Vista previa de la pista de YouTube",
+    "original": "Original"
+  },
+  "demo": {
+    "title": "Convertidor de servicios de música",
+    "description": "Selecciona tus servicios de música de origen y destino",
+    "selected": "Seleccionado:",
+    "from": "De",
+    "to": "A",
+    "notSelected": "No seleccionado"
+  },
+  "result": {
+    "trackFound": "Canción de Spotify encontrada",
+    "trackThumbnail": "Miniatura de la canción",
+    "spotifyUrl": "URL de Spotify",
+    "copyButton": "Copiar enlace de Spotify",
+    "copiedButton": "¡Copiado!",
+    "copiedTitle": "¡Copiado!",
+    "copiedDescription": "¡Enlace copiado al portapapeles!",
+    "copyFailedTitle": "Error al copiar",
+    "copyFailedDescription": "Por favor, inténtalo de nuevo."
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "home": {
+    "description": "Convert YouTube Music links to Spotify instantly",
+    "footer": "Perfect for Chrome extension • Privacy-focused • No data stored"
+  },
+  "conversion": {
+    "successTitle": "Success!",
+    "successDesc": "Successfully converted to Spotify!",
+    "errorTitle": "Conversion Failed",
+    "errorDesc": "Please try again."
+  },
+  "form": {
+    "youtubeUrlLabel": "YouTube Music URL",
+    "youtubeUrlPlaceholder": "https://music.youtube.com/watch?v=...",
+    "duplicateUrlWarning": "This URL has already been converted. Enter a different YouTube Music URL to convert.",
+    "converting": "Converting...",
+    "urlAlreadyConverted": "URL Already Converted",
+    "convertButton": "Convert to Spotify"
+  },
+  "preview": {
+    "youtubeTrack": "YouTube Track Preview",
+    "original": "Original"
+  },
+  "demo": {
+    "title": "Music Service Converter",
+    "description": "Select your source and target music services",
+    "selected": "Selected:",
+    "from": "From",
+    "to": "To",
+    "notSelected": "Not selected"
+  },
+  "result": {
+    "trackFound": "Spotify Track Found",
+    "trackThumbnail": "Track thumbnail",
+    "spotifyUrl": "Spotify URL",
+    "copyButton": "Copy Spotify Link",
+    "copiedButton": "Copied!",
+    "copiedTitle": "Copied!",
+    "copiedDescription": "Link copied to clipboard!",
+    "copyFailedTitle": "Failed to copy",
+    "copyFailedDescription": "Please try again."
+  }
+}

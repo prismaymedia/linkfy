@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,14 +15,15 @@ interface ResultCardProps {
 export default function ResultCard({ result }: ResultCardProps) {
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const handleCopyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(result.spotifyUrl);
       setCopied(true);
       toast({
-        title: 'Copied!',
-        description: 'Link copied to clipboard!',
+        title: t('result.copiedTitle'),
+        description: t('result.copiedDescription'),
       });
 
       setTimeout(() => {
@@ -29,8 +31,8 @@ export default function ResultCard({ result }: ResultCardProps) {
       }, 2000);
     } catch (error) {
       toast({
-        title: 'Failed to copy',
-        description: 'Please try again.',
+        title: t('result.copyFailedTitle'),
+        description: t('result.copyFailedDescription'),
         variant: 'destructive',
       });
     }
@@ -42,7 +44,7 @@ export default function ResultCard({ result }: ResultCardProps) {
         <div className="flex items-center mb-4">
           <SiSpotify className="text-spotify text-xl mr-2" />
           <h3 className="text-lg font-semibold text-gray-800">
-            Spotify Track Found
+            {t('result.trackFound')}
           </h3>
         </div>
 
@@ -50,7 +52,7 @@ export default function ResultCard({ result }: ResultCardProps) {
         <div className="flex items-center space-x-4 mb-4">
           <img
             src={result.thumbnailUrl}
-            alt="Track thumbnail"
+            alt={t('result.trackThumbnail')}
             className="w-16 h-16 rounded-lg object-cover shadow-md"
           />
           <div className="flex-1 min-w-0">
@@ -67,7 +69,7 @@ export default function ResultCard({ result }: ResultCardProps) {
         {/* Spotify URL */}
         <div className="bg-gray-50 rounded-lg p-3 mb-4">
           <label className="block text-xs font-medium text-gray-600 mb-1">
-            Spotify URL
+            {t('result.spotifyUrl')}
           </label>
           <Input
             value={result.spotifyUrl}
@@ -84,12 +86,12 @@ export default function ResultCard({ result }: ResultCardProps) {
           {copied ? (
             <>
               <Check className="mr-2 h-4 w-4" />
-              Copied!
+              {t('result.copiedButton')}
             </>
           ) : (
             <>
               <Copy className="mr-2 h-4 w-4" />
-              Copy Spotify Link
+              {t('result.copyButton')}
             </>
           )}
         </Button>

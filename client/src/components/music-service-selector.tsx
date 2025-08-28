@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Select,
   SelectContent,
@@ -38,6 +39,8 @@ export default function MusicServiceSelector({
   onSourceChange,
   onTargetChange,
 }: MusicServiceSelectorProps) {
+  const { t } = useTranslation();
+
   useEffect(() => {
     if (!sourceService) onSourceChange('YouTube Music');
     if (!targetService) onTargetChange('Spotify');
@@ -72,7 +75,7 @@ export default function MusicServiceSelector({
     <div className="space-y-6">
       {/* Source Service */}
       <div className="space-y-2">
-        <Label htmlFor="source-service">From</Label>
+        <Label htmlFor="source-service">{t('demo.from')}</Label>
         <Select
           value={sourceService ?? undefined}
           onValueChange={handleSourceChange}
@@ -84,7 +87,7 @@ export default function MusicServiceSelector({
                 <span>{sourceInfo.name}</span>
               </div>
             ) : (
-              <SelectValue placeholder="Select Service" />
+              <SelectValue placeholder={t('demo.notSelected')} />
             )}
           </SelectTrigger>
 
@@ -106,7 +109,7 @@ export default function MusicServiceSelector({
 
       {/* Target Service */}
       <div className="space-y-2">
-        <Label htmlFor="target-service">To</Label>
+        <Label htmlFor="target-service">{t('demo.to')}</Label>
         <Select
           value={targetService ?? undefined}
           onValueChange={handleTargetChange}
@@ -118,7 +121,7 @@ export default function MusicServiceSelector({
                 <span>{targetInfo.name}</span>
               </div>
             ) : (
-              <SelectValue placeholder="Select Service" />
+              <SelectValue placeholder={t('demo.notSelected')} />
             )}
           </SelectTrigger>
 

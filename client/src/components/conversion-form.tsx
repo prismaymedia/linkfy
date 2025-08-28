@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
@@ -22,8 +22,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { SiYoutubemusic } from 'react-icons/si';
-import { Loader2, Music, AlertCircle } from 'lucide-react';
+import { Loader2, AlertCircle } from 'lucide-react';
 import ResultCard from './result-card';
+import { useTranslation } from 'react-i18next';
 
 export default function ConversionForm() {
   const [spotifyResult, setSpotifyResult] = useState<SpotifyTrackInfo | null>(
@@ -36,6 +37,7 @@ export default function ConversionForm() {
   const [lastProcessedUrl, setLastProcessedUrl] = useState<string>('');
 
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const form = useForm<ConvertUrlRequest>({
     resolver: zodResolver(convertUrlSchema),
@@ -51,25 +53,22 @@ export default function ConversionForm() {
     },
     onSuccess: (result) => {
       setSpotifyResult(result);
-
-      // Store the successfully processed URL
       setLastProcessedUrl(form.getValues('youtubeUrl'));
 
       toast({
-        title: 'Success!',
-        description: 'Successfully converted to Spotify!',
+        title: t('conversion.successTitle'),
+        description: t('conversion.successDesc'),
       });
     },
     onError: (error: any) => {
       toast({
-        title: 'Conversion Failed',
-        description: error.message || 'Please try again.',
+        title: t('conversion.errorTitle'),
+        description: error.message || t('conversion.errorDesc'),
         variant: 'destructive',
       });
     },
   });
 
-  // Fetch YouTube track preview when URL changes
   const fetchYouTubePreview = async (url: string) => {
     if (!url || !convertUrlSchema.safeParse({ youtubeUrl: url }).success) {
       setYoutubePreview(null);
@@ -83,14 +82,13 @@ export default function ConversionForm() {
       });
       const data = (await response.json()) as YouTubeTrackInfo;
       setYoutubePreview(data);
-    } catch (error) {
+    } catch {
       setYoutubePreview(null);
     } finally {
       setIsLoadingPreview(false);
     }
   };
 
-  // Watch for URL changes
   const watchedUrl = form.watch('youtubeUrl');
 
   useEffect(() => {
@@ -107,20 +105,11 @@ export default function ConversionForm() {
     return () => clearTimeout(timeoutId);
   }, [watchedUrl, lastProcessedUrl]);
 
-  const isButtonEnabled =
-    watchedUrl &&
-    watchedUrl.trim() !== '' &&
-    !convertMutation.isPending &&
-    watchedUrl !== lastProcessedUrl;
-
   const onSubmit = (data: ConvertUrlRequest) => {
     convertMutation.mutate(data);
   };
 
-  // Check if the current URL is the same as the last processed URL
   const isDuplicateUrl = lastProcessedUrl && watchedUrl === lastProcessedUrl;
-
-  // Check if the form is valid and not a duplicate
   const isFormValid = form.formState.isValid && !isDuplicateUrl;
 
   return (
@@ -135,14 +124,14 @@ export default function ConversionForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium text-gray-700">
-                      YouTube Music URL
+                      {t('form.youtubeUrlLabel')}
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Input
                           {...field}
                           type="url"
-                          placeholder="https://music.youtube.com/watch?v=..."
+                          placeholder={t('form.youtubeUrlPlaceholder')}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-spotify focus:border-spotify transition-colors duration-200 pr-10"
                         />
                         <SiYoutubemusic className="absolute right-3 top-1/2 transform -translate-y-1/2 text-youtube opacity-50" />
@@ -153,13 +142,11 @@ export default function ConversionForm() {
                 )}
               />
 
-              {/* Duplicate URL warning */}
               {isDuplicateUrl && (
                 <div className="flex items-center space-x-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
                   <AlertCircle className="h-4 w-4 text-amber-600" />
                   <span className="text-sm text-amber-700">
-                    This URL has already been converted. Enter a different
-                    YouTube Music URL to convert.
+                    {t('form.duplicateUrlWarning')}
                   </span>
                 </div>
               )}
@@ -171,13 +158,13 @@ export default function ConversionForm() {
               >
                 {convertMutation.isPending ? (
                   <>
-                    Converting...
+                    {t('form.converting')}
                     <Loader2 className="ml-2 h-4 w-4 animate-spin" />
                   </>
                 ) : isDuplicateUrl ? (
-                  'URL Already Converted'
+                  t('form.urlAlreadyConverted')
                 ) : (
-                  'Convert to Spotify'
+                  t('form.convertButton')
                 )}
               </Button>
             </form>
@@ -185,14 +172,13 @@ export default function ConversionForm() {
         </CardContent>
       </Card>
 
-      {/* YouTube Track Preview */}
       {youtubePreview && (
         <Card className="bg-white rounded-2xl shadow-lg mb-6">
           <CardHeader className="pb-3">
             <div className="flex items-center">
               <SiYoutubemusic className="text-youtube text-xl mr-2" />
               <h3 className="text-lg font-semibold text-gray-800">
-                YouTube Track Preview
+                {t('preview.youtubeTrack')}
               </h3>
             </div>
           </CardHeader>
@@ -211,7 +197,7 @@ export default function ConversionForm() {
                   {youtubePreview.artistName}
                 </p>
                 <p className="text-xs text-gray-500 truncate">
-                  Original: {youtubePreview.originalTitle}
+                  {t('preview.original')}: {youtubePreview.originalTitle}
                 </p>
               </div>
               {isLoadingPreview && (

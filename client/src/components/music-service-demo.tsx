@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import MusicServiceSelector from './music-service-selector';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 type MusicService = 'YouTube Music' | 'Spotify' | 'SoundCloud';
 
 export default function MusicServiceDemo() {
+  const { t } = useTranslation();
   const [sourceService, setSourceService] = useState<MusicService | null>(
     'YouTube Music',
   );
@@ -17,11 +19,9 @@ export default function MusicServiceDemo() {
       <Card className="bg-white rounded-2xl shadow-lg">
         <CardHeader>
           <h2 className="text-xl font-semibold text-gray-800">
-            Music Service Converter
+            {t('demo.title')}
           </h2>
-          <p className="text-sm text-gray-600">
-            Select your source and target music services
-          </p>
+          <p className="text-sm text-gray-600">{t('demo.description')}</p>
         </CardHeader>
         <CardContent>
           <MusicServiceSelector
@@ -31,16 +31,15 @@ export default function MusicServiceDemo() {
             onTargetChange={setTargetService}
           />
 
-          {/* Show selected services */}
           <div className="mt-4 p-3 bg-gray-50 rounded-lg">
             <h4 className="text-sm font-medium text-gray-700 mb-2">
-              Selected:
+              {t('demo.selected')}
             </h4>
             <p className="text-sm text-gray-600">
-              From: {sourceService || 'Not selected'}
+              {t('demo.from')}: {sourceService || t('demo.notSelected')}
             </p>
             <p className="text-sm text-gray-600">
-              To: {targetService || 'Not selected'}
+              {t('demo.to')}: {targetService || t('demo.notSelected')}
             </p>
           </div>
         </CardContent>

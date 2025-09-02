@@ -10,6 +10,8 @@
     "paths": {
       "@/*": ["*"]
     },
-    "module": "esnext"
+    "module": "esnext",
+    "resolveJsonModule": true,
+    "esModuleInterop": true
   }
 }

@@ -76,10 +76,7 @@ export default function MusicServiceSelector({
       {/* Source Service */}
       <div className="space-y-2">
         <Label htmlFor="source-service">{t('demo.from')}</Label>
-        <Select
-          value={sourceService ?? undefined}
-          onValueChange={handleSourceChange}
-        >
+        <Select value={sourceService ?? ''} onValueChange={handleSourceChange}>
           <SelectTrigger id="source-service" className="flex items-center">
             {sourceInfo ? (
               <div className="flex items-center gap-2">
@@ -110,10 +107,7 @@ export default function MusicServiceSelector({
       {/* Target Service */}
       <div className="space-y-2">
         <Label htmlFor="target-service">{t('demo.to')}</Label>
-        <Select
-          value={targetService ?? undefined}
-          onValueChange={handleTargetChange}
-        >
+        <Select value={targetService ?? ''} onValueChange={handleTargetChange}>
           <SelectTrigger id="target-service" className="flex items-center">
             {targetInfo ? (
               <div className="flex items-center gap-2">

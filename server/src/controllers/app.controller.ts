@@ -18,6 +18,7 @@ import { ConversionService } from '../services/conversion.service';
 import { YoutubeService } from '../services/youtube.service';
 import { ZodError } from 'zod';
 import { convertUrlSchema } from '../../../shared/schema';
+import * as Sentry from '@sentry/nestjs';
 
 @ApiTags('Conversion')
 @Controller('api')
@@ -27,7 +28,7 @@ export class AppController {
   constructor(
     private readonly conversionService: ConversionService,
     private readonly youtubeService: YoutubeService,
-  ) {}
+  ) { }
 
   @Post('youtube-info')
   @ApiOperation({ summary: 'Get information from a YouTube Music URL' })
@@ -81,6 +82,7 @@ export class AppController {
       const validated = convertUrlSchema.parse(body);
       return await this.youtubeService.getYoutubeInfo(validated.youtubeUrl);
     } catch (error) {
+      Sentry.captureException(error);
       if (error instanceof ZodError) {
         throw new BadRequestException(
           error.issues[0]?.message || 'Invalid input',
@@ -145,6 +147,7 @@ export class AppController {
         validated.youtubeUrl,
       );
     } catch (error) {
+      Sentry.captureException(error);
       if (error instanceof ZodError) {
         throw new BadRequestException(
           error.issues[0]?.message || 'Invalid input',

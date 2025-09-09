@@ -23,6 +23,7 @@
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/swagger": "^11.2.0",
+    "@sentry/nestjs": "^10.11.0",
     "@supabase/supabase-js": "^2.57.2",
     "connect-pg-simple": "^10.0.0",
     "dotenv": "^17.2.2",

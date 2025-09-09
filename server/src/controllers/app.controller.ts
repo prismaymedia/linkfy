@@ -28,7 +28,7 @@ export class AppController {
   constructor(
     private readonly conversionService: ConversionService,
     private readonly youtubeService: YoutubeService,
-  ) { }
+  ) {}
 
   @Post('youtube-info')
   @ApiOperation({ summary: 'Get information from a YouTube Music URL' })

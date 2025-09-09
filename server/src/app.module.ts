@@ -9,10 +9,7 @@ import { StorageService } from './services/storage.service';
 import { SupabaseModule } from './supabase/supabase.module';
 
 @Module({
-  imports: [
-    SupabaseModule,
-    SentryModule.forRoot(),
-  ],
+  imports: [SupabaseModule, SentryModule.forRoot()],
   controllers: [AppController],
   providers: [
     ConversionService,
@@ -25,4 +22,4 @@ import { SupabaseModule } from './supabase/supabase.module';
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}

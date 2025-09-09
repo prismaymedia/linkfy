@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://linkfy-production.up.railway.app/';
+const API_BASE_URL = 'https://linkfy-production.up.railway.app';
 
 let jwtToken = null;
 let tokenExpiry = null;

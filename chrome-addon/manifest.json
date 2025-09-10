@@ -3,13 +3,17 @@
   "name": "Linkfy",
   "version": "1.0.0",
   "description": "Extensión de Google Chrome para Linkfy - Gestiona tus enlaces de forma inteligente",
+
   "permissions": ["storage", "activeTab", "scripting"],
-  "host_permissions": ["*://*/*"],
+
+  "host_permissions": ["https://linkfy-production.up.railway.app/*"],
+
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
+
   "action": {
     "default_popup": "dist/popup.html",
     "default_title": "Linkfy",
@@ -18,5 +22,9 @@
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
     }
+  },
+
+  "background": {
+    "service_worker": "background.js"
   }
 }

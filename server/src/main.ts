@@ -21,7 +21,11 @@ async function bootstrap() {
 
   app.use(
     cors({
-      origin: ['http://localhost:5173', 'https://prismaymedia.github.io'],
+      origin: [
+        'http://localhost:5173',
+        'https://prismaymedia.github.io',
+        'chrome-extension://mefdblccfmhfhhcgeckmcicgfnfgolpf',
+      ],
       credentials: true,
     }),
   );

@@ -1,8 +1,10 @@
+import { useEffect, useState } from 'react';
+import { useLocation } from 'wouter';
+import { supabase, getSession } from '@/lib/supabaseClient';
 import ConversionForm from '@/components/conversion-form';
 import MusicServiceSelector from '@/components/music-service-selector';
 import { ArrowRight } from 'lucide-react';
 import { SiYoutubemusic, SiSpotify } from 'react-icons/si';
-import { useState } from 'react';
 import LanguageSwitcher from '@/components/language-switcher';
 import { useTranslation } from 'react-i18next';
 
@@ -12,6 +14,24 @@ export default function Home() {
   const [sourceService, setSourceService] = useState<MusicService | null>(null);
   const [targetService, setTargetService] = useState<MusicService | null>(null);
   const { t } = useTranslation();
+  const [, setLocation] = useLocation();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const session = await getSession();
+      if (!session) {
+        setLocation('/auth');
+      } else {
+        setLoading(false);
+      }
+    };
+    checkSession();
+  }, []);
+
+  if (loading) {
+    return <div className="text-center mt-20">Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-surface flex items-center justify-center p-4">

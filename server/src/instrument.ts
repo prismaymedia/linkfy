@@ -9,4 +9,3 @@ Sentry.init({
   // Enable logs to be sent to Sentry
   enableLogs: true,
 });
-

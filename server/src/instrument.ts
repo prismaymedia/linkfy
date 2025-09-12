@@ -10,8 +10,4 @@ Sentry.init({
   enableLogs: true,
 });
 
-Sentry.setUser({
-  email: 'user@example.com',
-});
-
 Sentry.logger.info('User triggered test log', { action: 'test_log' });

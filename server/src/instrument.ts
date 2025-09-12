@@ -10,4 +10,3 @@ Sentry.init({
   enableLogs: true,
 });
 
-Sentry.logger.info('User triggered test log', { action: 'test_log' });

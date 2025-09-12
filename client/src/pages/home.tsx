@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
-import { supabase, getSession } from '@/lib/supabaseClient';
+import { getSession } from '@/lib/supabaseClient';
 import ConversionForm from '@/components/conversion-form';
 import MusicServiceSelector from '@/components/music-service-selector';
 import { ArrowRight } from 'lucide-react';
@@ -27,7 +27,7 @@ export default function Home() {
       }
     };
     checkSession();
-  }, []);
+  }, [setLocation]);
 
   if (loading) {
     return <div className="text-center mt-20">Loading...</div>;

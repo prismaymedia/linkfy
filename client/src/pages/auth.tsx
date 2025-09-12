@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'wouter';
 import AuthForm from '@/components/authForm';
 import { supabase, getSession } from '@/lib/supabaseClient';
 import { Session } from '@supabase/supabase-js';
@@ -6,12 +7,15 @@ import LanguageSwitcher from '@/components/language-switcher';
 import { SiFacebook } from 'react-icons/si';
 import { FcGoogle } from 'react-icons/fc';
 import { useTranslation } from 'react-i18next';
+
 export default function AuthPage() {
   const { t } = useTranslation();
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [session, setSession] = useState<Session | null>(null);
+
+  const [, setLocation] = useLocation();
 
   useEffect(() => {
     // Fetch session on load
@@ -51,7 +55,7 @@ export default function AuthPage() {
 
       setSuccess('✅ Signed in successfully!');
       console.log('User session:', data.session);
-      window.location.href = '/';
+      setLocation('/');
     } else {
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -65,7 +69,7 @@ export default function AuthPage() {
 
       setSuccess('✅ Account created! Please check your email to confirm.');
       console.log('New user:', data.user);
-      window.location.href = '/';
+      setLocation('/'); // 👈 navegación cliente
     }
   };
 

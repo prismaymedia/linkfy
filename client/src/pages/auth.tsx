@@ -69,7 +69,7 @@ export default function AuthPage() {
 
       setSuccess('✅ Account created! Please check your email to confirm.');
       console.log('New user:', data.user);
-      setLocation('/'); // 👈 navegación cliente
+      setLocation('/'); // Redirect to the home page
     }
   };
 

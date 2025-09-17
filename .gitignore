@@ -140,3 +140,4 @@ coverage/
 # Temporary build files
 .temp/
 .tmp/
+client/.env.development

@@ -1,0 +1,16 @@
+### Request to preview YouTube info 
+POST {{baseUrl}}/api/youtube-convert
+Content-Type: application/json
+
+{
+  "youtubeUrl": "https://music.youtube.com/watch?v=Z3L5M7GHAkw",
+  "convert": false
+}
+
+### Request to convert YouTube info to Spotify (default if convert is omitted)
+POST {{baseUrl}}/api/youtube-convert
+Content-Type: application/json
+
+{
+  "youtubeUrl": "https://music.youtube.com/watch?v=Z3L5M7GHAkw"
+}

@@ -2,8 +2,8 @@ import {
   Controller,
   Post,
   Body,
-  BadRequestException,
   InternalServerErrorException,
+  BadRequestException,
   Logger,
 } from '@nestjs/common';
 import {
@@ -28,10 +28,10 @@ export class AppController {
   constructor(
     private readonly conversionService: ConversionService,
     private readonly youtubeService: YoutubeService,
-  ) {}
+  ) { }
 
-  @Post('youtube-info')
-  @ApiOperation({ summary: 'Get information from a YouTube Music URL' })
+  @Post('youtube-convert')
+  @ApiOperation({ summary: 'Get information from YouTube and convert it to Spotify' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -39,23 +39,22 @@ export class AppController {
         youtubeUrl: {
           type: 'string',
           example: 'https://music.youtube.com/watch?v=YkgkThdzX-8',
-          description: 'YouTube Music URL to analyze',
+          description: 'YouTube Music URL to process',
         },
       },
       required: ['youtubeUrl'],
     },
   })
   @ApiResponse({
-    status: 201,
-    description: 'YouTube track info successfully retrieved',
+    status: 200,
+    description: 'YouTube info retrieved and optionally converted to Spotify',
     schema: {
       example: {
-        trackName:
-          'John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
-        artistName: 'IMAGINE. (Ultimate Mix, 2020)',
+        trackName: 'Imagine',
+        artistName: 'John Lennon',
         thumbnailUrl: 'https://i.ytimg.com/vi/YkgkThdzX-8/mqdefault.jpg',
-        originalTitle:
-          'IMAGINE. (Ultimate Mix, 2020) - John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
+        originalTitle: 'John Lennon - Imagine (Remastered)',
+        spotifyUrl: 'https://open.spotify.com/track/12345',
       },
     },
   })
@@ -68,92 +67,44 @@ export class AppController {
     },
   })
   @ApiInternalServerErrorResponse({
-    description: 'An error occurred while retrieving the YouTube info',
+    description: 'An error occurred during processing',
     content: {
       'application/json': {
         example: {
-          message: 'Failed to fetch track information',
+          message: 'Failed to process the request',
         },
       },
     },
   })
-  async getYoutubeInfo(@Body() body: any) {
-    try {
-      const validated = convertUrlSchema.parse(body);
-      return await this.youtubeService.getYoutubeInfo(validated.youtubeUrl);
-    } catch (error) {
-      Sentry.captureException(error);
-      if (error instanceof ZodError) {
-        throw new BadRequestException(
-          error.issues[0]?.message || 'Invalid input',
-        );
-      }
-      throw new InternalServerErrorException(
-        'Failed to fetch track information',
-      );
-    }
-  }
+  async youtubeConvert(@Body() body: { youtubeUrl: string; convert?: boolean }) {
+    const { youtubeUrl, convert } = body;
 
-  @Post('convert')
-  @ApiOperation({ summary: 'Convert YouTube Music URL to Spotify' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        youtubeUrl: {
-          type: 'string',
-          example: 'https://music.youtube.com/watch?v=YkgkThdzX-8',
-          description: 'YouTube Music URL to convert to Spotify',
-        },
-      },
-      required: ['youtubeUrl'],
-    },
-  })
-  @ApiResponse({
-    status: 201,
-    description: 'Conversion completed successfully',
-    schema: {
-      example: {
-        spotifyUrl: 'https://open.spotify.com/track/syszkzt3466rytG53xGD3M',
-        trackName:
-          'John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
-        artistName: 'IMAGINE. (Ultimate Mix, 2020)',
-        albumName: 'Unknown Album',
-        thumbnailUrl: 'https://i.ytimg.com/vi/YkgkThdzX-8/mqdefault.jpg',
-      },
-    },
-  })
-  @ApiBadRequestResponse({
-    description: 'Invalid YouTube Music URL',
-    schema: {
-      example: {
-        message: 'Please enter a valid YouTube Music URL',
-      },
-    },
-  })
-  @ApiInternalServerErrorResponse({
-    description: 'Internal server error during conversion',
-    schema: {
-      example: {
-        message: 'Failed to convert URL',
-      },
-    },
-  })
-  async convert(@Body() body: any) {
-    this.logger.log('🟢 [AppController] Body received in /api/convert:', body);
     try {
-      const validated = convertUrlSchema.parse(body);
-      return await this.conversionService.getOrCreateConversion(
-        validated.youtubeUrl,
-      );
+      // Validate input with Zod schema for consistent error messaging
+      convertUrlSchema.parse({ youtubeUrl });
+
+      const youtubeInfo = await this.youtubeService.getYoutubeInfo(youtubeUrl);
+
+      if (convert === false) {
+        return youtubeInfo;
+      }
+
+      const spotifyInfo =
+        await this.conversionService.getOrCreateConversion(youtubeUrl);
+
+      return { ...youtubeInfo, spotifyUrl: spotifyInfo.spotifyUrl };
     } catch (error) {
       Sentry.captureException(error);
+
       if (error instanceof ZodError) {
+        Sentry.captureMessage('Validation error: Invalid YouTube URL');
         throw new BadRequestException(
           error.issues[0]?.message || 'Invalid input',
         );
       }
-      throw new InternalServerErrorException('Failed to convert URL');
+
+      Sentry.captureMessage('Internal server error during YouTube conversion');
+      throw new InternalServerErrorException('Failed to process the request');
     }
   }
 }

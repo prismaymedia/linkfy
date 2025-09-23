@@ -28,10 +28,12 @@ export class AppController {
   constructor(
     private readonly conversionService: ConversionService,
     private readonly youtubeService: YoutubeService,
-  ) { }
+  ) {}
 
   @Post('youtube-convert')
-  @ApiOperation({ summary: 'Get information from YouTube and convert it to Spotify' })
+  @ApiOperation({
+    summary: 'Get information from YouTube and convert it to Spotify',
+  })
   @ApiBody({
     schema: {
       type: 'object',
@@ -76,7 +78,9 @@ export class AppController {
       },
     },
   })
-  async youtubeConvert(@Body() body: { youtubeUrl: string; convert?: boolean }) {
+  async youtubeConvert(
+    @Body() body: { youtubeUrl: string; convert?: boolean },
+  ) {
     const { youtubeUrl, convert } = body;
 
     try {

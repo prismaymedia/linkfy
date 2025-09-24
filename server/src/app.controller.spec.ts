@@ -2,7 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from '../src/controllers/app.controller';
 import { YoutubeService } from '../src/services/youtube.service';
 import { ConversionService } from '../src/services/conversion.service';
-import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import {
+  BadRequestException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 
 describe('AppController', () => {
   let controller: AppController;

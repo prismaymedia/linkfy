@@ -45,9 +45,12 @@ describe('YouTube Convert Endpoint (e2e)', () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     })
-      .overrideProvider(SupabaseService).useValue(mockSupabaseService)
-      .overrideProvider(YoutubeService).useValue(mockYoutubeService)
-      .overrideProvider(ConversionService).useValue(mockConversionService)
+      .overrideProvider(SupabaseService)
+      .useValue(mockSupabaseService)
+      .overrideProvider(YoutubeService)
+      .useValue(mockYoutubeService)
+      .overrideProvider(ConversionService)
+      .useValue(mockConversionService)
       .compile();
 
     app = moduleFixture.createNestApplication();
@@ -57,7 +60,10 @@ describe('YouTube Convert Endpoint (e2e)', () => {
   it('should return 200 with YouTube info when convert=false (preview)', async () => {
     const response = await request(app.getHttpServer())
       .post('/api/youtube-convert')
-      .send({ youtubeUrl: 'https://music.youtube.com/watch?v=dQw4w9WgXcQ', convert: false });
+      .send({
+        youtubeUrl: 'https://music.youtube.com/watch?v=dQw4w9WgXcQ',
+        convert: false,
+      });
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty('trackName');

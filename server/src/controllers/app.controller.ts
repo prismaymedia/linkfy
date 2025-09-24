@@ -32,7 +32,7 @@ export class AppController {
   constructor(
     private readonly conversionService: ConversionService,
     private readonly youtubeService: YoutubeService,
-  ) { }
+  ) {}
 
   @Post('youtube-convert')
   @ApiOperation({

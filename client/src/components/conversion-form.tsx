@@ -83,10 +83,8 @@ export default function ConversionForm() {
         convert: false, // only preview YouTube data
       });
       const json = await response.json();
-      const data =
-        (json?.youtubeInfo as YouTubeTrackInfo) ??
-        (json as YouTubeTrackInfo | null);
-      setYoutubePreview(data ?? null);
+
+      setYoutubePreview(json as YouTubeTrackInfo);
     } catch {
       setYoutubePreview(null);
     } finally {

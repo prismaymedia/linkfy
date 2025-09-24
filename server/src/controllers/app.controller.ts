@@ -5,20 +5,24 @@ import {
   InternalServerErrorException,
   BadRequestException,
   Logger,
+  Res,
+  HttpStatus,
 } from '@nestjs/common';
 import {
   ApiTags,
   ApiBody,
   ApiOperation,
-  ApiResponse,
+  ApiOkResponse,
+  ApiCreatedResponse,
   ApiBadRequestResponse,
   ApiInternalServerErrorResponse,
 } from '@nestjs/swagger';
 import { ConversionService } from '../services/conversion.service';
 import { YoutubeService } from '../services/youtube.service';
-import { ZodError } from 'zod';
+import { ZodError, z } from 'zod';
 import { convertUrlSchema } from '../../../shared/schema';
 import * as Sentry from '@sentry/nestjs';
+import { Response } from 'express';
 
 @ApiTags('Conversion')
 @Controller('api')
@@ -28,7 +32,7 @@ export class AppController {
   constructor(
     private readonly conversionService: ConversionService,
     private readonly youtubeService: YoutubeService,
-  ) {}
+  ) { }
 
   @Post('youtube-convert')
   @ApiOperation({
@@ -43,13 +47,29 @@ export class AppController {
           example: 'https://music.youtube.com/watch?v=YkgkThdzX-8',
           description: 'YouTube Music URL to process',
         },
+        convert: {
+          type: 'boolean',
+          description:
+            'If true (default), also convert to Spotify. If false, only return YouTube info.',
+          default: true,
+        },
       },
       required: ['youtubeUrl'],
     },
   })
-  @ApiResponse({
-    status: 200,
-    description: 'YouTube info retrieved and optionally converted to Spotify',
+  @ApiOkResponse({
+    description: 'YouTube info retrieved (preview mode, convert=false)',
+    schema: {
+      example: {
+        trackName: 'Imagine',
+        artistName: 'John Lennon',
+        thumbnailUrl: 'https://i.ytimg.com/vi/YkgkThdzX-8/mqdefault.jpg',
+        originalTitle: 'John Lennon - Imagine (Remastered)',
+      },
+    },
+  })
+  @ApiCreatedResponse({
+    description: 'Conversion completed successfully (convert=true or omitted)',
     schema: {
       example: {
         trackName: 'Imagine',
@@ -79,23 +99,28 @@ export class AppController {
     },
   })
   async youtubeConvert(
-    @Body() body: { youtubeUrl: string; convert?: boolean },
+    @Body() body: any,
+    @Res({ passthrough: true }) res: Response,
   ) {
-    const { youtubeUrl, convert } = body;
-
     try {
-      // Validate input with Zod schema for consistent error messaging
-      convertUrlSchema.parse({ youtubeUrl });
+      // Validate and coerce input with Zod schema for consistent error messaging
+      const RequestSchema = z.object({
+        youtubeUrl: convertUrlSchema.shape.youtubeUrl,
+        convert: z.coerce.boolean().default(true).optional(),
+      });
+      const { youtubeUrl, convert } = RequestSchema.parse(body);
 
       const youtubeInfo = await this.youtubeService.getYoutubeInfo(youtubeUrl);
 
       if (convert === false) {
+        res.status(HttpStatus.OK);
         return youtubeInfo;
       }
 
       const spotifyInfo =
         await this.conversionService.getOrCreateConversion(youtubeUrl);
 
+      res.status(HttpStatus.CREATED);
       return { ...youtubeInfo, spotifyUrl: spotifyInfo.spotifyUrl };
     } catch (error) {
       Sentry.captureException(error);

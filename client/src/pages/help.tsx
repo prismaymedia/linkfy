@@ -15,24 +15,24 @@ import { useState } from 'react';
 
 const faqData = [
   {
-    question: 'help.faq.howItWorks.question',
-    answer: 'help.faq.howItWorks.answer',
+    question: 'How does Linkfy work?',
+    answer: 'Linkfy uses YouTube Data API and Spotify Web API to extract track information and find matching songs between platforms.',
   },
   {
-    question: 'help.faq.supportedPlatforms.question',
-    answer: 'help.faq.supportedPlatforms.answer',
+    question: 'What platforms are supported?',
+    answer: 'Currently, Linkfy supports conversion from YouTube Music to Spotify. More platforms will be added in future updates.',
   },
   {
-    question: 'help.faq.accuracy.question',
-    answer: 'help.faq.accuracy.answer',
+    question: 'How accurate are the conversions?',
+    answer: 'Linkfy uses advanced matching algorithms to find the best matches. Accuracy depends on the availability of songs on both platforms and the quality of metadata.',
   },
   {
-    question: 'help.faq.free.question',
-    answer: 'help.faq.free.answer',
+    question: 'Is Linkfy free to use?',
+    answer: 'Yes, Linkfy is completely free to use. No subscription or payment required.',
   },
   {
-    question: 'help.faq.privacy.question',
-    answer: 'help.faq.privacy.answer',
+    question: 'What about my privacy?',
+    answer: 'Linkfy is privacy-focused. We don\'t store your URLs or personal data. All conversions are processed temporarily and securely.',
   },
 ];
 
@@ -125,7 +125,7 @@ export default function Help() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <HelpCircle className="h-5 w-5" />
-                {t('help.faq', 'Frequently Asked Questions')}
+                {t('help.faqTitle', 'Frequently Asked Questions')}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -137,7 +137,7 @@ export default function Help() {
                       className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition-colors"
                     >
                       <span className="font-medium">
-                        {t(faq.question, `FAQ Question ${index + 1}`)}
+                        {faq.question}
                       </span>
                       <ChevronDown
                         className={`h-4 w-4 transition-transform ${
@@ -147,7 +147,7 @@ export default function Help() {
                     </button>
                     {openFaq === index && (
                       <div className="px-4 pb-4 text-sm text-gray-600">
-                        {t(faq.answer, `FAQ Answer ${index + 1}`)}
+                        {faq.answer}
                       </div>
                     )}
                   </div>

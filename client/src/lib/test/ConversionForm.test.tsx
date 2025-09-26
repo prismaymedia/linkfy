@@ -83,7 +83,25 @@ describe('ConversionForm', () => {
   });
 
   it('displays error message for network failure', async () => {
-    server.use(http.post('/api/convert', () => HttpResponse.error()));
+    server.use(
+      http.post('/api/youtube-convert', async ({ request }) => {
+        const body = (await request.json()) as any;
+        if (body?.convert === false) {
+          return HttpResponse.json(
+            {
+              trackName:
+                'John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
+              artistName: 'IMAGINE. (Ultimate Mix, 2020)',
+              thumbnailUrl: 'https://i.ytimg.com/vi/YkgkThdzX-8/mqdefault.jpg',
+              originalTitle:
+                'IMAGINE. (Ultimate Mix, 2020) - John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
+            },
+            { status: 200 },
+          );
+        }
+        return HttpResponse.error();
+      }),
+    );
 
     renderWithClient(<ConversionForm />);
     const input = screen.getByPlaceholderText(
@@ -110,12 +128,26 @@ describe('ConversionForm', () => {
 
   it('displays error message for 404 Not Found', async () => {
     server.use(
-      http.post('/api/convert', () =>
-        HttpResponse.json(
+      http.post('/api/youtube-convert', async ({ request }) => {
+        const body = (await request.json()) as any;
+        if (body?.convert === false) {
+          return HttpResponse.json(
+            {
+              trackName:
+                'John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
+              artistName: 'IMAGINE. (Ultimate Mix, 2020)',
+              thumbnailUrl: 'https://i.ytimg.com/vi/YkgkThdzX-8/mqdefault.jpg',
+              originalTitle:
+                'IMAGINE. (Ultimate Mix, 2020) - John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
+            },
+            { status: 200 },
+          );
+        }
+        return HttpResponse.json(
           { message: 'Track not found on Spotify' },
           { status: 404 },
-        ),
-      ),
+        );
+      }),
     );
 
     renderWithClient(<ConversionForm />);
@@ -148,12 +180,26 @@ describe('ConversionForm', () => {
 
   it('displays error message for 500 Internal Server Error', async () => {
     server.use(
-      http.post('/api/convert', () =>
-        HttpResponse.json(
+      http.post('/api/youtube-convert', async ({ request }) => {
+        const body = (await request.json()) as any;
+        if (body?.convert === false) {
+          return HttpResponse.json(
+            {
+              trackName:
+                'John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
+              artistName: 'IMAGINE. (Ultimate Mix, 2020)',
+              thumbnailUrl: 'https://i.ytimg.com/vi/YkgkThdzX-8/mqdefault.jpg',
+              originalTitle:
+                'IMAGINE. (Ultimate Mix, 2020) - John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
+            },
+            { status: 200 },
+          );
+        }
+        return HttpResponse.json(
           { message: 'Internal server error' },
           { status: 500 },
-        ),
-      ),
+        );
+      }),
     );
 
     renderWithClient(<ConversionForm />);
@@ -186,7 +232,23 @@ describe('ConversionForm', () => {
 
   it('displays generic error message when server returns empty response', async () => {
     server.use(
-      http.post('/api/convert', () => HttpResponse.json({}, { status: 500 })),
+      http.post('/api/youtube-convert', async ({ request }) => {
+        const body = (await request.json()) as any;
+        if (body?.convert === false) {
+          return HttpResponse.json(
+            {
+              trackName:
+                'John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
+              artistName: 'IMAGINE. (Ultimate Mix, 2020)',
+              thumbnailUrl: 'https://i.ytimg.com/vi/YkgkThdzX-8/mqdefault.jpg',
+              originalTitle:
+                'IMAGINE. (Ultimate Mix, 2020) - John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
+            },
+            { status: 200 },
+          );
+        }
+        return HttpResponse.json({}, { status: 500 });
+      }),
     );
 
     renderWithClient(<ConversionForm />);
@@ -217,12 +279,26 @@ describe('ConversionForm', () => {
 
   it('displays error message for 400 Bad Request', async () => {
     server.use(
-      http.post('/api/convert', () =>
-        HttpResponse.json(
+      http.post('/api/youtube-convert', async ({ request }) => {
+        const body = (await request.json()) as any;
+        if (body?.convert === false) {
+          return HttpResponse.json(
+            {
+              trackName:
+                'John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
+              artistName: 'IMAGINE. (Ultimate Mix, 2020)',
+              thumbnailUrl: 'https://i.ytimg.com/vi/YkgkThdzX-8/mqdefault.jpg',
+              originalTitle:
+                'IMAGINE. (Ultimate Mix, 2020) - John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
+            },
+            { status: 200 },
+          );
+        }
+        return HttpResponse.json(
           { message: 'Invalid YouTube URL format' },
           { status: 400 },
-        ),
-      ),
+        );
+      }),
     );
 
     renderWithClient(<ConversionForm />);
@@ -255,12 +331,26 @@ describe('ConversionForm', () => {
 
   it('displays error message for 401 Unauthorized', async () => {
     server.use(
-      http.post('/api/convert', () =>
-        HttpResponse.json(
+      http.post('/api/youtube-convert', async ({ request }) => {
+        const body = (await request.json()) as any;
+        if (body?.convert === false) {
+          return HttpResponse.json(
+            {
+              trackName:
+                'John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
+              artistName: 'IMAGINE. (Ultimate Mix, 2020)',
+              thumbnailUrl: 'https://i.ytimg.com/vi/YkgkThdzX-8/mqdefault.jpg',
+              originalTitle:
+                'IMAGINE. (Ultimate Mix, 2020) - John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
+            },
+            { status: 200 },
+          );
+        }
+        return HttpResponse.json(
           { message: 'Spotify authentication required' },
           { status: 401 },
-        ),
-      ),
+        );
+      }),
     );
 
     renderWithClient(<ConversionForm />);
@@ -325,9 +415,29 @@ describe('ConversionForm', () => {
 
   it('handles YouTube preview API errors gracefully', async () => {
     server.use(
-      http.post('/api/youtube-info', () =>
-        HttpResponse.json({ message: 'YouTube API error' }, { status: 500 }),
-      ),
+      http.post('/api/youtube-convert', async ({ request }) => {
+        const body = (await request.json()) as any;
+        // Fail preview, succeed conversion
+        if (body?.convert === false) {
+          return HttpResponse.json(
+            { message: 'YouTube API error' },
+            { status: 500 },
+          );
+        }
+        return HttpResponse.json(
+          {
+            spotifyUrl: 'https://open.spotify.com/track/syszkzt3466rytG53xGD3M',
+            trackName:
+              'John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
+            artistName: 'IMAGINE. (Ultimate Mix, 2020)',
+            albumName: 'Unknown Album',
+            thumbnailUrl: 'https://i.ytimg.com/vi/YkgkThdzX-8/mqdefault.jpg',
+            originalTitle:
+              'IMAGINE. (Ultimate Mix, 2020) - John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
+          },
+          { status: 201 },
+        );
+      }),
     );
 
     renderWithClient(<ConversionForm />);
@@ -361,7 +471,21 @@ describe('ConversionForm', () => {
 
   it('displays error message for network timeout errors', async () => {
     server.use(
-      http.post('/api/convert', () => {
+      http.post('/api/youtube-convert', async ({ request }) => {
+        const body = (await request.json()) as any;
+        if (body?.convert === false) {
+          return HttpResponse.json(
+            {
+              trackName:
+                'John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
+              artistName: 'IMAGINE. (Ultimate Mix, 2020)',
+              thumbnailUrl: 'https://i.ytimg.com/vi/YkgkThdzX-8/mqdefault.jpg',
+              originalTitle:
+                'IMAGINE. (Ultimate Mix, 2020) - John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
+            },
+            { status: 200 },
+          );
+        }
         throw new Error('Network request failed');
       }),
     );

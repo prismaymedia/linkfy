@@ -3,8 +3,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { AppModule } from '../app.module';
 import { SupabaseService } from '../supabase/supabase.service';
+import { YoutubeService } from '../services/youtube.service';
+import { ConversionService } from '../services/conversion.service';
 
-describe('YouTube Info Endpoint (e2e)', () => {
+describe('YouTube Convert Endpoint (e2e)', () => {
   let app: INestApplication;
   const originalLog = console.log;
   const originalError = console.error;
@@ -13,7 +15,6 @@ describe('YouTube Info Endpoint (e2e)', () => {
     console.log = jest.fn();
     console.error = jest.fn();
 
-    // Mock SupabaseService
     const mockSupabaseService = {
       getClient: jest.fn().mockReturnValue({
         from: jest.fn().mockReturnThis(),
@@ -22,32 +23,72 @@ describe('YouTube Info Endpoint (e2e)', () => {
       }),
     };
 
+    const mockYoutubeService: Partial<YoutubeService> = {
+      getYoutubeInfo: jest.fn().mockResolvedValue({
+        trackName: 'Track',
+        artistName: 'Artist',
+        thumbnailUrl: 'thumb',
+        originalTitle: 'Original',
+      }),
+    };
+
+    const mockConversionService: Partial<ConversionService> = {
+      getOrCreateConversion: jest.fn().mockResolvedValue({
+        spotifyUrl: 'https://open.spotify.com/track/123',
+        trackName: 'Track',
+        artistName: 'Artist',
+        albumName: 'Album',
+        thumbnailUrl: 'thumb',
+      }),
+    };
+
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     })
       .overrideProvider(SupabaseService)
       .useValue(mockSupabaseService)
+      .overrideProvider(YoutubeService)
+      .useValue(mockYoutubeService)
+      .overrideProvider(ConversionService)
+      .useValue(mockConversionService)
       .compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
   });
 
-  it('should return song info for a valid URL', async () => {
+  it('should return 200 with YouTube info when convert=false (preview)', async () => {
     const response = await request(app.getHttpServer())
-      .post('/api/youtube-info')
+      .post('/api/youtube-convert')
+      .send({
+        youtubeUrl: 'https://music.youtube.com/watch?v=dQw4w9WgXcQ',
+        convert: false,
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('trackName');
+    expect(response.body).toHaveProperty('artistName');
+    expect(response.body).toHaveProperty('thumbnailUrl');
+    expect(response.body).toHaveProperty('originalTitle');
+    expect(response.body).not.toHaveProperty('spotifyUrl');
+  });
+
+  it('should return 201 with Spotify info when convert omitted/true', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/api/youtube-convert')
       .send({ youtubeUrl: 'https://music.youtube.com/watch?v=dQw4w9WgXcQ' });
 
-    expect([200, 201]).toContain(response.status);
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty('spotifyUrl');
     expect(response.body).toHaveProperty('trackName');
     expect(response.body).toHaveProperty('artistName');
     expect(response.body).toHaveProperty('thumbnailUrl');
     expect(response.body).toHaveProperty('originalTitle');
   });
 
-  it('should return error if the parameter is missing', async () => {
+  it('should return 400 if the parameter is missing', async () => {
     const response = await request(app.getHttpServer())
-      .post('/api/youtube-info')
+      .post('/api/youtube-convert')
       .send({});
 
     expect(response.status).toBe(400);
@@ -56,7 +97,6 @@ describe('YouTube Info Endpoint (e2e)', () => {
 
   afterAll(async () => {
     await app.close();
-
     console.log = originalLog;
     console.error = originalError;
   });

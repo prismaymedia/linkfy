@@ -1,12 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useLocation } from 'wouter';
-import { 
-  HelpCircle, 
-  MessageCircle, 
-  ExternalLink, 
+import {
+  HelpCircle,
+  MessageCircle,
+  ExternalLink,
   ChevronDown,
-  ArrowRight
+  ArrowRight,
 } from 'lucide-react';
 import { SiYoutubemusic, SiSpotify, SiGithub } from 'react-icons/si';
 import { useTranslation } from 'react-i18next';
@@ -16,23 +16,28 @@ import { useState } from 'react';
 const faqData = [
   {
     question: 'How does Linkfy work?',
-    answer: 'Linkfy uses YouTube Data API and Spotify Web API to extract track information and find matching songs between platforms.',
+    answer:
+      'Linkfy uses YouTube Data API and Spotify Web API to extract track information and find matching songs between platforms.',
   },
   {
     question: 'What platforms are supported?',
-    answer: 'Currently, Linkfy supports conversion from YouTube Music to Spotify. More platforms will be added in future updates.',
+    answer:
+      'Currently, Linkfy supports conversion from YouTube Music to Spotify. More platforms will be added in future updates.',
   },
   {
     question: 'How accurate are the conversions?',
-    answer: 'Linkfy uses advanced matching algorithms to find the best matches. Accuracy depends on the availability of songs on both platforms and the quality of metadata.',
+    answer:
+      'Linkfy uses advanced matching algorithms to find the best matches. Accuracy depends on the availability of songs on both platforms and the quality of metadata.',
   },
   {
     question: 'Is Linkfy free to use?',
-    answer: 'Yes, Linkfy is completely free to use. No subscription or payment required.',
+    answer:
+      'Yes, Linkfy is completely free to use. No subscription or payment required.',
   },
   {
     question: 'What about my privacy?',
-    answer: 'Linkfy is privacy-focused. We don\'t store your URLs or personal data. All conversions are processed temporarily and securely.',
+    answer:
+      "Linkfy is privacy-focused. We don't store your URLs or personal data. All conversions are processed temporarily and securely.",
   },
 ];
 
@@ -54,7 +59,10 @@ export default function Help() {
             {t('help.title', 'Help & Support')}
           </h1>
           <p className="text-gray-600">
-            {t('help.subtitle', 'Get help with Linkfy and learn how to use it effectively')}
+            {t(
+              'help.subtitle',
+              'Get help with Linkfy and learn how to use it effectively',
+            )}
           </p>
         </div>
 
@@ -74,9 +82,14 @@ export default function Help() {
                     1
                   </div>
                   <div>
-                    <h3 className="font-medium">{t('help.step1.title', 'Copy YouTube Music URL')}</h3>
+                    <h3 className="font-medium">
+                      {t('help.step1.title', 'Copy YouTube Music URL')}
+                    </h3>
                     <p className="text-sm text-gray-600">
-                      {t('help.step1.desc', 'Go to YouTube Music and copy the URL of the song you want to convert')}
+                      {t(
+                        'help.step1.desc',
+                        'Go to YouTube Music and copy the URL of the song you want to convert',
+                      )}
                     </p>
                     <div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
                       <SiYoutubemusic className="h-4 w-4 text-youtube" />
@@ -92,9 +105,14 @@ export default function Help() {
                     2
                   </div>
                   <div>
-                    <h3 className="font-medium">{t('help.step2.title', 'Paste and Convert')}</h3>
+                    <h3 className="font-medium">
+                      {t('help.step2.title', 'Paste and Convert')}
+                    </h3>
                     <p className="text-sm text-gray-600">
-                      {t('help.step2.desc', 'Paste the URL in Linkfy and click "Convert to Spotify"')}
+                      {t(
+                        'help.step2.desc',
+                        'Paste the URL in Linkfy and click "Convert to Spotify"',
+                      )}
                     </p>
                   </div>
                 </div>
@@ -104,9 +122,14 @@ export default function Help() {
                     3
                   </div>
                   <div>
-                    <h3 className="font-medium">{t('help.step3.title', 'Get Spotify Link')}</h3>
+                    <h3 className="font-medium">
+                      {t('help.step3.title', 'Get Spotify Link')}
+                    </h3>
                     <p className="text-sm text-gray-600">
-                      {t('help.step3.desc', 'Copy the generated Spotify URL and enjoy your music')}
+                      {t(
+                        'help.step3.desc',
+                        'Copy the generated Spotify URL and enjoy your music',
+                      )}
                     </p>
                     <div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
                       <SiSpotify className="h-4 w-4 text-spotify" />
@@ -136,9 +159,7 @@ export default function Help() {
                       onClick={() => toggleFaq(index)}
                       className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition-colors"
                     >
-                      <span className="font-medium">
-                        {faq.question}
-                      </span>
+                      <span className="font-medium">{faq.question}</span>
                       <ChevronDown
                         className={`h-4 w-4 transition-transform ${
                           openFaq === index ? 'rotate-180' : ''
@@ -169,15 +190,25 @@ export default function Help() {
                 <div className="p-4 border rounded-lg">
                   <div className="flex items-center gap-3 mb-3">
                     <SiGithub className="h-6 w-6" />
-                    <h3 className="font-medium">{t('help.github', 'GitHub Issues')}</h3>
+                    <h3 className="font-medium">
+                      {t('help.github', 'GitHub Issues')}
+                    </h3>
                   </div>
                   <p className="text-sm text-gray-600 mb-3">
-                    {t('help.githubDesc', 'Report bugs or request features on our GitHub repository')}
+                    {t(
+                      'help.githubDesc',
+                      'Report bugs or request features on our GitHub repository',
+                    )}
                   </p>
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => window.open('https://github.com/prismaymedia/linkfy/issues', '_blank')}
+                    onClick={() =>
+                      window.open(
+                        'https://github.com/prismaymedia/linkfy/issues',
+                        '_blank',
+                      )
+                    }
                     className="w-full"
                   >
                     <ExternalLink className="h-4 w-4 mr-2" />
@@ -188,10 +219,15 @@ export default function Help() {
                 <div className="p-4 border rounded-lg">
                   <div className="flex items-center gap-3 mb-3">
                     <MessageCircle className="h-6 w-6" />
-                    <h3 className="font-medium">{t('help.community', 'Community')}</h3>
+                    <h3 className="font-medium">
+                      {t('help.community', 'Community')}
+                    </h3>
                   </div>
                   <p className="text-sm text-gray-600 mb-3">
-                    {t('help.communityDesc', 'Join our community for discussions and help')}
+                    {t(
+                      'help.communityDesc',
+                      'Join our community for discussions and help',
+                    )}
                   </p>
                   <Button
                     variant="outline"
@@ -216,25 +252,37 @@ export default function Help() {
                 <div className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                   <p className="text-sm">
-                    {t('help.tip1', 'Make sure the YouTube Music URL is for a specific song, not a playlist or channel')}
+                    {t(
+                      'help.tip1',
+                      'Make sure the YouTube Music URL is for a specific song, not a playlist or channel',
+                    )}
                   </p>
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                   <p className="text-sm">
-                    {t('help.tip2', 'If a song is not found on Spotify, try searching for alternative versions or covers')}
+                    {t(
+                      'help.tip2',
+                      'If a song is not found on Spotify, try searching for alternative versions or covers',
+                    )}
                   </p>
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                   <p className="text-sm">
-                    {t('help.tip3', 'Use the history feature to keep track of your successful conversions')}
+                    {t(
+                      'help.tip3',
+                      'Use the history feature to keep track of your successful conversions',
+                    )}
                   </p>
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                   <p className="text-sm">
-                    {t('help.tip4', 'Check the settings page to customize your conversion preferences')}
+                    {t(
+                      'help.tip4',
+                      'Check the settings page to customize your conversion preferences',
+                    )}
                   </p>
                 </div>
               </div>
@@ -243,10 +291,16 @@ export default function Help() {
 
           {/* Actions */}
           <div className="flex gap-4">
-            <Button onClick={() => setLocation(ROUTES.DASHBOARD)} variant="outline">
+            <Button
+              onClick={() => setLocation(ROUTES.DASHBOARD)}
+              variant="outline"
+            >
               {t('help.backToDashboard', 'Back to Dashboard')}
             </Button>
-            <Button onClick={() => setLocation(ROUTES.SETTINGS)} variant="outline">
+            <Button
+              onClick={() => setLocation(ROUTES.SETTINGS)}
+              variant="outline"
+            >
               {t('help.settings', 'Settings')}
             </Button>
           </div>

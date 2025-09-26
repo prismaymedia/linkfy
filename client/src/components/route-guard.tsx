@@ -22,7 +22,7 @@ export default function RouteGuard({ children, path }: RouteGuardProps) {
 
       // Check if the route requires authentication
       const requiresAuth = isProtectedRoute(path);
-      
+
       if (requiresAuth && !currentSession) {
         // Redirect to auth if route is protected and user is not authenticated
         setLocation(ROUTES.AUTH);

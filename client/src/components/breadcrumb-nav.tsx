@@ -1,5 +1,5 @@
 import { useLocation } from 'wouter';
-import { 
+import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -21,7 +21,7 @@ export default function BreadcrumbNav() {
   }
 
   const currentRoute = ROUTE_CONFIG[location as keyof typeof ROUTE_CONFIG];
-  
+
   if (!currentRoute) {
     return null;
   }
@@ -37,7 +37,10 @@ export default function BreadcrumbNav() {
   // Add current page if it's not dashboard
   if (location !== ROUTES.DASHBOARD) {
     breadcrumbs.push({
-      label: t(`breadcrumb.${currentRoute.title.toLowerCase()}`, currentRoute.title),
+      label: t(
+        `breadcrumb.${currentRoute.title.toLowerCase()}`,
+        currentRoute.title,
+      ),
       path: location,
       icon: null,
     });

@@ -76,14 +76,18 @@ export default function Profile() {
                 </div>
 
                 <div>
-                  <Label htmlFor="created">{t('profile.memberSince', 'Member Since')}</Label>
+                  <Label htmlFor="created">
+                    {t('profile.memberSince', 'Member Since')}
+                  </Label>
                   <div className="flex items-center gap-2 mt-1">
                     <Calendar className="h-4 w-4 text-gray-500" />
                     <Input
                       id="created"
                       value={
                         session?.user?.created_at
-                          ? new Date(session.user.created_at).toLocaleDateString()
+                          ? new Date(
+                              session.user.created_at,
+                            ).toLocaleDateString()
                           : ''
                       }
                       disabled
@@ -111,7 +115,10 @@ export default function Profile() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-500 text-sm">
-                  {t('profile.preferencesDesc', 'User preferences will be available in a future update.')}
+                  {t(
+                    'profile.preferencesDesc',
+                    'User preferences will be available in a future update.',
+                  )}
                 </p>
               </CardContent>
             </Card>
@@ -164,20 +171,28 @@ export default function Profile() {
             {/* Account Stats */}
             <Card>
               <CardHeader>
-                <CardTitle>{t('profile.accountStats', 'Account Stats')}</CardTitle>
+                <CardTitle>
+                  {t('profile.accountStats', 'Account Stats')}
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">{t('profile.totalConversions', 'Total Conversions')}</span>
+                    <span className="text-gray-600">
+                      {t('profile.totalConversions', 'Total Conversions')}
+                    </span>
                     <span className="font-medium">0</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">{t('profile.successfulConversions', 'Successful')}</span>
+                    <span className="text-gray-600">
+                      {t('profile.successfulConversions', 'Successful')}
+                    </span>
                     <span className="font-medium">0</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">{t('profile.lastActivity', 'Last Activity')}</span>
+                    <span className="text-gray-600">
+                      {t('profile.lastActivity', 'Last Activity')}
+                    </span>
                     <span className="font-medium text-sm">Today</span>
                   </div>
                 </div>

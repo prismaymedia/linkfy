@@ -4,7 +4,13 @@ import { getSession } from '@/lib/supabaseClient';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { History as HistoryIcon, ExternalLink, Copy, Trash2, Calendar } from 'lucide-react';
+import {
+  History as HistoryIcon,
+  ExternalLink,
+  Copy,
+  Trash2,
+  Calendar,
+} from 'lucide-react';
 import { SiYoutubemusic, SiSpotify } from 'react-icons/si';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@/lib/routes';
@@ -80,7 +86,7 @@ export default function History() {
   };
 
   const deleteRecord = (id: string) => {
-    setHistory(prev => prev.filter(record => record.id !== id));
+    setHistory((prev) => prev.filter((record) => record.id !== id));
   };
 
   const openUrl = (url: string) => {
@@ -100,11 +106,7 @@ export default function History() {
       pending: t('history.pending', 'Pending'),
     };
 
-    return (
-      <Badge variant={variants[status]}>
-        {labels[status]}
-      </Badge>
-    );
+    return <Badge variant={variants[status]}>{labels[status]}</Badge>;
   };
 
   if (loading) {
@@ -132,7 +134,9 @@ export default function History() {
                 <HistoryIcon className="h-8 w-8 text-blue-500" />
                 <div>
                   <p className="text-2xl font-bold">{history.length}</p>
-                  <p className="text-sm text-gray-600">{t('history.totalConversions', 'Total Conversions')}</p>
+                  <p className="text-sm text-gray-600">
+                    {t('history.totalConversions', 'Total Conversions')}
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -144,9 +148,11 @@ export default function History() {
                 <SiSpotify className="h-8 w-8 text-spotify" />
                 <div>
                   <p className="text-2xl font-bold">
-                    {history.filter(h => h.status === 'success').length}
+                    {history.filter((h) => h.status === 'success').length}
                   </p>
-                  <p className="text-sm text-gray-600">{t('history.successful', 'Successful')}</p>
+                  <p className="text-sm text-gray-600">
+                    {t('history.successful', 'Successful')}
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -158,9 +164,16 @@ export default function History() {
                 <Calendar className="h-8 w-8 text-green-500" />
                 <div>
                   <p className="text-2xl font-bold">
-                    {Math.round((history.filter(h => h.status === 'success').length / history.length) * 100) || 0}%
+                    {Math.round(
+                      (history.filter((h) => h.status === 'success').length /
+                        history.length) *
+                        100,
+                    ) || 0}
+                    %
                   </p>
-                  <p className="text-sm text-gray-600">{t('history.successRate', 'Success Rate')}</p>
+                  <p className="text-sm text-gray-600">
+                    {t('history.successRate', 'Success Rate')}
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -170,7 +183,9 @@ export default function History() {
         {/* History List */}
         <Card>
           <CardHeader>
-            <CardTitle>{t('history.recentConversions', 'Recent Conversions')}</CardTitle>
+            <CardTitle>
+              {t('history.recentConversions', 'Recent Conversions')}
+            </CardTitle>
           </CardHeader>
           <CardContent>
             {history.length === 0 ? (
@@ -238,7 +253,10 @@ export default function History() {
                             variant="ghost"
                             size="sm"
                             onClick={() => copyToClipboard(record.spotifyUrl)}
-                            title={t('history.copySpotifyUrl', 'Copy Spotify URL')}
+                            title={t(
+                              'history.copySpotifyUrl',
+                              'Copy Spotify URL',
+                            )}
                           >
                             <Copy className="h-4 w-4" />
                           </Button>
@@ -264,10 +282,16 @@ export default function History() {
 
         {/* Actions */}
         <div className="flex gap-4 mt-8">
-          <Button onClick={() => setLocation(ROUTES.DASHBOARD)} variant="outline">
+          <Button
+            onClick={() => setLocation(ROUTES.DASHBOARD)}
+            variant="outline"
+          >
             {t('history.backToDashboard', 'Back to Dashboard')}
           </Button>
-          <Button onClick={() => setLocation(ROUTES.SETTINGS)} variant="outline">
+          <Button
+            onClick={() => setLocation(ROUTES.SETTINGS)}
+            variant="outline"
+          >
             {t('history.settings', 'Settings')}
           </Button>
         </div>

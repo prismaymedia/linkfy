@@ -52,7 +52,9 @@ export default function Dashboard() {
           <div className="lg:col-span-2">
             <Card>
               <CardHeader>
-                <CardTitle>{t('dashboard.converter', 'Music Converter')}</CardTitle>
+                <CardTitle>
+                  {t('dashboard.converter', 'Music Converter')}
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <ConversionForm />
@@ -64,7 +66,9 @@ export default function Dashboard() {
           <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>{t('dashboard.quickActions', 'Quick Actions')}</CardTitle>
+                <CardTitle>
+                  {t('dashboard.quickActions', 'Quick Actions')}
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <button
@@ -73,9 +77,14 @@ export default function Dashboard() {
                 >
                   <History className="h-5 w-5 text-gray-500" />
                   <div>
-                    <div className="font-medium">{t('dashboard.viewHistory', 'View History')}</div>
+                    <div className="font-medium">
+                      {t('dashboard.viewHistory', 'View History')}
+                    </div>
                     <div className="text-sm text-gray-500">
-                      {t('dashboard.viewHistoryDesc', 'See your past conversions')}
+                      {t(
+                        'dashboard.viewHistoryDesc',
+                        'See your past conversions',
+                      )}
                     </div>
                   </div>
                 </button>
@@ -86,7 +95,9 @@ export default function Dashboard() {
                 >
                   <User className="h-5 w-5 text-gray-500" />
                   <div>
-                    <div className="font-medium">{t('dashboard.profile', 'Profile')}</div>
+                    <div className="font-medium">
+                      {t('dashboard.profile', 'Profile')}
+                    </div>
                     <div className="text-sm text-gray-500">
                       {t('dashboard.profileDesc', 'Manage your account')}
                     </div>
@@ -99,7 +110,9 @@ export default function Dashboard() {
                 >
                   <Settings className="h-5 w-5 text-gray-500" />
                   <div>
-                    <div className="font-medium">{t('dashboard.settings', 'Settings')}</div>
+                    <div className="font-medium">
+                      {t('dashboard.settings', 'Settings')}
+                    </div>
                     <div className="text-sm text-gray-500">
                       {t('dashboard.settingsDesc', 'App preferences')}
                     </div>
@@ -116,15 +129,21 @@ export default function Dashboard() {
               <CardContent>
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">{t('dashboard.conversions', 'Conversions')}</span>
+                    <span className="text-gray-600">
+                      {t('dashboard.conversions', 'Conversions')}
+                    </span>
                     <span className="font-medium">0</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">{t('dashboard.thisWeek', 'This Week')}</span>
+                    <span className="text-gray-600">
+                      {t('dashboard.thisWeek', 'This Week')}
+                    </span>
                     <span className="font-medium">0</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">{t('dashboard.successRate', 'Success Rate')}</span>
+                    <span className="text-gray-600">
+                      {t('dashboard.successRate', 'Success Rate')}
+                    </span>
                     <span className="font-medium">--</span>
                   </div>
                 </div>

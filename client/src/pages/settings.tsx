@@ -5,8 +5,20 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Settings as SettingsIcon, Bell, Shield, Palette, Globe } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Settings as SettingsIcon,
+  Bell,
+  Shield,
+  Palette,
+  Globe,
+} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@/lib/routes';
 import LanguageSwitcher from '@/components/language-switcher';
@@ -35,7 +47,7 @@ export default function Settings() {
   }, [setLocation]);
 
   const handleSettingChange = (key: string, value: boolean) => {
-    setSettings(prev => ({ ...prev, [key]: value }));
+    setSettings((prev) => ({ ...prev, [key]: value }));
   };
 
   if (loading) {
@@ -71,13 +83,18 @@ export default function Settings() {
                     {t('settings.autoConvert', 'Auto Convert')}
                   </Label>
                   <p className="text-sm text-gray-500">
-                    {t('settings.autoConvertDesc', 'Automatically convert URLs when pasted')}
+                    {t(
+                      'settings.autoConvertDesc',
+                      'Automatically convert URLs when pasted',
+                    )}
                   </p>
                 </div>
                 <Switch
                   id="auto-convert"
                   checked={settings.autoConvert}
-                  onCheckedChange={(checked) => handleSettingChange('autoConvert', checked)}
+                  onCheckedChange={(checked) =>
+                    handleSettingChange('autoConvert', checked)
+                  }
                 />
               </div>
 
@@ -87,13 +104,18 @@ export default function Settings() {
                     {t('settings.saveHistory', 'Save History')}
                   </Label>
                   <p className="text-sm text-gray-500">
-                    {t('settings.saveHistoryDesc', 'Keep a record of your conversions')}
+                    {t(
+                      'settings.saveHistoryDesc',
+                      'Keep a record of your conversions',
+                    )}
                   </p>
                 </div>
                 <Switch
                   id="save-history"
                   checked={settings.saveHistory}
-                  onCheckedChange={(checked) => handleSettingChange('saveHistory', checked)}
+                  onCheckedChange={(checked) =>
+                    handleSettingChange('saveHistory', checked)
+                  }
                 />
               </div>
             </CardContent>
@@ -120,7 +142,9 @@ export default function Settings() {
                 <Switch
                   id="dark-mode"
                   checked={settings.darkMode}
-                  onCheckedChange={(checked) => handleSettingChange('darkMode', checked)}
+                  onCheckedChange={(checked) =>
+                    handleSettingChange('darkMode', checked)
+                  }
                   disabled
                 />
               </div>
@@ -134,13 +158,22 @@ export default function Settings() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="light">{t('settings.light', 'Light')}</SelectItem>
-                    <SelectItem value="dark">{t('settings.dark', 'Dark')}</SelectItem>
-                    <SelectItem value="system">{t('settings.system', 'System')}</SelectItem>
+                    <SelectItem value="light">
+                      {t('settings.light', 'Light')}
+                    </SelectItem>
+                    <SelectItem value="dark">
+                      {t('settings.dark', 'Dark')}
+                    </SelectItem>
+                    <SelectItem value="system">
+                      {t('settings.system', 'System')}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
                 <p className="text-sm text-gray-500 mt-1">
-                  {t('settings.themeDesc', 'Theme customization coming in future updates')}
+                  {t(
+                    'settings.themeDesc',
+                    'Theme customization coming in future updates',
+                  )}
                 </p>
               </div>
             </CardContent>
@@ -161,7 +194,10 @@ export default function Settings() {
                 </Label>
                 <LanguageSwitcher />
                 <p className="text-sm text-gray-500 mt-2">
-                  {t('settings.languageDesc', 'Choose your preferred language for the interface')}
+                  {t(
+                    'settings.languageDesc',
+                    'Choose your preferred language for the interface',
+                  )}
                 </p>
               </div>
             </CardContent>
@@ -178,17 +214,25 @@ export default function Settings() {
             <CardContent className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <Label htmlFor="notifications" className="text-sm font-medium">
+                  <Label
+                    htmlFor="notifications"
+                    className="text-sm font-medium"
+                  >
                     {t('settings.enableNotifications', 'Enable Notifications')}
                   </Label>
                   <p className="text-sm text-gray-500">
-                    {t('settings.notificationsDesc', 'Get notified about conversion results')}
+                    {t(
+                      'settings.notificationsDesc',
+                      'Get notified about conversion results',
+                    )}
                   </p>
                 </div>
                 <Switch
                   id="notifications"
                   checked={settings.notifications}
-                  onCheckedChange={(checked) => handleSettingChange('notifications', checked)}
+                  onCheckedChange={(checked) =>
+                    handleSettingChange('notifications', checked)
+                  }
                 />
               </div>
             </CardContent>
@@ -204,17 +248,26 @@ export default function Settings() {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-500">
-                {t('settings.privacyDesc', 'Privacy and security settings will be available in future updates.')}
+                {t(
+                  'settings.privacyDesc',
+                  'Privacy and security settings will be available in future updates.',
+                )}
               </p>
             </CardContent>
           </Card>
 
           {/* Actions */}
           <div className="flex gap-4 pt-6">
-            <Button onClick={() => setLocation(ROUTES.DASHBOARD)} variant="outline">
+            <Button
+              onClick={() => setLocation(ROUTES.DASHBOARD)}
+              variant="outline"
+            >
               {t('settings.backToDashboard', 'Back to Dashboard')}
             </Button>
-            <Button onClick={() => setLocation(ROUTES.PROFILE)} variant="outline">
+            <Button
+              onClick={() => setLocation(ROUTES.PROFILE)}
+              variant="outline"
+            >
               {t('settings.profile', 'Profile')}
             </Button>
           </div>

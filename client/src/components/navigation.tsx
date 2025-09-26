@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { getSession, supabase } from '@/lib/supabaseClient';
 import { Button } from '@/components/ui/button';
-import { 
+import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
@@ -11,7 +11,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
-import { 
+import {
   Home,
   LayoutDashboard,
   User,
@@ -20,7 +20,7 @@ import {
   HelpCircle,
   LogOut,
   Menu,
-  X
+  X,
 } from 'lucide-react';
 import { SiYoutubemusic, SiSpotify } from 'react-icons/si';
 import { useTranslation } from 'react-i18next';
@@ -59,7 +59,7 @@ export default function Navigation({ className }: NavigationProps) {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setSession(session);
-      }
+      },
     );
 
     return () => {
@@ -85,7 +85,12 @@ export default function Navigation({ className }: NavigationProps) {
   }
 
   return (
-    <nav className={cn('bg-white border-b border-gray-200 sticky top-0 z-50', className)}>
+    <nav
+      className={cn(
+        'bg-white border-b border-gray-200 sticky top-0 z-50',
+        className,
+      )}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -108,21 +113,25 @@ export default function Navigation({ className }: NavigationProps) {
             <NavigationMenu>
               <NavigationMenuList>
                 {navigationRoutes.map((route) => {
-                  const Icon = iconMap[route.icon as keyof typeof iconMap] || Home;
+                  const Icon =
+                    iconMap[route.icon as keyof typeof iconMap] || Home;
                   const isActive = location === route.path;
-                  
+
                   return (
                     <NavigationMenuItem key={route.path}>
                       <NavigationMenuLink
                         className={cn(
                           navigationMenuTriggerStyle(),
                           'cursor-pointer',
-                          isActive && 'bg-accent text-accent-foreground'
+                          isActive && 'bg-accent text-accent-foreground',
                         )}
                         onClick={() => navigateToRoute(route.path)}
                       >
                         <Icon className="h-4 w-4 mr-2" />
-                        {t(`navigation.${route.title.toLowerCase()}`, route.title)}
+                        {t(
+                          `navigation.${route.title.toLowerCase()}`,
+                          route.title,
+                        )}
                       </NavigationMenuLink>
                     </NavigationMenuItem>
                   );
@@ -192,7 +201,11 @@ export default function Navigation({ className }: NavigationProps) {
                 size="sm"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
-                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                {mobileMenuOpen ? (
+                  <X className="h-5 w-5" />
+                ) : (
+                  <Menu className="h-5 w-5" />
+                )}
               </Button>
             </div>
           </div>
@@ -203,9 +216,10 @@ export default function Navigation({ className }: NavigationProps) {
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200">
               {navigationRoutes.map((route) => {
-                const Icon = iconMap[route.icon as keyof typeof iconMap] || Home;
+                const Icon =
+                  iconMap[route.icon as keyof typeof iconMap] || Home;
                 const isActive = location === route.path;
-                
+
                 return (
                   <button
                     key={route.path}
@@ -214,7 +228,7 @@ export default function Navigation({ className }: NavigationProps) {
                       'w-full flex items-center px-3 py-2 text-left rounded-md text-sm font-medium transition-colors',
                       isActive
                         ? 'bg-gray-100 text-gray-900'
-                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
                     )}
                   >
                     <Icon className="h-4 w-4 mr-3" />
@@ -222,7 +236,7 @@ export default function Navigation({ className }: NavigationProps) {
                   </button>
                 );
               })}
-              
+
               <div className="border-t border-gray-200 pt-3 mt-3">
                 <div className="px-3 py-2">
                   <p className="text-sm font-medium text-gray-900">
@@ -232,7 +246,7 @@ export default function Navigation({ className }: NavigationProps) {
                     {t('navigation.signedIn', 'Signed in')}
                   </p>
                 </div>
-                
+
                 <button
                   onClick={() => navigateToRoute(ROUTES.PROFILE)}
                   className="w-full flex items-center px-3 py-2 text-left rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
@@ -240,7 +254,7 @@ export default function Navigation({ className }: NavigationProps) {
                   <User className="h-4 w-4 mr-3" />
                   {t('navigation.profile', 'Profile')}
                 </button>
-                
+
                 <button
                   onClick={() => navigateToRoute(ROUTES.SETTINGS)}
                   className="w-full flex items-center px-3 py-2 text-left rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
@@ -248,7 +262,7 @@ export default function Navigation({ className }: NavigationProps) {
                   <Settings className="h-4 w-4 mr-3" />
                   {t('navigation.settings', 'Settings')}
                 </button>
-                
+
                 <button
                   onClick={handleSignOut}
                   className="w-full flex items-center px-3 py-2 text-left rounded-md text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors"

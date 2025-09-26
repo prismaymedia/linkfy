@@ -11,7 +11,7 @@ export const ROUTES = {
 } as const;
 
 export type RouteKey = keyof typeof ROUTES;
-export type RoutePath = typeof ROUTES[RouteKey];
+export type RoutePath = (typeof ROUTES)[RouteKey];
 
 // Route metadata for enhanced navigation
 export interface RouteConfig {
@@ -94,15 +94,16 @@ export const getRouteConfig = (path: RoutePath): RouteConfig => {
   return ROUTE_CONFIG[path];
 };
 
-export const getNavigationRoutes = (isAuthenticated: boolean): RouteConfig[] => {
+export const getNavigationRoutes = (
+  isAuthenticated: boolean,
+): RouteConfig[] => {
   return Object.values(ROUTE_CONFIG).filter(
     (route) =>
-      route.showInNavigation &&
-      (!route.requiresAuth || isAuthenticated)
+      route.showInNavigation && (!route.requiresAuth || isAuthenticated),
   );
 };
 
 export const isProtectedRoute = (path: string): boolean => {
-  const route = Object.values(ROUTE_CONFIG).find(r => r.path === path);
+  const route = Object.values(ROUTE_CONFIG).find((r) => r.path === path);
   return route ? route.requiresAuth : false;
 };

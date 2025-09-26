@@ -6,61 +6,109 @@ import {
   BadRequestException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { ZodError } from 'zod';
 
 describe('AppController', () => {
   let controller: AppController;
-  let youtubeService: Partial<YoutubeService>;
+  let youtubeService: jest.Mocked<Partial<YoutubeService>>;
+  let conversionService: jest.Mocked<Partial<ConversionService>>;
 
   beforeEach(async () => {
     youtubeService = {
       getYoutubeInfo: jest.fn(),
+    };
+    conversionService = {
+      getOrCreateConversion: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
       providers: [
         { provide: YoutubeService, useValue: youtubeService },
-        { provide: ConversionService, useValue: {} },
+        { provide: ConversionService, useValue: conversionService },
       ],
     }).compile();
 
     controller = module.get<AppController>(AppController);
   });
 
-  it('should return song info for a valid body', async () => {
+  function createResMock() {
+    return {
+      status: jest.fn().mockReturnThis(),
+    } as any;
+  }
+
+  it('returns YouTube info with 200 when convert=false (preview)', async () => {
     (youtubeService.getYoutubeInfo as jest.Mock).mockResolvedValue({
       trackName: 'Track',
       artistName: 'Artist',
-      thumbnailUrl: 'url',
+      thumbnailUrl: 'thumb',
       originalTitle: 'Title',
     });
 
-    const result = await controller.getYoutubeInfo({
-      youtubeUrl: 'https://music.youtube.com/watch?v=abc',
-    });
+    const res = createResMock();
+    const result = await controller.youtubeConvert(
+      { youtubeUrl: 'https://music.youtube.com/watch?v=abc', convert: false },
+      res,
+    );
+
+    expect(res.status).toHaveBeenCalledWith(200);
     expect(result).toEqual({
       trackName: 'Track',
       artistName: 'Artist',
-      thumbnailUrl: 'url',
+      thumbnailUrl: 'thumb',
       originalTitle: 'Title',
     });
   });
 
-  it('should throw BadRequestException if the body is invalid', async () => {
+  it('returns merged info with 201 when convert omitted/true', async () => {
+    (youtubeService.getYoutubeInfo as jest.Mock).mockResolvedValue({
+      trackName: 'Track',
+      artistName: 'Artist',
+      thumbnailUrl: 'thumb',
+      originalTitle: 'Title',
+    });
+    (conversionService.getOrCreateConversion as jest.Mock).mockResolvedValue({
+      spotifyUrl: 'https://open.spotify.com/track/123',
+      trackName: 'Track',
+      artistName: 'Artist',
+      albumName: 'Album',
+      thumbnailUrl: 'thumb',
+    });
+
+    const res = createResMock();
+    const result = await controller.youtubeConvert(
+      { youtubeUrl: 'https://music.youtube.com/watch?v=abc' },
+      res,
+    );
+
+    expect(res.status).toHaveBeenCalledWith(201);
+    expect(result).toEqual({
+      trackName: 'Track',
+      artistName: 'Artist',
+      thumbnailUrl: 'thumb',
+      originalTitle: 'Title',
+      spotifyUrl: 'https://open.spotify.com/track/123',
+    });
+  });
+
+  it('throws BadRequestException for invalid body', async () => {
+    const res = createResMock();
     await expect(
-      controller.getYoutubeInfo({ youtubeUrl: 123 }),
+      controller.youtubeConvert({ youtubeUrl: 123 as any }, res),
     ).rejects.toThrow(BadRequestException);
   });
 
-  it('should throw InternalServerErrorException if the service fails', async () => {
+  it('throws InternalServerErrorException if youtube service fails', async () => {
     (youtubeService.getYoutubeInfo as jest.Mock).mockRejectedValue(
       new Error('fail'),
     );
+
+    const res = createResMock();
     await expect(
-      controller.getYoutubeInfo({
-        youtubeUrl: 'https://music.youtube.com/watch?v=abc',
-      }),
+      controller.youtubeConvert(
+        { youtubeUrl: 'https://music.youtube.com/watch?v=abc' },
+        res,
+      ),
     ).rejects.toThrow(InternalServerErrorException);
   });
 });

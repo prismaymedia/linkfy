@@ -47,9 +47,10 @@ export default function ConversionForm() {
   });
 
   const convertMutation = useMutation({
-    mutationFn: async (data: ConvertUrlRequest) => {
-      const response = await apiRequest('POST', '/api/convert', data);
-      return (await response.json()) as SpotifyTrackInfo;
+    mutationFn: async (data: { youtubeUrl: string }) => {
+      const response = await apiRequest('POST', '/api/youtube-convert', data);
+      const result = await response.json();
+      return result;
     },
     onSuccess: (result) => {
       setSpotifyResult(result);
@@ -77,11 +78,13 @@ export default function ConversionForm() {
 
     setIsLoadingPreview(true);
     try {
-      const response = await apiRequest('POST', '/api/youtube-info', {
+      const response = await apiRequest('POST', '/api/youtube-convert', {
         youtubeUrl: url,
+        convert: false, // only preview YouTube data
       });
-      const data = (await response.json()) as YouTubeTrackInfo;
-      setYoutubePreview(data);
+      const json = await response.json();
+
+      setYoutubePreview(json as YouTubeTrackInfo);
     } catch {
       setYoutubePreview(null);
     } finally {

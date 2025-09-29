@@ -1,15 +1,28 @@
 import { createClient, User, Session } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+// When running tests with Vitest, provide a minimal mock so env vars are not required
+const isRunningTests = typeof process !== 'undefined' && !!process.env.VITEST;
+
+const mockSupabase = {
   auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true,
+    getSession: async () => ({ data: { session: null as Session | null }, error: null }),
+    getUser: async () => ({ data: { user: null as User | null }, error: null }),
+    signOut: async () => ({ error: null as unknown as Error | null }),
   },
-});
+} as unknown as ReturnType<typeof createClient>;
+
+export const supabase = isRunningTests
+  ? mockSupabase
+  : createClient(supabaseUrl as string, supabaseAnonKey as string, {
+      auth: {
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true,
+      },
+    });
 
 // Session management helpers
 export const getSession = async (): Promise<Session | null> => {

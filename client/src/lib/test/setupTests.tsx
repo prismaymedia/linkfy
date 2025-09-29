@@ -18,6 +18,19 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
+// Mock Supabase client
+vi.mock('../lib/supabaseClient', () => {
+  return {
+    supabase: {
+      auth: {
+        signInWithOAuth: vi.fn(),
+        getSession: vi.fn().mockResolvedValue({ data: null, error: null }),
+        signOut: vi.fn(),
+      },
+    },
+  };
+});
+
 // Start MSW before all tests
 beforeAll(() => server.listen());
 

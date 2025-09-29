@@ -109,7 +109,11 @@ describe('AppController', () => {
   it('throws BadRequestException for invalid body', async () => {
     const res = createResMock();
     await expect(
-      controller.youtubeConvert({ youtubeUrl: 123 as any }, res, createUserMock()),
+      controller.youtubeConvert(
+        { youtubeUrl: 123 as any },
+        res,
+        createUserMock(),
+      ),
     ).rejects.toThrow(BadRequestException);
   });
 

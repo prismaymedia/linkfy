@@ -6,6 +6,7 @@ import {
   BadRequestException,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { SupabaseAuthGuard } from '../src/auth/supabase-auth.guard';
 
 describe('AppController', () => {
   let controller: AppController;
@@ -26,7 +27,10 @@ describe('AppController', () => {
         { provide: YoutubeService, useValue: youtubeService },
         { provide: ConversionService, useValue: conversionService },
       ],
-    }).compile();
+    })
+      .overrideGuard(SupabaseAuthGuard)
+      .useValue({ canActivate: jest.fn().mockReturnValue(true) })
+      .compile();
 
     controller = module.get<AppController>(AppController);
   });
@@ -34,6 +38,15 @@ describe('AppController', () => {
   function createResMock() {
     return {
       status: jest.fn().mockReturnThis(),
+    } as any;
+  }
+
+  function createUserMock() {
+    return {
+      id: 'user-id',
+      email: 'user@example.com',
+      user_metadata: {},
+      created_at: new Date().toISOString(),
     } as any;
   }
 
@@ -49,6 +62,7 @@ describe('AppController', () => {
     const result = await controller.youtubeConvert(
       { youtubeUrl: 'https://music.youtube.com/watch?v=abc', convert: false },
       res,
+      createUserMock(),
     );
 
     expect(res.status).toHaveBeenCalledWith(200);
@@ -79,6 +93,7 @@ describe('AppController', () => {
     const result = await controller.youtubeConvert(
       { youtubeUrl: 'https://music.youtube.com/watch?v=abc' },
       res,
+      createUserMock(),
     );
 
     expect(res.status).toHaveBeenCalledWith(201);
@@ -94,7 +109,7 @@ describe('AppController', () => {
   it('throws BadRequestException for invalid body', async () => {
     const res = createResMock();
     await expect(
-      controller.youtubeConvert({ youtubeUrl: 123 as any }, res),
+      controller.youtubeConvert({ youtubeUrl: 123 as any }, res, createUserMock()),
     ).rejects.toThrow(BadRequestException);
   });
 
@@ -108,6 +123,7 @@ describe('AppController', () => {
       controller.youtubeConvert(
         { youtubeUrl: 'https://music.youtube.com/watch?v=abc' },
         res,
+        createUserMock(),
       ),
     ).rejects.toThrow(InternalServerErrorException);
   });

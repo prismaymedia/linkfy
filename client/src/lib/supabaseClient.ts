@@ -1,14 +1,19 @@
 import { createClient, User, Session } from '@supabase/supabase-js';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as
+  | string
+  | undefined;
 
 // When running tests with Vitest, provide a minimal mock so env vars are not required
 const isRunningTests = typeof process !== 'undefined' && !!process.env.VITEST;
 
 const mockSupabase = {
   auth: {
-    getSession: async () => ({ data: { session: null as Session | null }, error: null }),
+    getSession: async () => ({
+      data: { session: null as Session | null },
+      error: null,
+    }),
     getUser: async () => ({ data: { user: null as User | null }, error: null }),
     signOut: async () => ({ error: null as unknown as Error | null }),
   },

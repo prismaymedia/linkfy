@@ -76,14 +76,14 @@ export default function AuthPage() {
   const handleSocialLogin = async (provider: 'facebook' | 'google') => {
     setError(null);
     setSuccess(null);
-    
-    const { error } = await supabase.auth.signInWithOAuth({ 
+
+    const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `${window.location.origin}/`
-      }
+        redirectTo: `${window.location.origin}/`,
+      },
     });
-    
+
     if (error) {
       setError(error.message);
     }

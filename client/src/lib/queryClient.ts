@@ -23,7 +23,7 @@ export async function apiRequest(
   const headers: Record<string, string> = {
     ...(data ? { 'Content-Type': 'application/json' } : {}),
   };
-  
+
   // Only add Authorization header if it exists
   if (authHeaders.Authorization) {
     headers.Authorization = authHeaders.Authorization;
@@ -49,12 +49,12 @@ export const getQueryFn: <T>(options: {
   async ({ queryKey }) => {
     const authHeaders = await getAuthHeaders();
     const headers: Record<string, string> = {};
-    
+
     // Only add Authorization header if it exists
     if (authHeaders.Authorization) {
       headers.Authorization = authHeaders.Authorization;
     }
-    
+
     const res = await fetch(`${baseUrl}${queryKey[0] as string}`, {
       headers,
       credentials: 'include',

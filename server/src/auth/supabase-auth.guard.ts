@@ -26,9 +26,10 @@ export class SupabaseAuthGuard implements CanActivate {
     const token = authHeader.substring(7); // Remove 'Bearer ' prefix
 
     try {
-      const { data: { user }, error } = await this.supabaseService
-        .getClient()
-        .auth.getUser(token);
+      const {
+        data: { user },
+        error,
+      } = await this.supabaseService.getClient().auth.getUser(token);
 
       if (error || !user) {
         this.logger.warn(`Invalid token: ${error?.message || 'No user found'}`);
@@ -38,7 +39,7 @@ export class SupabaseAuthGuard implements CanActivate {
       // Attach user to request for use in controllers
       request['user'] = user;
       this.logger.log(`User authenticated: ${user.email}`);
-      
+
       return true;
     } catch (error) {
       if (error instanceof UnauthorizedException) {

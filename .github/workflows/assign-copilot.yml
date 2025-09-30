@@ -26,8 +26,8 @@ jobs:
             const baseBranch = pr.base.ref;
             const labels = pr.labels.map(l => l.name);
 
-            // Condición: solo en develop o main con label "review-with-copilot"
-            if ((baseBranch === "develop" || baseBranch === "main") &&
+            // Condición: solo en develop o master con label "review-with-copilot"
+            if ((baseBranch === "develop" || baseBranch === "master") &&
                 labels.includes("review-with-copilot")) {
               core.setOutput("shouldAssign", "true");
             } else {

@@ -1,7 +1,6 @@
 {
   "home": {
-    "description": "Convierte enlaces de YouTube Music a Spotify al instante",
-    "footer": "Perfecto para la extensión de Chrome • Enfocado en la privacidad • Sin almacenar datos"
+    "description": "Convierte enlaces de YouTube Music a Spotify al instante"
   },
   "conversion": {
     "successTitle": "¡Éxito!",

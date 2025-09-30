@@ -8,8 +8,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: github-pages
     permissions:
-      contents: write # Allow write access to repository contents
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -17,14 +18,39 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # Or your preferred Node.js version
+          node-version: '20'
 
       - name: Install dependencies
         run: yarn install
 
       - name: Set environment variables for production
         run: |
-          echo "VITE_API_URL=https://linkfy-production.up.railway.app" > client/.env.production
+          # Create a copy of the production env file
+          cp client/.env.production client/.env.production.bak
+          
+          # Check if required secrets are available
+          echo "Checking environment variables availability..."
+          echo "VITE_API_URL: ${{ secrets.VITE_API_URL != '' && 'SET' || 'NOT SET' }}"
+          echo "VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL != '' && 'SET' || 'NOT SET' }}"
+          echo "VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY != '' && 'SET' || 'NOT SET' }}"
+          echo "VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN != '' && 'SET' || 'NOT SET' }}"
+          
+          # Replace placeholder values with GitHub secrets
+          sed -i 's|your-supabase-url-here|${{ secrets.VITE_SUPABASE_URL }}|g' client/.env.production
+          sed -i 's|your-supabase-anon-key-here|${{ secrets.VITE_SUPABASE_ANON_KEY }}|g' client/.env.production
+          sed -i 's|your-sentry-dsn-here|${{ secrets.VITE_SENTRY_DSN }}|g' client/.env.production
+          
+          # Update API URL - use secret if available, otherwise use Railway URL
+          if [ -n "${{ secrets.VITE_API_URL }}" ]; then
+            sed -i 's|VITE_API_URL=.*|VITE_API_URL=${{ secrets.VITE_API_URL }}|g' client/.env.production
+          else
+            sed -i 's|VITE_API_URL=.*|VITE_API_URL=https://linkfy-production.up.railway.app|g' client/.env.production
+          fi
+          
+          # Show the final result for debugging (without sensitive values)
+          echo "Production environment file created:"
+          echo "--- client/.env.production ---"
+          cat client/.env.production | sed 's/\(=.*[a-zA-Z0-9]\{10\}.*\)/=***(hidden)***/g'
 
       - name: Build project
         run: npm run --workspace=client build
@@ -33,4 +59,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: client/dist # Corrected publish directory
+          publish_dir: client/dist

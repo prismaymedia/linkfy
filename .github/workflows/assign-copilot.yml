@@ -1,0 +1,61 @@
+name: Assign Copilot Reviewer
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review]
+    branches:
+      - master
+
+jobs:
+  assign-copilot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Log PR Info
+        run: |
+          echo "Pull Request #${{ github.event.pull_request.number }}"
+          echo "Branch: ${{ github.event.pull_request.base.ref }}"
+          echo "Labels: ${{ toJson(github.event.pull_request.labels) }}"
+
+      - name: Check Conditions (labels/branches)
+        id: conditions
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const baseBranch = pr.base.ref;
+            const labels = pr.labels.map(l => l.name);
+
+            // Condición: solo en develop o main con label "review-with-copilot"
+            if ((baseBranch === "develop" || baseBranch === "main") &&
+                labels.includes("review-with-copilot")) {
+              core.setOutput("shouldAssign", "true");
+            } else {
+              core.setOutput("shouldAssign", "false");
+            }
+
+      - name: Assign Copilot as Reviewer
+        if: steps.conditions.outputs.shouldAssign == 'true'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            try {
+              const prNumber = context.payload.pull_request.number;
+              const owner = context.repo.owner;
+              const repo = context.repo.repo;
+
+              const reviewers = ["github-copilot"];
+
+              const res = await github.rest.pulls.requestReviewers({
+                owner,
+                repo,
+                pull_number: prNumber,
+                reviewers: reviewers,
+              });
+
+              core.info(`✅ Copilot asignado como reviewer en PR #${prNumber}`);
+            } catch (error) {
+              core.warning(`⚠️ No se pudo asignar a Copilot: ${error.message}`);
+              core.setFailed("Error al intentar asignar reviewer.");
+            }

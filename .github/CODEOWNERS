@@ -1,0 +1,68 @@
+# CODEOWNERS file for Linkfy repository
+# See https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+#
+# This file defines the code owners for different parts of the codebase.
+# Pull requests will automatically request reviews from the appropriate team members or groups.
+#
+# Each line is a file pattern followed by one or more owners (GitHub usernames or team names).
+# The last matching pattern takes precedence.
+
+# Default owner for everything in the repo
+# This is a catch-all rule that will be overridden by more specific rules below
+* @prismaymedia/linkfy-maintainers
+
+# Frontend (React, TypeScript, UI components)
+# Includes client app, components, pages, hooks, and UI-related code
+/client/ @prismaymedia/frontend-team
+/client/src/components/ @prismaymedia/frontend-team
+/client/src/pages/ @prismaymedia/frontend-team
+/client/src/hooks/ @prismaymedia/frontend-team
+
+# Backend (NestJS, APIs, services)
+# Includes server code, controllers, services, and API integrations
+/server/ @prismaymedia/backend-team
+/server/src/controllers/ @prismaymedia/backend-team
+/server/src/services/ @prismaymedia/backend-team
+
+# Chrome Extension
+# Browser extension code and manifest
+/chrome-addon/ @prismaymedia/extension-team
+
+# Shared code (schemas, types, utilities)
+# Code shared between frontend, backend, and extension
+/shared/ @prismaymedia/frontend-team @prismaymedia/backend-team
+
+# Documentation
+# All markdown files and documentation directory
+*.md @prismaymedia/product-owner @prismaymedia/documentation-team
+/docs/ @prismaymedia/product-owner @prismaymedia/documentation-team
+
+# GitHub workflows and CI/CD
+# GitHub Actions, dependabot, and other automation
+/.github/ @prismaymedia/devops-team
+/.github/workflows/ @prismaymedia/devops-team
+/.github/dependabot.yml @prismaymedia/devops-team
+
+# Configuration files
+# Build, lint, format, and other configuration files
+*.config.js @prismaymedia/devops-team
+*.config.ts @prismaymedia/devops-team
+*.config.mjs @prismaymedia/devops-team
+.prettierrc @prismaymedia/devops-team
+.gitignore @prismaymedia/devops-team
+tsconfig.json @prismaymedia/devops-team
+package.json @prismaymedia/devops-team
+yarn.lock @prismaymedia/devops-team
+
+# Release and version management
+# Automated release configuration (do not edit manually)
+.release-please-manifest.json @prismaymedia/devops-team
+release-please-config.json @prismaymedia/devops-team
+
+# Community and contribution files
+CODE_OF_CONDUCT.md @prismaymedia/product-owner
+CONTRIBUTING.md @prismaymedia/product-owner @prismaymedia/documentation-team
+LICENSE @prismaymedia/product-owner
+
+# Changelog
+CHANGELOG.md @prismaymedia/devops-team

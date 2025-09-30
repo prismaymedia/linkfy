@@ -53,14 +53,7 @@ In the era of multiple music streaming platforms, sharing music between friends 
 
 **New to Linkfy?** [📖 Check out our complete guide](https://github.com/prismaymedia/linkfy/wiki) in the wiki!
 
-### 📋 Prerequisites
-
-- **Node.js** 20+ 
-- **Yarn** (recommended) or npm
-- **YouTube Data API v3** key
-- **Spotify Web API** credentials
-
-### 🔧 Installation
+###  Installation
 
 1. **Clone the repository**
    ```bash
@@ -109,135 +102,7 @@ In the era of multiple music streaming platforms, sharing music between friends 
    # Runs on http://localhost:5173
    ```
 
-### 🔑 Getting API Keys
 
-<details>
-<summary><strong>YouTube Data API v3 Setup</strong></summary>
-
-1. Visit [Google Cloud Console](https://console.cloud.google.com)
-2. Create a new project or select an existing one
-3. Navigate to **APIs & Services > Library**
-4. Search for "YouTube Data API v3" and enable it
-5. Go to **APIs & Services > Credentials**
-6. Click **Create Credentials > API Key**
-7. Copy the API key to your `server/.env` file
-
-</details>
-
-<details>
-<summary><strong>Spotify Web API Setup</strong></summary>
-
-1. Visit [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
-2. Log in and click **Create App**
-3. Fill in app details:
-   - **App Name**: Linkfy (or your preferred name)
-   - **App Description**: Music URL converter
-   - **Redirect URI**: `http://localhost:3000/auth/callback`
-4. Copy **Client ID** and **Client Secret** to your `server/.env` file
-
-</details>
-
-### 🐳 Docker Setup (Optional)
-
-```bash
-# Build and run with Docker Compose
-docker-compose up --build
-
-# Or build individual services
-docker build -t linkfy-client ./client
-docker build -t linkfy-server ./server
-```
-
-## 🏗️ Project Structure
-
-```
-linkfy/
-├── 📱 client/           # React frontend (Vite + TypeScript)
-│   ├── src/
-│   │   ├── components/  # Reusable UI components
-│   │   ├── pages/       # Application pages
-│   │   ├── hooks/       # Custom React hooks
-│   │   ├── lib/         # Utilities and configurations
-│   │   └── locales/     # Internationalization files
-│   └── dist/           # Built frontend assets
-├── 🚀 server/          # NestJS backend
-│   ├── src/
-│   │   ├── controllers/ # API route handlers
-│   │   ├── services/    # Business logic
-│   │   ├── auth/        # Authentication modules
-│   │   └── utils/       # Helper utilities
-│   └── dist/           # Built server files
-├── 🔧 shared/          # Shared types and schemas
-├── 🌐 chrome-addon/    # Chrome extension files
-└── 📋 requests/        # API testing files
-```
-
-## 🔌 API Documentation
-
-### Track Information Endpoint
-
-**`POST /api/youtube-info`**
-
-Retrieve metadata from YouTube Music URLs without conversion.
-
-```http
-POST /api/youtube-info
-Content-Type: application/json
-
-{
-  "youtubeUrl": "https://music.youtube.com/watch?v=dQw4w9WgXcQ"
-}
-```
-
-**Response:**
-```json
-{
-  "trackName": "Never Gonna Give You Up",
-  "artistName": "Rick Astley", 
-  "thumbnailUrl": "https://i.ytimg.com/vi/dQw4w9WgXcQ/mqdefault.jpg",
-  "originalTitle": "Rick Astley - Never Gonna Give You Up (Official Music Video)"
-}
-```
-
-### Conversion Endpoint
-
-**`POST /api/convert`**
-
-Convert YouTube Music URLs to Spotify tracks with full metadata.
-
-```http
-POST /api/convert
-Content-Type: application/json
-
-{
-  "youtubeUrl": "https://music.youtube.com/watch?v=dQw4w9WgXcQ"
-}
-```
-
-**Response:**
-```json
-{
-  "spotifyUrl": "https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8",
-  "trackName": "Never Gonna Give You Up",
-  "artistName": "Rick Astley",
-  "albumName": "Whenever You Need Somebody",
-  "thumbnailUrl": "https://i.scdn.co/image/ab67616d0000b273...",
-  "matchConfidence": 0.95,
-  "alternativeMatches": []
-}
-```
-
-### Error Handling
-
-All endpoints return standardized error responses:
-
-```json
-{
-  "error": "TRACK_NOT_FOUND",
-  "message": "Could not find matching Spotify track",
-  "statusCode": 404
-}
-```
 
 ## 🏛️ Architecture & Tech Stack
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.1.0...linkfy-v2.1.1) (2025-09-30)
+
+
+### Documentation
+
+* add CODEOWNERS file for repository structure ([70ac906](https://github.com/prismaymedia/linkfy/commit/70ac9063c0d3518aad3a0bdcd3af2344ba20502a))
+
 ## [2.1.0](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.0.0...linkfy-v2.1.0) (2025-09-30)
 
 

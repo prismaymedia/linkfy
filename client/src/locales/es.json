@@ -39,15 +39,5 @@
     "copiedDescription": "¡Enlace copiado al portapapeles!",
     "copyFailedTitle": "Error al copiar",
     "copyFailedDescription": "Por favor, inténtalo de nuevo."
-  },
-  "auth": {
-    "login": "Iniciar sesión",
-    "emailPlaceholder": "Correo electrónico",
-    "passwordPlaceholder": "Contraseña",
-    "signInButton": "Iniciar sesión",
-    "noAccount": "¿No tienes una cuenta?",
-    "signUp": "Regístrate",
-    "alreadyHaveAccount": "¿Ya tienes una cuenta?",
-    "signIn": "Inicia sesión"
   }
 }

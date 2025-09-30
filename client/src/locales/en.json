@@ -39,15 +39,5 @@
     "copiedDescription": "Link copied to clipboard!",
     "copyFailedTitle": "Failed to copy",
     "copyFailedDescription": "Please try again."
-  },
-  "auth": {
-    "login": "Login",
-    "emailPlaceholder": "Email",
-    "passwordPlaceholder": "Password",
-    "signInButton": "Sign in",
-    "noAccount": "Don't have an account?",
-    "signUp": "Sign up",
-    "alreadyHaveAccount": "Already have an account?",
-    "signIn": "Sign in"
   }
 }

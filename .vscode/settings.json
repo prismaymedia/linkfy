@@ -7,5 +7,14 @@
     "development": {
       "baseUrl": "https://linkfy-production.up.railway.app"
     }
-  }
+  },
+  "git.inputValidation": true,
+  "git.inputValidationLength": 50,
+  "git.inputValidationSubjectLength": 50,
+  "github.copilot.enable": {
+    "*": true,
+    "scminput": true
+  },
+  "github.copilot.editor.enableAutoCompletions": true,
+  "scm.inputFontSize": 13
 }

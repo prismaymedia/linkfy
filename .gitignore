@@ -52,6 +52,9 @@ jspm_packages/
 # ClickUp MCP configuration (contains private workspace IDs)
 .vscode/clickup-config.md
 
+# ClickUp tasks folder (local use only - contains task lists)
+clickup/
+
 # Microbundle cache
 .rpt2_cache/
 .rts2_cache_cjs/

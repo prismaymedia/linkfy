@@ -1,4 +1,5 @@
 import { QueryClient, QueryFunction } from '@tanstack/react-query';
+import { getAuthHeaders } from './supabaseClient';
 
 const baseUrl =
   import.meta.env.VITE_API_URL ||
@@ -18,9 +19,19 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
+  const authHeaders = await getAuthHeaders();
+  const headers: Record<string, string> = {
+    ...(data ? { 'Content-Type': 'application/json' } : {}),
+  };
+
+  // Only add Authorization header if it exists
+  if (authHeaders.Authorization) {
+    headers.Authorization = authHeaders.Authorization;
+  }
+
   const res = await fetch(`${baseUrl}${url}`, {
     method,
-    headers: data ? { 'Content-Type': 'application/json' } : {},
+    headers,
     body: data ? JSON.stringify(data) : undefined,
     credentials: 'include',
   });
@@ -36,7 +47,16 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
+    const authHeaders = await getAuthHeaders();
+    const headers: Record<string, string> = {};
+
+    // Only add Authorization header if it exists
+    if (authHeaders.Authorization) {
+      headers.Authorization = authHeaders.Authorization;
+    }
+
     const res = await fetch(`${baseUrl}${queryKey[0] as string}`, {
+      headers,
       credentials: 'include',
     });
 

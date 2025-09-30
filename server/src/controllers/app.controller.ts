@@ -7,6 +7,7 @@ import {
   Logger,
   Res,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -23,9 +24,13 @@ import { ZodError, z } from 'zod';
 import { convertUrlSchema } from '../../../shared/schema';
 import * as Sentry from '@sentry/nestjs';
 import { Response } from 'express';
+import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
+import { CurrentUser } from '../auth/user.decorator';
+import { User } from '@supabase/supabase-js';
 
 @ApiTags('Conversion')
 @Controller('api')
+@UseGuards(SupabaseAuthGuard)
 export class AppController {
   private readonly logger = new Logger(AppController.name);
 
@@ -101,8 +106,12 @@ export class AppController {
   async youtubeConvert(
     @Body() body: any,
     @Res({ passthrough: true }) res: Response,
+    @CurrentUser() user: User,
   ) {
     try {
+      // Log user information for debugging
+      this.logger.log(`Processing conversion request for user: ${user.email}`);
+
       // Validate and coerce input with Zod schema for consistent error messaging
       const RequestSchema = z.object({
         youtubeUrl: convertUrlSchema.shape.youtubeUrl,
@@ -135,5 +144,30 @@ export class AppController {
       Sentry.captureMessage('Internal server error during YouTube conversion');
       throw new InternalServerErrorException('Failed to process the request');
     }
+  }
+
+  @Post('user-info')
+  @ApiOperation({
+    summary: 'Get current user information',
+  })
+  @ApiOkResponse({
+    description: 'User information retrieved successfully',
+    schema: {
+      example: {
+        id: 'user-uuid',
+        email: 'user@example.com',
+        full_name: 'John Doe',
+        avatar_url: 'https://example.com/avatar.jpg',
+      },
+    },
+  })
+  async getUserInfo(@CurrentUser() user: User) {
+    return {
+      id: user.id,
+      email: user.email,
+      full_name: user.user_metadata?.full_name,
+      avatar_url: user.user_metadata?.avatar_url,
+      created_at: user.created_at,
+    };
   }
 }

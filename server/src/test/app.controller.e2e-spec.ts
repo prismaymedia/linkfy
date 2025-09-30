@@ -5,6 +5,7 @@ import { AppModule } from '../app.module';
 import { SupabaseService } from '../supabase/supabase.service';
 import { YoutubeService } from '../services/youtube.service';
 import { ConversionService } from '../services/conversion.service';
+import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
 
 describe('YouTube Convert Endpoint (e2e)', () => {
   let app: INestApplication;
@@ -51,6 +52,19 @@ describe('YouTube Convert Endpoint (e2e)', () => {
       .useValue(mockYoutubeService)
       .overrideProvider(ConversionService)
       .useValue(mockConversionService)
+      .overrideGuard(SupabaseAuthGuard)
+      .useValue({
+        canActivate: (ctx: any) => {
+          const req = ctx.switchToHttp().getRequest();
+          req.user = {
+            id: 'user-id',
+            email: 'user@example.com',
+            user_metadata: {},
+            created_at: new Date().toISOString(),
+          };
+          return true;
+        },
+      })
       .compile();
 
     app = moduleFixture.createNestApplication();

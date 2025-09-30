@@ -51,23 +51,68 @@ Linkfy is a full-stack TypeScript project for converting YouTube Music URLs to S
 - All endpoints validate input with Zod
 - Use Jest for backend tests (`server/src/test/`)
 
-## Commit Convention
+## Commit Convention - MANDATORY
 
 **ALWAYS** follow the Conventional Commits specification detailed in `docs/COMMIT_CONVENTION.md`:
 
-- **Format**: `<type>(scope): description`
-- **Types**: `feat`, `fix`, `chore`, `docs`, `style`, `refactor`, `perf`, `test`
-- **Scopes**: `api`, `client`, `extension`, `shared`, `auth`, `ui`, `config`
-- **Breaking changes**: Add `!` after type (e.g., `feat!:`) or `BREAKING CHANGE:` footer
-- **Description**: Imperative mood, lowercase, no period, max 50 chars
+### Required Format
+```
+<type>(optional scope): <description>
 
-### Common scope mapping:
-- `client/` changes → `client` scope
-- `server/` changes → `api` scope  
-- `chrome-addon/` changes → `extension` scope
-- `shared/` changes → `shared` scope
-- `*.md` files → `docs` type
-- Config files → `chore` type
+[optional body]
+
+[optional footer(s)]
+```
+
+### Types and Version Impact
+- **`feat`**: New features → MINOR version bump (1.2.3 → 1.3.0)
+- **`fix`**: Bug fixes → PATCH version bump (1.2.3 → 1.2.4)  
+- **`chore`**: Maintenance, build, config → no version bump
+- **`docs`**: Documentation only
+- **`style`**: Formatting, whitespace
+- **`refactor`**: Code restructuring without feature/bug changes
+- **`perf`**: Performance improvements
+- **`test`**: Test additions or corrections
+
+### Scopes for Linkfy
+- **`api`**: server/ directory changes
+- **`client`**: client/ directory changes  
+- **`extension`**: chrome-addon/ directory changes
+- **`shared`**: shared/ directory changes
+- **`auth`**: Authentication related
+- **`ui`**: User interface components
+- **`config`**: Configuration files
+
+### Description Requirements
+- Use **imperative mood** ("add feature" not "added feature")
+- Start with **lowercase letter**
+- **No period** at the end
+- Maximum **50 characters**
+
+### Breaking Changes
+- Add `!` after type: `feat!: description`
+- OR add `BREAKING CHANGE:` in footer
+- Triggers **MAJOR** version bump (1.2.3 → 2.0.0)
+
+### Auto-detection for Copilot
+
+| File Pattern | → Type | → Scope |
+|-------------|--------|---------|
+| `server/src/**` | `feat`/`fix`/`refactor` | `api` |
+| `client/src/**` | `feat`/`fix`/`refactor` | `client` |
+| `chrome-addon/**` | `feat`/`fix`/`chore` | `extension` |
+| `shared/**` | `feat`/`fix`/`refactor` | `shared` |
+| `*.md` files | `docs` | none |
+| Config files | `chore` | `config` |
+
+### Common Templates
+```bash
+feat(api): add [feature description]
+fix(client): resolve [issue description]  
+chore(deps): update [package] to v[version]
+docs: update [section] documentation
+refactor(auth): simplify [component]
+```
 
 ## Useful References
 

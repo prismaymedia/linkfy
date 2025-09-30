@@ -166,7 +166,30 @@ We welcome contributions from the community! Here's how you can help:
 
 </details>
 
-## 📄 License
+## � Project Structure
+
+### Root Configuration Files
+
+- **`.release-please-manifest.json`** - Version tracking for automated releases (DO NOT edit manually)
+- **`release-please-config.json`** - Configuration for release-please automation
+- **`.gitignore`** - Git ignore patterns
+- **`.prettierrc`** - Code formatting configuration
+- **`eslint.config.mjs`** - Linting configuration
+
+### Documentation (docs/)
+
+- **`COMMIT_CONVENTION.md`** - Commit message format and conventions
+- **`CONTRIBUTING.md`** - Guidelines for contributing to the project
+- **`CODE_OF_CONDUCT.md`** - Community standards and behavior
+- **`LICENSE`** - MIT license terms
+
+### GitHub Configuration (.github/)
+
+- **`workflows/`** - GitHub Actions automation
+- **`copilot-instructions.md`** - Instructions for GitHub Copilot
+- **`templates/`** - Templates for Copilot and Git messages
+
+## �📄 License
 
 This project is licensed under the **MIT License** - see the [LICENSE](docs/LICENSE) file for details.
 

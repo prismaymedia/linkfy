@@ -51,10 +51,11 @@ export default function AuthPage() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `${window.location.origin}/`,
+        redirectTo: import.meta.env.DEV
+          ? 'http://localhost:3000/dashboard'
+          : 'https://prismaymedia.github.io/linkfy/dashboard',
       },
     });
-
 
     if (error) {
       setError(error.message);

@@ -221,9 +221,10 @@ yarn test:client --watch
 
 ## 💬 Getting Help
 
-- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/prismaymedia/linkfy/issues)
-- 💡 **Questions**: [GitHub Discussions](https://github.com/prismaymedia/linkfy/discussions)
-- 💬 **Chat**: Feel free to reach out to maintainers
+- 🐛 **Report Issues**: [GitHub Issues](https://github.com/prismaymedia/linkfy/issues)
+- 💡 **Request Features**: [GitHub Issues](https://github.com/prismaymedia/linkfy/issues)
+- ❓ **Ask Questions**: [GitHub Issues](https://github.com/prismaymedia/linkfy/issues)
+- 💬 **Contact Maintainers**: Create an issue and tag the maintainers
 
 ## 🙏 Recognition
 

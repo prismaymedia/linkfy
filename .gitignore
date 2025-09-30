@@ -49,6 +49,9 @@ jspm_packages/
 # Optional stylelint cache
 .stylelintcache
 
+# ClickUp MCP configuration (contains private workspace IDs)
+.vscode/clickup-config.md
+
 # Microbundle cache
 .rpt2_cache/
 .rts2_cache_cjs/

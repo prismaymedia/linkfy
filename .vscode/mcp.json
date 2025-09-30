@@ -1,0 +1,12 @@
+{
+  "servers": {
+    "clickup": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/DiversioTeam/clickup-mcp.git",
+        "clickup-mcp"
+      ]
+    }
+  }
+}

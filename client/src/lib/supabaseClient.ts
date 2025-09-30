@@ -1,11 +1,8 @@
 import { createClient, User, Session } from '@supabase/supabase-js';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as
-  | string
-  | undefined;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 
-// When running tests with Vitest, provide a minimal mock so env vars are not required
 const isRunningTests = typeof process !== 'undefined' && !!process.env.VITEST;
 
 const mockSupabase = {
@@ -22,14 +19,13 @@ const mockSupabase = {
 export const supabase = isRunningTests
   ? mockSupabase
   : createClient(supabaseUrl as string, supabaseAnonKey as string, {
-      auth: {
-        autoRefreshToken: true,
-        persistSession: true,
-        detectSessionInUrl: true,
-      },
-    });
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true,
+    },
+  });
 
-// Session management helpers
 export const getSession = async (): Promise<Session | null> => {
   const { data, error } = await supabase.auth.getSession();
   if (error) {
@@ -58,10 +54,14 @@ export const signOut = async () => {
 
 export const getAuthHeaders = async () => {
   const session = await getSession();
-  if (!session?.access_token) {
-    return {};
-  }
+  if (!session?.access_token) return {};
   return {
     Authorization: `Bearer ${session.access_token}`,
   };
+};
+
+export const getRedirectUrl = () => {
+  const base = window.location.origin;
+  const subpath = import.meta.env.DEV ? '' : '/linkfy';
+  return `${base}${subpath}/auth`;
 };

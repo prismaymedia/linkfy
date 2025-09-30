@@ -141,3 +141,6 @@ coverage/
 .temp/
 .tmp/
 client/.env.development
+
+# Local environment variables
+client/.env.development

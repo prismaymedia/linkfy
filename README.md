@@ -48,9 +48,9 @@ In the era of multiple music streaming platforms, sharing music between friends 
 [![Use App](https://img.shields.io/badge/🎵_Use_App-Live_Demo-1DB954?style=for-the-badge&logo=spotify)](https://prismaymedia.github.io/linkfy/)
 [![Self Hosting](https://img.shields.io/badge/🚀_Self_Hosting-Deploy_Guide-FF6B35?style=for-the-badge&logo=docker)](https://github.com/prismaymedia/linkfy/wiki/Self-Hosting-Guide)
 
-</div>
-
 **New to Linkfy?** [📖 Check out our complete guide](https://github.com/prismaymedia/linkfy/wiki) in the wiki!
+
+</div>
 
 ## 🏛️ Architecture & Tech Stack
 
@@ -93,6 +93,9 @@ In the era of multiple music streaming platforms, sharing music between friends 
 
 ## 🧩 Chrome Extension
 
+<details>
+<summary><strong>🌐 Browser Extension Details - Click to expand</strong></summary>
+
 Linkfy includes a fully-featured Chrome extension for seamless browser integration:
 
 ### Features
@@ -108,7 +111,12 @@ Linkfy includes a fully-featured Chrome extension for seamless browser integrati
 3. Enable "Developer mode"
 4. Click "Load unpacked" and select `client/dist-extension/`
 
+</details>
+
 ## 🤝 Contributing
+
+<details>
+<summary><strong>🚀 How to Contribute - Click to expand</strong></summary>
 
 We welcome contributions from the community! Here's how you can help:
 
@@ -156,6 +164,8 @@ We welcome contributions from the community! Here's how you can help:
 - 📱 **Mobile App** - React Native implementation
 - 🧪 **Testing** - Increase test coverage
 
+</details>
+
 ## 📄 License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
@@ -192,8 +202,5 @@ Please include:
 **⭐ Star this repository if Linkfy helped you!**
 
 *Made with ❤️ by [Prisma y Media](https://github.com/prismaymedia)*
-
-[![GitHub stars](https://img.shields.io/github/stars/prismaymedia/linkfy?style=social)](https://github.com/prismaymedia/linkfy/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/prismaymedia/linkfy?style=social)](https://github.com/prismaymedia/linkfy/network/members)
 
 </div>

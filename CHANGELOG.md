@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.2.0](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.1.2...linkfy-v2.2.0) (2025-09-30)
+
+
+### Features
+
+* **docs:** add auto-generation of architecture diagrams using Mermaid ([c60decb](https://github.com/prismaymedia/linkfy/commit/c60decb9390700dfc31ca4fe72c99a17a8d7777c))
+
+
+### Bug Fixes
+
+* **ci:** resolve puppeteer sandbox issues in diagram generation ([195be11](https://github.com/prismaymedia/linkfy/commit/195be110af6ed1acb782303f920abb5025725ba9))
+* **docs:** remove unnecessary div wrapper around issue reporting badge in README ([d4b4367](https://github.com/prismaymedia/linkfy/commit/d4b4367c8ce041c84c80e076a5e0af89aa0a4d19))
+* **docs:** update issue reporting badge in README for better visibility ([d67069e](https://github.com/prismaymedia/linkfy/commit/d67069ec14bae787281a57588cbdb89372212853))
+
 ## [2.1.2](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.1.1...linkfy-v2.1.2) (2025-09-30)
 
 

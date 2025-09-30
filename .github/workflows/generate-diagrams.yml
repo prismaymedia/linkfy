@@ -1,0 +1,86 @@
+name: Generate Architecture Diagrams
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'docs/architecture.mmd'
+      - '.github/workflows/generate-diagrams.yml'
+  workflow_dispatch:
+
+jobs:
+  generate-diagrams:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Install Mermaid CLI
+        run: npm install -g @mermaid-js/mermaid-cli
+        
+      - name: Create docs directory
+        run: mkdir -p docs/diagrams
+        
+      - name: Generate architecture diagram
+        run: |
+          cat > docs/architecture.mmd << 'EOF'
+          graph TB
+              subgraph "🖥️ Client Side"
+                  UI[React 18 + TypeScript<br/>Tailwind + shadcn/ui]
+                  EXT[Chrome Extension<br/>Manifest v3]
+              end
+              
+              subgraph "☁️ Backend Services"
+                  API[NestJS API<br/>TypeScript + Zod]
+                  AUTH[Supabase Auth<br/>PostgreSQL + Drizzle]
+              end
+              
+              subgraph "🎵 External APIs"
+                  YT[YouTube Data API v3<br/>Video Metadata]
+                  SP[Spotify Web API<br/>Music Catalog]
+              end
+              
+              subgraph "🔧 DevOps & Tools"
+                  BUILD[Vite + Yarn Workspaces]
+                  TEST[Jest + Vitest]
+                  DEPLOY[GitHub Actions<br/>Docker Ready]
+              end
+              
+              UI --> API
+              EXT --> API
+              API --> AUTH
+              API --> YT
+              API --> SP
+              
+              BUILD --> UI
+              BUILD --> API
+              TEST --> UI
+              TEST --> API
+              DEPLOY --> BUILD
+              
+              style UI fill:#61DAFB,stroke:#000,color:#000
+              style API fill:#E0234E,stroke:#000,color:#fff
+              style YT fill:#FF0000,stroke:#000,color:#fff
+              style SP fill:#1DB954,stroke:#000,color:#fff
+              style AUTH fill:#3ECF8E,stroke:#000,color:#000
+          EOF
+          
+      - name: Generate PNG from Mermaid
+        run: |
+          mmdc -i docs/architecture.mmd -o assets/architecture.png -w 1200 -H 800 --backgroundColor white
+          
+      - name: Commit generated diagrams
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add assets/architecture.png docs/architecture.mmd
+          git diff --staged --quiet || git commit -m "chore(docs): auto-generate architecture diagram [skip ci]"
+          git push

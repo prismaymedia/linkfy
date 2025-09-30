@@ -56,7 +56,47 @@ In the era of multiple music streaming platforms, sharing music between friends 
 
 <div align="center">
 
-![Architecture Diagram](./assets/architecture.png)
+```mermaid
+graph TB
+    subgraph "🖥️ Client Side"
+        UI[React 18 + TypeScript<br/>Tailwind + shadcn/ui]
+        EXT[Chrome Extension<br/>Manifest v3]
+    end
+    
+    subgraph "☁️ Backend Services"
+        API[NestJS API<br/>TypeScript + Zod]
+        AUTH[Supabase Auth<br/>PostgreSQL + Drizzle]
+    end
+    
+    subgraph "🎵 External APIs"
+        YT[YouTube Data API v3<br/>Video Metadata]
+        SP[Spotify Web API<br/>Music Catalog]
+    end
+    
+    subgraph "🔧 DevOps & Tools"
+        BUILD[Vite + Yarn Workspaces]
+        TEST[Jest + Vitest]
+        DEPLOY[GitHub Actions<br/>Docker Ready]
+    end
+    
+    UI --> API
+    EXT --> API
+    API --> AUTH
+    API --> YT
+    API --> SP
+    
+    BUILD --> UI
+    BUILD --> API
+    TEST --> UI
+    TEST --> API
+    DEPLOY --> BUILD
+    
+    style UI fill:#61DAFB,stroke:#000,color:#000
+    style API fill:#E0234E,stroke:#000,color:#fff
+    style YT fill:#FF0000,stroke:#000,color:#fff
+    style SP fill:#1DB954,stroke:#000,color:#fff
+    style AUTH fill:#3ECF8E,stroke:#000,color:#000
+```
 
 </div>
 

@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.1.2](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.1.1...linkfy-v2.1.2) (2025-09-30)
+
+
+### Bug Fixes
+
+* **docs:** correct table of contents formatting in CONTRIBUTING.md ([9f9bca0](https://github.com/prismaymedia/linkfy/commit/9f9bca06745161c7f454f5b70111d149decaaa49))
+* **docs:** update badge text for live demo link in README.md ([b19e803](https://github.com/prismaymedia/linkfy/commit/b19e80330f8e87494c6b214af4298548f2aa67db))
+* **docs:** update badge text from "Use App" to "Launch App" in README.md ([75635ae](https://github.com/prismaymedia/linkfy/commit/75635ae63585997eaa73c61bfa6998945e24f5e5))
+* **docs:** update help section wording in CONTRIBUTING.md for clarity ([3dafd15](https://github.com/prismaymedia/linkfy/commit/3dafd15e23537ed47be7812dc8905929bd95226e))
+
 ## [2.1.1](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.1.0...linkfy-v2.1.1) (2025-09-30)
 
 

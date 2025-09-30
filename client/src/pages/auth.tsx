@@ -4,7 +4,6 @@ import AuthForm from '@/components/authForm';
 import { supabase, getSession } from '@/lib/supabaseClient';
 import { Session } from '@supabase/supabase-js';
 import LanguageSwitcher from '@/components/language-switcher';
-import { SiFacebook } from 'react-icons/si';
 import { FcGoogle } from 'react-icons/fc';
 import { useTranslation } from 'react-i18next';
 
@@ -73,7 +72,7 @@ export default function AuthPage() {
     }
   };
 
-  const handleSocialLogin = async (provider: 'facebook' | 'google') => {
+  const handleSocialLogin = async (provider: 'google') => {
     setError(null);
     setSuccess(null);
 
@@ -137,14 +136,6 @@ export default function AuthPage() {
           >
             <FcGoogle className="text-xl" />
             <span className="text-gray-700">Google</span>
-          </button>
-
-          <button
-            onClick={() => handleSocialLogin('facebook')}
-            className="bg-blue-600 text-white px-4 py-2 rounded flex items-center space-x-2"
-          >
-            <SiFacebook className="text-white" />
-            <span>Facebook</span>
           </button>
         </div>
 

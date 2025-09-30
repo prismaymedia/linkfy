@@ -1,7 +1,6 @@
 {
   "home": {
-    "description": "Convert YouTube Music links to Spotify instantly",
-    "footer": "Perfect for Chrome extension • Privacy-focused • No data stored"
+    "description": "Convert YouTube Music links to Spotify instantly"
   },
   "conversion": {
     "successTitle": "Success!",

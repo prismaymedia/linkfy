@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
-import { supabase, getSession } from '@/lib/supabaseClient';
+import { supabase, getSession, getRedirectUrl } from '@/lib/supabaseClient';
 import { Session } from '@supabase/supabase-js';
 import LanguageSwitcher from '@/components/language-switcher';
 import { FcGoogle } from 'react-icons/fc';
@@ -16,11 +16,9 @@ export default function AuthPage() {
   const [, setLocation] = useLocation();
 
   useEffect(() => {
-    // Fetch session on load
     const fetchSession = async () => {
       const currentSession = await getSession();
       setSession(currentSession);
-      // If already authenticated, redirect to dashboard
       if (currentSession) {
         setLocation(ROUTES.DASHBOARD);
       }
@@ -28,11 +26,9 @@ export default function AuthPage() {
 
     fetchSession();
 
-    // Listen to auth state changes
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setSession(session);
-        // Redirect to dashboard on successful auth
         if (session) {
           setLocation(ROUTES.DASHBOARD);
         }
@@ -51,9 +47,7 @@ export default function AuthPage() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: import.meta.env.DEV
-          ? 'http://localhost:3000/dashboard'
-          : 'https://prismaymedia.github.io/linkfy/dashboard',
+        redirectTo: getRedirectUrl(),
       },
     });
 
@@ -65,12 +59,10 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen bg-surface flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-2xl font-semibold text-gray-800 mb-2">Linkfy</h1>
         </div>
 
-        {/* Social Login */}
         <div className="mt-4 flex justify-center space-x-3">
           <button
             onClick={() => handleSocialLogin('google')}

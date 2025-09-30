@@ -23,11 +23,16 @@ jobs:
         with:
           node-version: '20'
           
-      - name: Install Mermaid CLI
-        run: npm install -g @mermaid-js/mermaid-cli
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser
+          npm install -g @mermaid-js/mermaid-cli
         
-      - name: Create docs directory
-        run: mkdir -p docs/diagrams
+      - name: Create directories
+        run: |
+          mkdir -p docs/diagrams
+          mkdir -p assets
         
       - name: Generate architecture diagram
         run: |
@@ -73,9 +78,24 @@ jobs:
               style AUTH fill:#3ECF8E,stroke:#000,color:#000
           EOF
           
+      - name: Create Puppeteer config
+        run: |
+          cat > puppeteer-config.json << 'EOF'
+          {
+            "executablePath": "/usr/bin/chromium-browser",
+            "args": [
+              "--no-sandbox",
+              "--disable-setuid-sandbox",
+              "--disable-dev-shm-usage",
+              "--disable-web-security",
+              "--disable-features=VizDisplayCompositor"
+            ]
+          }
+          EOF
+          
       - name: Generate PNG from Mermaid
         run: |
-          mmdc -i docs/architecture.mmd -o assets/architecture.png -w 1200 -H 800 --backgroundColor white
+          mmdc -i docs/architecture.mmd -o assets/architecture.png -w 1200 -H 800 --backgroundColor white --puppeteerConfig puppeteer-config.json
           
       - name: Commit generated diagrams
         run: |

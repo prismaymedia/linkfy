@@ -17,8 +17,9 @@
     "test:e2e:server": "npm run nest:test:e2e --workspace=server",
     "lint": "npm run lint --workspaces --if-present",
     "prettier:format": "prettier --write \"**/*.{ts,tsx,js,jsx,md,mdx,css,scss,json,yaml,yml}\"",
-    "diagrams:generate": "mmdc -i docs/architecture.mmd -o assets/architecture.png -w 1200 -H 800 --backgroundColor white",
-    "diagrams:install": "npm install -g @mermaid-js/mermaid-cli"
+    "diagrams:generate": "mkdir -p assets && mmdc -i docs/architecture.mmd -o assets/architecture.png -w 1200 -H 800 --backgroundColor white",
+    "diagrams:install": "npm install -g @mermaid-js/mermaid-cli",
+    "diagrams:generate:ci": "mmdc -i docs/architecture.mmd -o assets/architecture.png -w 1200 -H 800 --backgroundColor white --puppeteerConfig puppeteer-config.json"
   },
   "workspaces": [
     "client",

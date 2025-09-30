@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.1.0](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.0.0...linkfy-v2.1.0) (2025-09-30)
+
+
+### Features
+
+* **auth:** redirect to dashboard after login in GitHub Pages ([693e4dd](https://github.com/prismaymedia/linkfy/commit/693e4dd23bae217e105dcd04aa5aa5263a798971))
+
+
+### Bug Fixes
+
+* **auth:** use correct redirect URL for GitHub Pages ([92c5556](https://github.com/prismaymedia/linkfy/commit/92c55567ab1818b9bf8045607419bcda36cfd1c8))
+
 ## [2.0.0](https://github.com/prismaymedia/linkfy/compare/linkfy-v1.1.1...linkfy-v2.0.0) (2025-09-30)
 
 

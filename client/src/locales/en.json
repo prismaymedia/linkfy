@@ -38,5 +38,160 @@
     "copiedDescription": "Link copied to clipboard!",
     "copyFailedTitle": "Failed to copy",
     "copyFailedDescription": "Please try again."
+  },
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "settings": "Settings",
+    "history": "History",
+    "help": "Help",
+    "account": "Account",
+    "signedIn": "Signed in",
+    "profileDesc": "Manage your account",
+    "settingsDesc": "App preferences",
+    "signOut": "Sign Out"
+  },
+  "breadcrumb": {
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "settings": "Settings",
+    "history": "History",
+    "help": "Help"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Convert and manage your music links",
+    "converter": "Music Converter",
+    "quickActions": "Quick Actions",
+    "viewHistory": "View History",
+    "viewHistoryDesc": "See your past conversions",
+    "profile": "Profile",
+    "profileDesc": "Manage your account",
+    "settings": "Settings",
+    "settingsDesc": "App preferences",
+    "stats": "Your Stats",
+    "conversions": "Conversions",
+    "thisWeek": "This Week",
+    "successRate": "Success Rate"
+  },
+  "profile": {
+    "title": "Profile",
+    "subtitle": "Manage your account information",
+    "accountInfo": "Account Information",
+    "email": "Email",
+    "memberSince": "Member Since",
+    "userId": "User ID",
+    "preferences": "Preferences",
+    "preferencesDesc": "User preferences will be available in a future update.",
+    "actions": "Actions",
+    "backToDashboard": "Back to Dashboard",
+    "settings": "Settings",
+    "history": "View History",
+    "signOut": "Sign Out",
+    "accountStats": "Account Stats",
+    "totalConversions": "Total Conversions",
+    "successfulConversions": "Successful",
+    "lastActivity": "Last Activity"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Customize your Linkfy experience",
+    "general": "General",
+    "autoConvert": "Auto Convert",
+    "autoConvertDesc": "Automatically convert URLs when pasted",
+    "saveHistory": "Save History",
+    "saveHistoryDesc": "Keep a record of your conversions",
+    "appearance": "Appearance",
+    "darkMode": "Dark Mode",
+    "darkModeDesc": "Use dark theme (coming soon)",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "themeDesc": "Theme customization coming in future updates",
+    "language": "Language",
+    "selectLanguage": "Select Language",
+    "languageDesc": "Choose your preferred language for the interface",
+    "notifications": "Notifications",
+    "enableNotifications": "Enable Notifications",
+    "notificationsDesc": "Get notified about conversion results",
+    "privacy": "Privacy & Security",
+    "privacyDesc": "Privacy and security settings will be available in future updates.",
+    "backToDashboard": "Back to Dashboard",
+    "profile": "Profile"
+  },
+  "history": {
+    "title": "Conversion History",
+    "subtitle": "View and manage your past conversions",
+    "totalConversions": "Total Conversions",
+    "successful": "Successful",
+    "successRate": "Success Rate",
+    "recentConversions": "Recent Conversions",
+    "noHistory": "No conversion history yet",
+    "startConverting": "Start Converting",
+    "success": "Success",
+    "failed": "Failed",
+    "pending": "Pending",
+    "openYoutube": "Open YouTube",
+    "openSpotify": "Open Spotify",
+    "copySpotifyUrl": "Copy Spotify URL",
+    "delete": "Delete",
+    "backToDashboard": "Back to Dashboard",
+    "settings": "Settings"
+  },
+  "help": {
+    "title": "Help & Support",
+    "subtitle": "Get help with Linkfy and learn how to use it effectively",
+    "quickStart": "Quick Start Guide",
+    "step1": {
+      "title": "Copy YouTube Music URL",
+      "desc": "Go to YouTube Music and copy the URL of the song you want to convert"
+    },
+    "step2": {
+      "title": "Paste and Convert",
+      "desc": "Paste the URL in Linkfy and click \"Convert to Spotify\""
+    },
+    "step3": {
+      "title": "Get Spotify Link",
+      "desc": "Copy the generated Spotify URL and enjoy your music"
+    },
+    "faqTitle": "Frequently Asked Questions",
+    "faq": {
+      "howItWorks": {
+        "question": "How does Linkfy work?",
+        "answer": "Linkfy uses YouTube Data API and Spotify Web API to extract track information and find matching songs between platforms."
+      },
+      "supportedPlatforms": {
+        "question": "What platforms are supported?",
+        "answer": "Currently, Linkfy supports conversion from YouTube Music to Spotify. More platforms will be added in future updates."
+      },
+      "accuracy": {
+        "question": "How accurate are the conversions?",
+        "answer": "Linkfy uses advanced matching algorithms to find the best matches. Accuracy depends on the availability of songs on both platforms and the quality of metadata."
+      },
+      "free": {
+        "question": "Is Linkfy free to use?",
+        "answer": "Yes, Linkfy is completely free to use. No subscription or payment required."
+      },
+      "privacy": {
+        "question": "What about my privacy?",
+        "answer": "Linkfy is privacy-focused. We don't store your URLs or personal data. All conversions are processed temporarily and securely."
+      }
+    },
+    "support": "Get Support",
+    "github": "GitHub Issues",
+    "githubDesc": "Report bugs or request features on our GitHub repository",
+    "openIssue": "Open Issue",
+    "community": "Community",
+    "communityDesc": "Join our community for discussions and help",
+    "comingSoon": "Coming Soon",
+    "tips": "Tips & Tricks",
+    "tip1": "Make sure the YouTube Music URL is for a specific song, not a playlist or channel",
+    "tip2": "If a song is not found on Spotify, try searching for alternative versions or covers",
+    "tip3": "Use the history feature to keep track of your successful conversions",
+    "tip4": "Check the settings page to customize your conversion preferences",
+    "backToDashboard": "Back to Dashboard",
+    "settings": "Settings"
   }
 }

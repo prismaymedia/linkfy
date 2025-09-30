@@ -9,6 +9,7 @@ import LanguageSwitcher from '@/components/language-switcher';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { User as SupabaseUser } from '@supabase/supabase-js';
+import { ROUTES } from '@/lib/routes';
 
 type MusicService = 'YouTube Music' | 'Spotify' | 'SoundCloud';
 
@@ -23,9 +24,11 @@ export default function Home() {
   useEffect(() => {
     const checkSession = async () => {
       const session = await getSession();
-      if (!session) {
-        setLocation('/auth');
+      if (session) {
+        // If authenticated, redirect to dashboard
+        setLocation(ROUTES.DASHBOARD);
       } else {
+
         const userData = await getUser();
         setUser(userData);
         setLoading(false);

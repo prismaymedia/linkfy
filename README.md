@@ -6,13 +6,12 @@
 
 *Convert YouTube Music URLs to Spotify URLs with real-time preview and authentic metadata extraction*
 
-[![GitHub stars](https://img.shields.io/github/stars/prismaymedia/linkfy?style=for-the-badge)](https://github.com/prismaymedia/linkfy/stargazers)
-[![GitHub license](https://img.shields.io/github/license/prismaymedia/linkfy?style=for-the-badge)](https://github.com/prismaymedia/linkfy/blob/main/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/prismaymedia/linkfy?style=for-the-badge)](https://github.com/prismaymedia/linkfy/blob/master/LICENSE)
 [![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org/)
 [![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)](https://reactjs.org/)
 [![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white)](https://nestjs.com/)
 
-[🚀 Live Demo](https://prismaymedia.github.io/linkfy/) • [📖 Documentation](#documentation) • [💬 Report Bug](https://github.com/prismaymedia/linkfy/issues) • [✨ Request Feature](https://github.com/prismaymedia/linkfy/issues)
+[🚀 App](https://prismaymedia.github.io/linkfy/) • [📖 Documentation](https://github.com/prismaymedia/linkfy/wiki) • [💬 Report Bug](https://github.com/prismaymedia/linkfy/issues) • [✨ Request Feature](https://github.com/prismaymedia/linkfy/issues)
 
 ![Linkfy Demo](./assets/demo.gif)
 
@@ -49,195 +48,9 @@ In the era of multiple music streaming platforms, sharing music between friends 
 [![Use App](https://img.shields.io/badge/🎵_Use_App-Live_Demo-1DB954?style=for-the-badge&logo=spotify)](https://prismaymedia.github.io/linkfy/)
 [![Self Hosting](https://img.shields.io/badge/🚀_Self_Hosting-Deploy_Guide-FF6B35?style=for-the-badge&logo=docker)](https://github.com/prismaymedia/linkfy/wiki/Self-Hosting-Guide)
 
-</div>
-
 **New to Linkfy?** [📖 Check out our complete guide](https://github.com/prismaymedia/linkfy/wiki) in the wiki!
 
-### 📋 Prerequisites
-
-- **Node.js** 20+ 
-- **Yarn** (recommended) or npm
-- **YouTube Data API v3** key
-- **Spotify Web API** credentials
-
-### 🔧 Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/prismaymedia/linkfy.git
-   cd linkfy
-   ```
-
-2. **Install dependencies**
-   ```bash
-   yarn install
-   # or npm install
-   ```
-
-3. **Configure environment variables**
-   
-   **For the server:**
-   ```bash
-   cd server && cp .env.example .env
-   ```
-   
-   **For the client:**
-   ```bash
-   cd client && cp .env.example .env
-   ```
-
-4. **Set up API credentials**
-   
-   Add your API credentials to `server/.env`:
-   ```env
-   YOUTUBE_API_KEY=your_youtube_api_key
-   SPOTIFY_CLIENT_ID=your_spotify_client_id
-   SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
-   ```
-
-5. **Start development servers**
-   
-   **Backend:**
-   ```bash
-   yarn dev:server
-   # Runs on http://localhost:3000
-   ```
-   
-   **Frontend:**
-   ```bash
-   yarn dev:client  
-   # Runs on http://localhost:5173
-   ```
-
-### 🔑 Getting API Keys
-
-<details>
-<summary><strong>YouTube Data API v3 Setup</strong></summary>
-
-1. Visit [Google Cloud Console](https://console.cloud.google.com)
-2. Create a new project or select an existing one
-3. Navigate to **APIs & Services > Library**
-4. Search for "YouTube Data API v3" and enable it
-5. Go to **APIs & Services > Credentials**
-6. Click **Create Credentials > API Key**
-7. Copy the API key to your `server/.env` file
-
-</details>
-
-<details>
-<summary><strong>Spotify Web API Setup</strong></summary>
-
-1. Visit [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
-2. Log in and click **Create App**
-3. Fill in app details:
-   - **App Name**: Linkfy (or your preferred name)
-   - **App Description**: Music URL converter
-   - **Redirect URI**: `http://localhost:3000/auth/callback`
-4. Copy **Client ID** and **Client Secret** to your `server/.env` file
-
-</details>
-
-### 🐳 Docker Setup (Optional)
-
-```bash
-# Build and run with Docker Compose
-docker-compose up --build
-
-# Or build individual services
-docker build -t linkfy-client ./client
-docker build -t linkfy-server ./server
-```
-
-## 🏗️ Project Structure
-
-```
-linkfy/
-├── 📱 client/           # React frontend (Vite + TypeScript)
-│   ├── src/
-│   │   ├── components/  # Reusable UI components
-│   │   ├── pages/       # Application pages
-│   │   ├── hooks/       # Custom React hooks
-│   │   ├── lib/         # Utilities and configurations
-│   │   └── locales/     # Internationalization files
-│   └── dist/           # Built frontend assets
-├── 🚀 server/          # NestJS backend
-│   ├── src/
-│   │   ├── controllers/ # API route handlers
-│   │   ├── services/    # Business logic
-│   │   ├── auth/        # Authentication modules
-│   │   └── utils/       # Helper utilities
-│   └── dist/           # Built server files
-├── 🔧 shared/          # Shared types and schemas
-├── 🌐 chrome-addon/    # Chrome extension files
-└── 📋 requests/        # API testing files
-```
-
-## 🔌 API Documentation
-
-### Track Information Endpoint
-
-**`POST /api/youtube-info`**
-
-Retrieve metadata from YouTube Music URLs without conversion.
-
-```http
-POST /api/youtube-info
-Content-Type: application/json
-
-{
-  "youtubeUrl": "https://music.youtube.com/watch?v=dQw4w9WgXcQ"
-}
-```
-
-**Response:**
-```json
-{
-  "trackName": "Never Gonna Give You Up",
-  "artistName": "Rick Astley", 
-  "thumbnailUrl": "https://i.ytimg.com/vi/dQw4w9WgXcQ/mqdefault.jpg",
-  "originalTitle": "Rick Astley - Never Gonna Give You Up (Official Music Video)"
-}
-```
-
-### Conversion Endpoint
-
-**`POST /api/convert`**
-
-Convert YouTube Music URLs to Spotify tracks with full metadata.
-
-```http
-POST /api/convert
-Content-Type: application/json
-
-{
-  "youtubeUrl": "https://music.youtube.com/watch?v=dQw4w9WgXcQ"
-}
-```
-
-**Response:**
-```json
-{
-  "spotifyUrl": "https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8",
-  "trackName": "Never Gonna Give You Up",
-  "artistName": "Rick Astley",
-  "albumName": "Whenever You Need Somebody",
-  "thumbnailUrl": "https://i.scdn.co/image/ab67616d0000b273...",
-  "matchConfidence": 0.95,
-  "alternativeMatches": []
-}
-```
-
-### Error Handling
-
-All endpoints return standardized error responses:
-
-```json
-{
-  "error": "TRACK_NOT_FOUND",
-  "message": "Could not find matching Spotify track",
-  "statusCode": 404
-}
-```
+</div>
 
 ## 🏛️ Architecture & Tech Stack
 
@@ -280,6 +93,9 @@ All endpoints return standardized error responses:
 
 ## 🧩 Chrome Extension
 
+<details>
+<summary><strong>🌐 Browser Extension Details - Click to expand</strong></summary>
+
 Linkfy includes a fully-featured Chrome extension for seamless browser integration:
 
 ### Features
@@ -295,7 +111,12 @@ Linkfy includes a fully-featured Chrome extension for seamless browser integrati
 3. Enable "Developer mode"
 4. Click "Load unpacked" and select `client/dist-extension/`
 
+</details>
+
 ## 🤝 Contributing
+
+<details>
+<summary><strong>🚀 How to Contribute - Click to expand</strong></summary>
 
 We welcome contributions from the community! Here's how you can help:
 
@@ -343,6 +164,8 @@ We welcome contributions from the community! Here's how you can help:
 - 📱 **Mobile App** - React Native implementation
 - 🧪 **Testing** - Increase test coverage
 
+</details>
+
 ## 📄 License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
@@ -360,16 +183,8 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 <div align="center">
 
 [![GitHub Issues](https://img.shields.io/github/issues/prismaymedia/linkfy?style=for-the-badge)](https://github.com/prismaymedia/linkfy/issues)
-[![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-blue?style=for-the-badge&logo=github)](https://github.com/prismaymedia/linkfy/discussions)
 
 </div>
-
-### Getting Help
-
-- 🐛 **Bug Reports** - [Create an issue](https://github.com/prismaymedia/linkfy/issues/new?template=bug_report.md)
-- 💡 **Feature Requests** - [Request a feature](https://github.com/prismaymedia/linkfy/issues/new?template=feature_request.md)
-- 💬 **General Questions** - [Start a discussion](https://github.com/prismaymedia/linkfy/discussions)
-- 📧 **Email Support** - [contact@prismaymedia.com](mailto:contact@prismaymedia.com)
 
 ### When Reporting Issues
 
@@ -387,8 +202,5 @@ Please include:
 **⭐ Star this repository if Linkfy helped you!**
 
 *Made with ❤️ by [Prisma y Media](https://github.com/prismaymedia)*
-
-[![GitHub stars](https://img.shields.io/github/stars/prismaymedia/linkfy?style=social)](https://github.com/prismaymedia/linkfy/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/prismaymedia/linkfy?style=social)](https://github.com/prismaymedia/linkfy/network/members)
 
 </div>

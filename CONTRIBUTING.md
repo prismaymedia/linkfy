@@ -4,13 +4,13 @@ First off, thank you for considering contributing to Linkfy! 🎉 It's people li
 
 ## 📋 Table of Contents
 
-- [Code of Conduct](#code-of-conduct)
-- [Getting Started](#getting-started)
-- [How to Contribute](#how-to-contribute)
-- [Development Workflow](#development-workflow)
-- [Style Guidelines](#style-guidelines)
-- [Commit Messages](#commit-messages)
-- [Pull Request Process](#pull-request-process)
+- [Code of Conduct](#-code-of-conduct)
+- [Getting Started](#-getting-started)
+- [How to Contribute](#-how-to-contribute)
+- [Development Workflow](#-development-workflow)
+- [Style Guidelines](#-style-guidelines)
+- [Commit Messages](#-commit-messages)
+- [Pull Request Process](#-pull-request-process)
 
 ## 📖 Code of Conduct
 

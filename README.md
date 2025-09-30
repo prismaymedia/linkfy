@@ -216,12 +216,8 @@ We welcome contributions from the community! Here's how you can help:
 
 ## 📞 Support & Community
 
-<div align="center">
 
 [![Report Issue](https://img.shields.io/badge/🐛_Report-Issue-FF4444?style=for-the-badge&logo=github)](https://github.com/prismaymedia/linkfy/issues/new)
-
-</div>
-
 
 ### When Reporting Issues
 

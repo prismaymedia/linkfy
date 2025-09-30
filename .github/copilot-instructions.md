@@ -53,7 +53,7 @@ Linkfy is a full-stack TypeScript project for converting YouTube Music URLs to S
 
 ## Commit Convention
 
-**ALWAYS** follow the Conventional Commits specification detailed in `COMMIT_CONVENTION.md`:
+**ALWAYS** follow the Conventional Commits specification detailed in `docs/COMMIT_CONVENTION.md`:
 
 - **Format**: `<type>(scope): description`
 - **Types**: `feat`, `fix`, `chore`, `docs`, `style`, `refactor`, `perf`, `test`

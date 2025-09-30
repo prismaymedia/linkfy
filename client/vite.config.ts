@@ -2,17 +2,16 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import fs from 'fs';
 import runtimeErrorOverlay from '@replit/vite-plugin-runtime-error-modal';
 import tailwindcss from '@tailwindcss/vite';
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__dirname);
+const __dirname = path.dirname(__filename);
 
 // Plugin to generate 404.html for GitHub Pages SPA support
 const generateGitHubPages404Plugin = () => ({
   name: 'generate-404-html',
-  generateBundle() {
+  generateBundle(options: any, bundle: any) {
     const html404Content = `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -61,12 +60,12 @@ const generateGitHubPages404Plugin = () => ({
   </body>
 </html>`;
 
-    // Emit the 404.html file to the bundle
-    this.emitFile({
+    // Add the 404.html file to the bundle
+    bundle['404.html'] = {
       type: 'asset',
       fileName: '404.html',
       source: html404Content
-    });
+    };
   }
 });
 

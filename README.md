@@ -45,7 +45,7 @@ In the era of multiple music streaming platforms, sharing music between friends 
 
 <div align="center">
 
-[![Use App](https://img.shields.io/badge/🎵_Use_App-App-1DB954?style=for-the-badge&logo=spotify)](https://prismaymedia.github.io/linkfy/)
+[![Launch App](https://img.shields.io/badge/🚀_Launch-App-1DB954?style=for-the-badge&logo=spotify)](https://prismaymedia.github.io/linkfy/)
 [![Self Hosting](https://img.shields.io/badge/🚀_Self_Hosting-Deploy_Guide-FF6B35?style=for-the-badge&logo=docker)](https://github.com/prismaymedia/linkfy/wiki/Self-Hosting-Guide)
 
 **New to Linkfy?** [📖 Check out our complete guide](https://github.com/prismaymedia/linkfy/wiki) in the wiki!

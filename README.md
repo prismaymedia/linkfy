@@ -6,13 +6,12 @@
 
 *Convert YouTube Music URLs to Spotify URLs with real-time preview and authentic metadata extraction*
 
-[![GitHub stars](https://img.shields.io/github/stars/prismaymedia/linkfy?style=for-the-badge)](https://github.com/prismaymedia/linkfy/stargazers)
 [![GitHub license](https://img.shields.io/github/license/prismaymedia/linkfy?style=for-the-badge)](https://github.com/prismaymedia/linkfy/blob/main/LICENSE)
 [![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org/)
 [![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)](https://reactjs.org/)
 [![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white)](https://nestjs.com/)
 
-[🚀 Live Demo](https://prismaymedia.github.io/linkfy/) • [📖 Documentation](#documentation) • [💬 Report Bug](https://github.com/prismaymedia/linkfy/issues) • [✨ Request Feature](https://github.com/prismaymedia/linkfy/issues)
+[🚀 App](https://prismaymedia.github.io/linkfy/) • [📖 Documentation](#documentation) • [💬 Report Bug](https://github.com/prismaymedia/linkfy/issues) • [✨ Request Feature](https://github.com/prismaymedia/linkfy/issues)
 
 ![Linkfy Demo](./assets/demo.gif)
 
@@ -52,57 +51,6 @@ In the era of multiple music streaming platforms, sharing music between friends 
 </div>
 
 **New to Linkfy?** [📖 Check out our complete guide](https://github.com/prismaymedia/linkfy/wiki) in the wiki!
-
-###  Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/prismaymedia/linkfy.git
-   cd linkfy
-   ```
-
-2. **Install dependencies**
-   ```bash
-   yarn install
-   # or npm install
-   ```
-
-3. **Configure environment variables**
-   
-   **For the server:**
-   ```bash
-   cd server && cp .env.example .env
-   ```
-   
-   **For the client:**
-   ```bash
-   cd client && cp .env.example .env
-   ```
-
-4. **Set up API credentials**
-   
-   Add your API credentials to `server/.env`:
-   ```env
-   YOUTUBE_API_KEY=your_youtube_api_key
-   SPOTIFY_CLIENT_ID=your_spotify_client_id
-   SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
-   ```
-
-5. **Start development servers**
-   
-   **Backend:**
-   ```bash
-   yarn dev:server
-   # Runs on http://localhost:3000
-   ```
-   
-   **Frontend:**
-   ```bash
-   yarn dev:client  
-   # Runs on http://localhost:5173
-   ```
-
-
 
 ## 🏛️ Architecture & Tech Stack
 
@@ -225,16 +173,8 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 <div align="center">
 
 [![GitHub Issues](https://img.shields.io/github/issues/prismaymedia/linkfy?style=for-the-badge)](https://github.com/prismaymedia/linkfy/issues)
-[![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-blue?style=for-the-badge&logo=github)](https://github.com/prismaymedia/linkfy/discussions)
 
 </div>
-
-### Getting Help
-
-- 🐛 **Bug Reports** - [Create an issue](https://github.com/prismaymedia/linkfy/issues/new?template=bug_report.md)
-- 💡 **Feature Requests** - [Request a feature](https://github.com/prismaymedia/linkfy/issues/new?template=feature_request.md)
-- 💬 **General Questions** - [Start a discussion](https://github.com/prismaymedia/linkfy/discussions)
-- 📧 **Email Support** - [contact@prismaymedia.com](mailto:contact@prismaymedia.com)
 
 ### When Reporting Issues
 

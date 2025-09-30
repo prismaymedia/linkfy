@@ -1,191 +1,394 @@
-# Linkfy
+<div align="center">
 
-A React application that converts YouTube Music URLs to Spotify URLs with real-time track preview and authentic metadata extraction.
+# 🎵 Linkfy
 
-[![Run on Replit](https://replit.com/badge/github)](https://replit.com/new/github)
+**The ultimate tool for seamless music platform conversion**
 
-## Features
+*Convert YouTube Music URLs to Spotify URLs with real-time preview and authentic metadata extraction*
 
-- **Real-time Track Preview**: Shows song information as you type YouTube Music URLs
-- **Authentic API Integration**: Uses YouTube Data API v3 and Spotify Web API for real track data
-- **Smart Track Matching**: Advanced search algorithms to find accurate Spotify matches
-- **One-click Copy**: Copy Spotify URLs directly to clipboard
-- **Chrome Extension Ready**: Built with extension compatibility in mind
-- **Clean UI**: Modern design with Spotify branding
+[![GitHub stars](https://img.shields.io/github/stars/prismaymedia/linkfy?style=for-the-badge)](https://github.com/prismaymedia/linkfy/stargazers)
+[![GitHub license](https://img.shields.io/github/license/prismaymedia/linkfy?style=for-the-badge)](https://github.com/prismaymedia/linkfy/blob/main/LICENSE)
+[![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org/)
+[![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)](https://reactjs.org/)
+[![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white)](https://nestjs.com/)
 
-## Demo
+[🚀 Live Demo](https://prismaymedia.github.io/linkfy/) • [📖 Documentation](#documentation) • [💬 Report Bug](https://github.com/prismaymedia/linkfy/issues) • [✨ Request Feature](https://github.com/prismaymedia/linkfy/issues)
 
-🔗 [Live demo](https://prismaymedia.github.io/linkfy/)
+![Linkfy Demo](./assets/demo.gif)
 
-1. Paste a YouTube Music URL (e.g., `https://music.youtube.com/watch?v=dQw4w9WgXcQ`)
-2. See instant track preview with thumbnail and metadata
-3. Click "Convert to Spotify" to find the matching track
-4. Copy the Spotify URL with one click
+</div>
 
-5. Paste a YouTube Music URL (e.g., `https://music.youtube.com/watch?v=dQw4w9WgXcQ`)
-6. See instant track preview with thumbnail and metadata
-7. Click "Convert to Spotify" to find the matching track
-8. Copy the Spotify URL with one click
+---
 
-## Setup
+## 🌟 Why Linkfy?
 
-### Prerequisites
+In the era of multiple music streaming platforms, sharing music between friends using different services has never been more challenging. **Linkfy** bridges this gap by providing instant, accurate conversions between YouTube Music and Spotify with authentic metadata extraction.
 
-- Node.js 20+
-- YouTube Data API v3 key
-- Spotify API credentials (Client ID & Secret)
+### ✨ Key Features
 
-### Quick Start with Replit
+- 🎯 **Real-time Track Preview** - See song information instantly as you type
+- 🔗 **Authentic API Integration** - Uses official YouTube Data API v3 and Spotify Web API
+- 🎵 **Smart Track Matching** - Advanced algorithms for accurate track identification
+- 📱 **Chrome Extension Ready** - Seamless browser integration
+- 🎨 **Modern UI/UX** - Clean, responsive design with platform-native styling
+- � **Privacy-First** - No data storage, no tracking, completely secure
+- 🌐 **Multi-language Support** - Available in multiple languages
+- ⚡ **Lightning Fast** - Optimized performance with smart caching
 
-Click the "Run on Replit" button above, then paste this repository's GitHub URL to instantly fork and run this project in your browser. No local setup required!
+### 🎯 Use Cases
 
-### Local Installation
+- **Music Discovery** - Found a great song on YouTube Music? Share it with Spotify friends instantly
+- **Playlist Migration** - Convert individual tracks when moving between platforms  
+- **Social Sharing** - Share music across different streaming platforms seamlessly
+- **Content Creation** - Perfect for DJs, music bloggers, and content creators
 
-1. Clone the repository:
+## 🚀 Quick Start
+
+<div align="center">
+
+[![Use App](https://img.shields.io/badge/🎵_Use_App-Live_Demo-1DB954?style=for-the-badge&logo=spotify)](https://prismaymedia.github.io/linkfy/)
+[![Self Hosting](https://img.shields.io/badge/🚀_Self_Hosting-Deploy_Guide-FF6B35?style=for-the-badge&logo=docker)](https://github.com/prismaymedia/linkfy/wiki/Self-Hosting-Guide)
+
+</div>
+
+**New to Linkfy?** [📖 Check out our complete guide](https://github.com/prismaymedia/linkfy/wiki) in the wiki!
+
+### 📋 Prerequisites
+
+- **Node.js** 20+ 
+- **Yarn** (recommended) or npm
+- **YouTube Data API v3** key
+- **Spotify Web API** credentials
+
+### 🔧 Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/prismaymedia/linkfy.git
+   cd linkfy
+   ```
+
+2. **Install dependencies**
+   ```bash
+   yarn install
+   # or npm install
+   ```
+
+3. **Configure environment variables**
+   
+   **For the server:**
+   ```bash
+   cd server && cp .env.example .env
+   ```
+   
+   **For the client:**
+   ```bash
+   cd client && cp .env.example .env
+   ```
+
+4. **Set up API credentials**
+   
+   Add your API credentials to `server/.env`:
+   ```env
+   YOUTUBE_API_KEY=your_youtube_api_key
+   SPOTIFY_CLIENT_ID=your_spotify_client_id
+   SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+   ```
+
+5. **Start development servers**
+   
+   **Backend:**
+   ```bash
+   yarn dev:server
+   # Runs on http://localhost:3000
+   ```
+   
+   **Frontend:**
+   ```bash
+   yarn dev:client  
+   # Runs on http://localhost:5173
+   ```
+
+### 🔑 Getting API Keys
+
+<details>
+<summary><strong>YouTube Data API v3 Setup</strong></summary>
+
+1. Visit [Google Cloud Console](https://console.cloud.google.com)
+2. Create a new project or select an existing one
+3. Navigate to **APIs & Services > Library**
+4. Search for "YouTube Data API v3" and enable it
+5. Go to **APIs & Services > Credentials**
+6. Click **Create Credentials > API Key**
+7. Copy the API key to your `server/.env` file
+
+</details>
+
+<details>
+<summary><strong>Spotify Web API Setup</strong></summary>
+
+1. Visit [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
+2. Log in and click **Create App**
+3. Fill in app details:
+   - **App Name**: Linkfy (or your preferred name)
+   - **App Description**: Music URL converter
+   - **Redirect URI**: `http://localhost:3000/auth/callback`
+4. Copy **Client ID** and **Client Secret** to your `server/.env` file
+
+</details>
+
+### 🐳 Docker Setup (Optional)
 
 ```bash
-git clone <your-repo-url>
-cd linkfy
+# Build and run with Docker Compose
+docker-compose up --build
+
+# Or build individual services
+docker build -t linkfy-client ./client
+docker build -t linkfy-server ./server
 ```
 
-2. Install dependencies:
+## 🏗️ Project Structure
 
-```bash
-npm install
+```
+linkfy/
+├── 📱 client/           # React frontend (Vite + TypeScript)
+│   ├── src/
+│   │   ├── components/  # Reusable UI components
+│   │   ├── pages/       # Application pages
+│   │   ├── hooks/       # Custom React hooks
+│   │   ├── lib/         # Utilities and configurations
+│   │   └── locales/     # Internationalization files
+│   └── dist/           # Built frontend assets
+├── 🚀 server/          # NestJS backend
+│   ├── src/
+│   │   ├── controllers/ # API route handlers
+│   │   ├── services/    # Business logic
+│   │   ├── auth/        # Authentication modules
+│   │   └── utils/       # Helper utilities
+│   └── dist/           # Built server files
+├── 🔧 shared/          # Shared types and schemas
+├── 🌐 chrome-addon/    # Chrome extension files
+└── 📋 requests/        # API testing files
 ```
 
-3. Configure environment variables:
+## 🔌 API Documentation
 
-```bash
-cp .env.example .env
-```
+### Track Information Endpoint
 
-4. Add your API credentials to `.env`:
+**`POST /api/youtube-info`**
 
-```env
-YOUTUBE_API_KEY=your_youtube_api_key
-SPOTIFY_CLIENT_ID=your_spotify_client_id
-SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
-```
+Retrieve metadata from YouTube Music URLs without conversion.
 
-### Getting API Keys
+```http
+POST /api/youtube-info
+Content-Type: application/json
 
-#### YouTube Data API v3
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com)
-2. Create a new project or select existing
-3. Enable YouTube Data API v3
-4. Create credentials (API Key)
-5. Copy the API key to your `.env` file
-
-#### Spotify Web API
-
-1. Go to [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
-2. Create a new app
-3. Copy Client ID and Client Secret
-4. Add to your `.env` file
-
-### Development
-
-Start the development server:
-
-```bash
-npm run dev
-```
-
-The app will be available at `http://localhost:5000`
-
-## API Endpoints
-
-### `POST /api/youtube-info`
-
-Get YouTube track metadata without conversion.
-
-**Request:**
-
-```json
 {
-  "youtubeUrl": "https://music.youtube.com/watch?v=VIDEO_ID"
+  "youtubeUrl": "https://music.youtube.com/watch?v=dQw4w9WgXcQ"
 }
 ```
 
 **Response:**
-
 ```json
 {
   "trackName": "Never Gonna Give You Up",
-  "artistName": "Rick Astley",
-  "thumbnailUrl": "https://i.ytimg.com/vi/VIDEO_ID/mqdefault.jpg",
-  "originalTitle": "Never Gonna Give You Up (4K Remaster)"
+  "artistName": "Rick Astley", 
+  "thumbnailUrl": "https://i.ytimg.com/vi/dQw4w9WgXcQ/mqdefault.jpg",
+  "originalTitle": "Rick Astley - Never Gonna Give You Up (Official Music Video)"
 }
 ```
 
-### `POST /api/convert`
+### Conversion Endpoint
 
-Convert YouTube Music URL to Spotify track.
+**`POST /api/convert`**
 
-**Request:**
+Convert YouTube Music URLs to Spotify tracks with full metadata.
 
-```json
+```http
+POST /api/convert
+Content-Type: application/json
+
 {
-  "youtubeUrl": "https://music.youtube.com/watch?v=VIDEO_ID"
+  "youtubeUrl": "https://music.youtube.com/watch?v=dQw4w9WgXcQ"
 }
 ```
 
 **Response:**
-
 ```json
 {
-  "spotifyUrl": "https://open.spotify.com/track/TRACK_ID",
+  "spotifyUrl": "https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8",
   "trackName": "Never Gonna Give You Up",
   "artistName": "Rick Astley",
   "albumName": "Whenever You Need Somebody",
-  "thumbnailUrl": "https://i.scdn.co/image/ab67616d0000b273..."
+  "thumbnailUrl": "https://i.scdn.co/image/ab67616d0000b273...",
+  "matchConfidence": 0.95,
+  "alternativeMatches": []
 }
 ```
 
-## Architecture
+### Error Handling
 
-- **Frontend**: React + TypeScript with Vite
-- **Backend**: Express.js with TypeScript
-- **APIs**: YouTube Data API v3, Spotify Web API
-- **Styling**: Tailwind CSS + shadcn/ui components
-- **State**: TanStack Query for API state management
-- **Validation**: Zod schemas for type-safe API calls
+All endpoints return standardized error responses:
 
-## Chrome Extension Compatibility
+```json
+{
+  "error": "TRACK_NOT_FOUND",
+  "message": "Could not find matching Spotify track",
+  "statusCode": 404
+}
+```
 
-The application is structured for easy Chrome extension conversion:
+## 🏛️ Architecture & Tech Stack
 
-- Single-page application design
-- No external dependencies in content scripts
-- Popup-friendly responsive layout
-- Manifest v3 ready architecture
+<div align="center">
 
-## Contributing
+![Architecture Diagram](./assets/architecture.png)
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+</div>
 
-## License
+### Frontend Stack
+- **⚛️ React 18** - Modern UI library with hooks
+- **📘 TypeScript** - Type-safe development
+- **⚡ Vite** - Lightning-fast build tool
+- **🎨 Tailwind CSS** - Utility-first styling
+- **🧩 shadcn/ui** - Beautiful, accessible components
+- **🔄 TanStack Query** - Powerful data fetching & caching
+- **🌐 React Router** - Client-side routing
+- **🌍 React i18next** - Internationalization
 
-MIT License - see LICENSE file for details
+### Backend Stack
+- **🚀 NestJS** - Scalable Node.js framework
+- **📘 TypeScript** - End-to-end type safety
+- **🔍 Zod** - Runtime type validation
+- **🔑 Supabase Auth** - Authentication & user management
+- **📊 Drizzle ORM** - Type-safe database operations
+- **🐘 PostgreSQL** - Robust relational database
+- **📈 Sentry** - Error monitoring & performance
 
-## Security
+### External APIs
+- **🔴 YouTube Data API v3** - Video metadata extraction
+- **🟢 Spotify Web API** - Music catalog search & matching
+- **🔐 Google OAuth 2.0** - Secure authentication
 
-- API keys are protected via environment variables
-- No sensitive data is logged or stored
-- CORS protection enabled
-- Input validation on all endpoints
+### Development & DevOps
+- **📦 Yarn Workspaces** - Monorepo management
+- **🧪 Jest + Vitest** - Comprehensive testing
+- **📏 ESLint + Prettier** - Code quality & formatting
+- **🐳 Docker** - Containerization support
+- **🚀 GitHub Actions** - CI/CD automation
 
-## Support
+## 🧩 Chrome Extension
 
-For issues or questions, please open a GitHub issue with:
+Linkfy includes a fully-featured Chrome extension for seamless browser integration:
 
-- Description of the problem
-- Steps to reproduce
-- Expected vs actual behavior
-- API error logs (if applicable)
+### Features
+- 🔗 **One-click conversion** from any YouTube Music page
+- 📋 **Smart URL detection** in browser tabs
+- 🎯 **Context menu integration** for right-click conversion
+- 🎨 **Native browser UI** with consistent styling
+- ⚡ **Manifest v3 compliance** for modern Chrome compatibility
+
+### Installation
+1. Build the extension: `yarn build:extension:client`
+2. Open Chrome Extensions (`chrome://extensions/`)
+3. Enable "Developer mode"
+4. Click "Load unpacked" and select `client/dist-extension/`
+
+## 🤝 Contributing
+
+We welcome contributions from the community! Here's how you can help:
+
+### Development Workflow
+
+1. **Fork & Clone**
+   ```bash
+   git clone https://github.com/your-username/linkfy.git
+   cd linkfy
+   ```
+
+2. **Create Feature Branch**
+   ```bash
+   git checkout -b feature/amazing-feature
+   ```
+
+3. **Set Up Development Environment**
+   ```bash
+   yarn install
+   # Follow setup instructions above
+   ```
+
+4. **Make Changes & Test**
+   ```bash
+   yarn test:client
+   yarn test:server
+   ```
+
+5. **Submit Pull Request**
+
+### Code Guidelines
+
+- ✅ Follow TypeScript strict mode
+- ✅ Use conventional commits
+- ✅ Add tests for new features  
+- ✅ Update documentation
+- ✅ Ensure all checks pass
+
+### Areas for Contribution
+
+- 🎵 **New Music Platforms** - Add support for Apple Music, Amazon Music, etc.
+- 🌍 **Internationalization** - Translate to new languages
+- 🎨 **UI/UX Improvements** - Enhanced user interface
+- 🔧 **Performance Optimization** - Faster conversions and caching
+- 📱 **Mobile App** - React Native implementation
+- 🧪 **Testing** - Increase test coverage
+
+## 📄 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+## 🔒 Security & Privacy
+
+- 🔐 **Zero Data Storage** - No user data or URLs are stored
+- 🛡️ **API Key Protection** - Credentials secured via environment variables
+- 🔒 **HTTPS Only** - All communications encrypted
+- 🚫 **No Tracking** - Completely privacy-focused
+- ✅ **Input Validation** - All endpoints protected against injection
+
+## 📞 Support & Community
+
+<div align="center">
+
+[![GitHub Issues](https://img.shields.io/github/issues/prismaymedia/linkfy?style=for-the-badge)](https://github.com/prismaymedia/linkfy/issues)
+[![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-blue?style=for-the-badge&logo=github)](https://github.com/prismaymedia/linkfy/discussions)
+
+</div>
+
+### Getting Help
+
+- 🐛 **Bug Reports** - [Create an issue](https://github.com/prismaymedia/linkfy/issues/new?template=bug_report.md)
+- 💡 **Feature Requests** - [Request a feature](https://github.com/prismaymedia/linkfy/issues/new?template=feature_request.md)
+- 💬 **General Questions** - [Start a discussion](https://github.com/prismaymedia/linkfy/discussions)
+- 📧 **Email Support** - [contact@prismaymedia.com](mailto:contact@prismaymedia.com)
+
+### When Reporting Issues
+
+Please include:
+- 📝 Detailed description of the problem
+- 🔄 Steps to reproduce the issue
+- 🎯 Expected vs actual behavior  
+- 🖥️ Browser/OS information
+- 📊 Console logs (if applicable)
+
+---
+
+<div align="center">
+
+**⭐ Star this repository if Linkfy helped you!**
+
+*Made with ❤️ by [Prisma y Media](https://github.com/prismaymedia)*
+
+[![GitHub stars](https://img.shields.io/github/stars/prismaymedia/linkfy?style=social)](https://github.com/prismaymedia/linkfy/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/prismaymedia/linkfy?style=social)](https://github.com/prismaymedia/linkfy/network/members)
+
+</div>

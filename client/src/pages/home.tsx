@@ -95,11 +95,6 @@ export default function Home() {
 
         {/* Conversion Form */}
         <ConversionForm />
-
-        {/* Footer */}
-        <div className="text-center mt-8">
-          <p className="text-xs text-gray-500">{t('home.footer')}</p>
-        </div>
       </div>
     </div>
   );

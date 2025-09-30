@@ -51,6 +51,24 @@ Linkfy is a full-stack TypeScript project for converting YouTube Music URLs to S
 - All endpoints validate input with Zod
 - Use Jest for backend tests (`server/src/test/`)
 
+## Commit Convention
+
+**ALWAYS** follow the Conventional Commits specification detailed in `COMMIT_CONVENTION.md`:
+
+- **Format**: `<type>(scope): description`
+- **Types**: `feat`, `fix`, `chore`, `docs`, `style`, `refactor`, `perf`, `test`
+- **Scopes**: `api`, `client`, `extension`, `shared`, `auth`, `ui`, `config`
+- **Breaking changes**: Add `!` after type (e.g., `feat!:`) or `BREAKING CHANGE:` footer
+- **Description**: Imperative mood, lowercase, no period, max 50 chars
+
+### Common scope mapping:
+- `client/` changes → `client` scope
+- `server/` changes → `api` scope  
+- `chrome-addon/` changes → `extension` scope
+- `shared/` changes → `shared` scope
+- `*.md` files → `docs` type
+- Config files → `chore` type
+
 ## Useful References
 
 - `README.md`: Setup, API, architecture overview

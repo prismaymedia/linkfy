@@ -7,6 +7,7 @@ import LanguageSwitcher from '@/components/language-switcher';
 import { SiFacebook } from 'react-icons/si';
 import { FcGoogle } from 'react-icons/fc';
 import { useTranslation } from 'react-i18next';
+import { ROUTES } from '@/lib/routes';
 
 export default function AuthPage() {
   const { t } = useTranslation();
@@ -22,6 +23,10 @@ export default function AuthPage() {
     const fetchSession = async () => {
       const currentSession = await getSession();
       setSession(currentSession);
+      // If already authenticated, redirect to dashboard
+      if (currentSession) {
+        setLocation(ROUTES.DASHBOARD);
+      }
     };
 
     fetchSession();
@@ -30,13 +35,17 @@ export default function AuthPage() {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setSession(session);
+        // Redirect to dashboard on successful auth
+        if (session) {
+          setLocation(ROUTES.DASHBOARD);
+        }
       },
     );
 
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, []);
+  }, [setLocation]);
 
   const handleAuth = async (email: string, password: string) => {
     setError(null);
@@ -55,7 +64,7 @@ export default function AuthPage() {
 
       setSuccess('✅ Signed in successfully!');
       console.log('User session:', data.session);
-      setLocation('/');
+      setLocation(ROUTES.DASHBOARD);
     } else {
       const { data, error } = await supabase.auth.signUp({
         email,

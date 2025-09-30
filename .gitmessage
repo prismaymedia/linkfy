@@ -1,0 +1,33 @@
+# Commit template for Linkfy
+# Follow convention: <type>(scope): description
+#
+# Available types:
+# feat     - New feature (MINOR version bump)
+# fix      - Bug fix (PATCH version bump)  
+# chore    - Maintenance, configuration
+# docs     - Documentation only
+# style    - Formatting, whitespace
+# refactor - Code restructuring without functional change
+# perf     - Performance improvement
+# test     - Tests
+#
+# Common scopes:
+# api        - Changes in server/
+# client     - Changes in client/
+# extension  - Changes in chrome-addon/
+# shared     - Changes in shared/
+# auth       - Authentication
+# ui         - UI components
+# config     - Configuration files
+#
+# Breaking changes: add ! after type (e.g: feat!:)
+# 
+# Examples:
+# feat(client): add track preview component
+# fix(api): resolve spotify timeout issue
+# chore(deps): update typescript to v5
+# docs: update installation guide
+#
+# Line 1: max 50 characters, imperative mood, lowercase, no period
+# Line 2: empty
+# Line 3+: optional detailed description

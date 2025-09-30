@@ -15,5 +15,4 @@ jobs:
     steps:
       - uses: googleapis/release-please-action@v4
         with:
-          release-type: node
-          package-name: linkfy
+          token: ${{ secrets.GITHUB_TOKEN }}

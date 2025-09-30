@@ -1,0 +1,33 @@
+commit_message:
+  format: "<type>(scope): <description>"
+  types:
+    feat: "New features (MINOR version bump)"
+    fix: "Bug fixes (PATCH version bump)"
+    chore: "Maintenance, build, config changes"
+    docs: "Documentation only"
+    style: "Code formatting, whitespace"
+    refactor: "Code restructuring without feature changes"
+    perf: "Performance improvements"
+    test: "Test additions or corrections"
+  
+  scopes:
+    api: "server/ directory changes"
+    client: "client/ directory changes"
+    extension: "chrome-addon/ directory changes"
+    shared: "shared/ directory changes"
+    auth: "authentication related"
+    ui: "user interface components"
+    config: "configuration files"
+  
+  rules:
+    - "Use imperative mood (add not added)"
+    - "Start with lowercase"
+    - "No period at end"
+    - "Maximum 50 characters for description"
+    - "Add ! after type for breaking changes (feat!:)"
+  
+  examples:
+    - "feat(client): add spotify track preview"
+    - "fix(api): resolve youtube timeout issue"
+    - "chore(deps): update dependencies"
+    - "docs: update API documentation"

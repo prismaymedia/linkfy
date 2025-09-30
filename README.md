@@ -6,7 +6,7 @@
 
 *Convert YouTube Music URLs to Spotify URLs with real-time preview and authentic metadata extraction*
 
-[![GitHub license](https://img.shields.io/github/license/prismaymedia/linkfy?style=for-the-badge)](https://github.com/prismaymedia/linkfy/blob/main/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/prismaymedia/linkfy?style=for-the-badge)](https://github.com/prismaymedia/linkfy/blob/master/LICENSE)
 [![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org/)
 [![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)](https://reactjs.org/)
 [![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white)](https://nestjs.com/)

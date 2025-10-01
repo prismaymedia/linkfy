@@ -10,16 +10,20 @@
 
 ---
 
-## 🎯 Quarter Overview
+## 🎯 Quarter Overview (Updated)
 
-| Sprint | Dates | Theme | Release | Focus |
-|--------|-------|-------|---------|-------|
-| 1-2 | Oct 1-15 | Critical Stability 🔴 | v2.3.0 | Fix bugs, stable mobile |
-| 3-4 | Oct 16-31 | Quick Value Features 🚀 | v2.4.0 | Dark mode, smart URLs |
-| 5-6 | Nov 1-15 | User Engagement 💎 | v2.5.0 | History, favorites, extension |
-| 7-8 | Nov 16-30 | Performance ⚡ | v2.6.0 | Speed, caching, optimization |
-| 9 | Dec 1-15 | Music Player 🎵 | v2.7.0 | Integrated player MVP |
-| 10 | Dec 16-31 | Polish & Planning 🎁 | v2.8.0 | Quality, docs, Q1 prep |
+| Sprint | Dates | Theme | Release | Focus | Planned Capacity (h) | Notes |
+|--------|-------|-------|---------|-------|----------------------|-------|
+| 1-2 | Oct 1-15 | Critical Stability 🔴 | v2.3.0 | Fix bugs, stable mobile | 80 | ✅ Delivered base stability |
+| 3-4 | Oct 16-31 | Quick Value Features 🚀 | v2.4.0 | Dark mode, smart URLs | 80 | In progress / no holidays |
+| 5-6 | Nov 1-15 | User Engagement 💎 | v2.5.0 | History, favorites, extension | 80 | Prepare data for retention |
+| 7-8 | Nov 16-30 | Performance ⚡ | v2.6.0 | Speed, caching, optimization | 80 | Player pipeline pre-work |
+| 9 | Dec 1-15 | Music Player 🎵 | v2.7.0 | Player MVP (core) | 68 | Dev A 5 vacation days (50%) |
+| 10 | Dec 16-31 | Polish & Planning 🎁 | v2.8.0 | Quality, docs, Q1 prep | 52 | Dev B 5 vacation days + holidays |
+
+> Capacity note: December staggered vacations (Dev A: first half 5 workdays off, Dev B: second half 5 workdays off) reduce effective capacity ~20% in Sprint 9 and ~35% in Sprint 10.
+
+> Holiday planning: All capacity assumptions must explicitly account for Colombian public holidays (see "Colombia Q4 2025 Public Holidays" section). Effective delivery focus should not exceed 85–90% of theoretical hours in holiday-impacted sprints.
 
 ---
 
@@ -127,44 +131,49 @@ Week 8 - Frontend (40h)
 
 ### Sprint 9: Music Player MVP (Dec 1-15) 🎵
 
-**Effort**: 80 hours total (40h per developer)
+**Adjusted Capacity**: 68h (Dev A 5 vacation days → ~12h reduction)
 
 ```
-Weeks 9-10 - Integrated Player (80h)
-├── Player component ........................ 16h 🌟 BIG FEATURE
-├── Play/pause controls ..................... 8h
-├── Progress bar & seek ..................... 8h
-├── Volume control .......................... 6h
-├── State persistence ....................... 8h
-├── Keyboard shortcuts ...................... 6h
-├── UI/UX polish ............................ 10h
-├── Cross-browser testing ................... 8h
-└── Bug fixes ............................... 10h
+Core Player (68h)
+├── Core player shell (layout + hooks) ...... 10h
+├── Basic audio engine integration .......... 10h
+├── Play/pause + load states ................ 6h
+├── Progress bar (read-only) ................ 6h
+├── Basic seek (no edge buffering) .......... 6h
+├── Volume + mute toggle .................... 4h
+├── Minimal state persistence (session) ..... 6h
+├── Initial shortcut map .................... 4h
+├── Minimal error handling (fallback) ....... 6h
+└── Buffer: micro-fixes / QA ................ 10h
 ```
 
-**User Impact**: Preview before converting - game changer!  
-**Success Metric**: 60% use player, <1% playback errors
+**Deferred to Sprint 10**: Deep cross-browser test, advanced UI polish, advanced metrics.
+
+**User Impact**: Basic preview unlocks early validation  
+**Success Metric**: 40% of users interact with preview (incremental target), <2% critical playback errors
 
 ---
 
 ### Sprint 10: Polish & Planning (Dec 16-31) 🎁
 
-**Effort**: 60 hours total (30h per developer - holidays!)
+**Adjusted Capacity**: 52h (Dev B 5 vacation days + holidays → -8h dev B, -4h overhead)
 
 ```
-Weeks 11-12 - Wrap Up (60h)
-├── Critical bug fixes ...................... 12h
-├── Error handling .......................... 8h
-├── User onboarding ......................... 8h
-├── Documentation ........................... 8h
-├── Monitoring setup ........................ 6h
-├── Release notes ........................... 4h
-├── Q1 planning ............................. 8h
-└── Code cleanup ............................ 6h
+Wrap Up & Player Finishing (52h)
+├── Cross-browser testing (player) .......... 6h
+├── UI/UX polish (controls + accessibility).. 8h
+├── Enhanced error handling (fallback streams) 6h
+├── Monitoring setup (player + perf spans) .. 6h
+├── Refined user onboarding ................. 6h
+├── Documentation (API + player) ............ 6h
+├── Q1 2026 planning pack ................... 8h
+└── Release notes + cleanup ................. 6h
 ```
 
-**User Impact**: Polished, production-ready experience  
-**Success Metric**: Zero critical bugs, ready for scale
+**User Impact**: Polished experience and player ready for scaling  
+**Success Metric**: Zero open critical bugs, player p95 init <800ms
+
+> Risk: reduced capacity + holidays → prioritize blocking items (monitoring + cross-browser) at sprint start.
 
 ---
 
@@ -193,22 +202,71 @@ Weeks 11-12 - Wrap Up (60h)
 ## 📊 Effort Distribution
 
 ```
-Total Q4 Effort: ~460 hours (230h per developer)
+Total Q4 Effort (Revisado): ~440 hours (Capacidad reducida diciembre)
 
 By Category:
 ├── Bug Fixes & Stability .......... 80h (17%) 🔴
-├── New Features ................... 200h (43%) 🚀
-├── Performance & Optimization ..... 80h (17%) ⚡
-├── Testing & Quality .............. 60h (13%) 🧪
-└── Documentation & Planning ....... 40h (9%) 📚
+├── New Features ................... 188h (43%) 🚀
+├── Performance & Optimization ..... 80h (18%) ⚡
+├── Testing & Quality .............. 58h (13%) 🧪
+└── Documentation & Planning ....... 38h (9%) 📚
 
 By Sprint:
 ├── Sprint 1-2 ..................... 80h
 ├── Sprint 3-4 ..................... 80h
 ├── Sprint 5-6 ..................... 80h
 ├── Sprint 7-8 ..................... 80h
-├── Sprint 9 ....................... 80h
-└── Sprint 10 ...................... 60h
+├── Sprint 9 ....................... 68h
+└── Sprint 10 ...................... 52h
+
+---
+
+## 👥 Resource & Capacity Notes
+
+| Resource | Oct | Nov | Dec 1-15 | Dec 16-31 | Vacation Pattern |
+|----------|-----|-----|----------|-----------|------------------|
+| Dev A | 100% | 100% | 50% (5d off) | 100% | First half December off |
+| Dev B | 100% | 100% | 100% | 60% (5d off + holidays) | Second half December off |
+
+## 🇨🇴 Colombia Q4 2025 Public Holidays (Impact)
+
+| Date | Holiday | Falls In | Sprint Affected | Impact (est.) |
+|------|---------|----------|-----------------|---------------|
+| Oct 6 (Mon) | Día de la Raza (moved) | Oct 1-15 | Sprint 1-2 | Historical (already delivered) |
+| Nov 3 (Mon) | All Saints' Day (moved) | Nov 1-15 | Sprint 5-6 | -1 working day (~5%) |
+| Nov 17 (Mon) | Cartagena Independence (moved) | Nov 16-30 | Sprint 7-8 | -1 working day (~5%) |
+| Dec 8 (Mon) | Immaculate Conception | Dec 1-15 | Sprint 9 | -1 working day (~6% of adjusted) |
+| Dec 25 (Thu) | Christmas Day | Dec 16-31 | Sprint 10 | -1 working day (~7% of adjusted) |
+
+Optional culturally observed half-days (Dec 24 PM, Dec 31 PM) are NOT included above; if enforced, reduce available focus hours a further ~5–8% in Sprint 10.
+
+### Capacity Clarifications
+| Sprint | Planned (h) | Holidays Deduction | Vacation Deduction | Effective Focus (h) | Notes |
+|--------|-------------|--------------------|--------------------|---------------------|-------|
+| 5-6 | 80 | -4 | 0 | ~76 | Adjust backlog to avoid overcommit |
+| 7-8 | 80 | -4 | 0 | ~76 | Keep perf tasks modular |
+| 9 | 68 | -4 (Dec 8) | -12 (Dev A) | ~52 | Prioritize core playback first |
+| 10 | 52 | -4 (Dec 25) | -12 (Dev B + overhead) | ~36 | Front-load monitoring + cross-browser |
+
+> The Player roadmap should treat any scope beyond "Core Player" as stretch once effective focus <55h (Sprint 9) and <40h (Sprint 10).
+
+### Planning Guidelines
+- Always subtract confirmed holidays before assigning story points / hours.
+- Treat vacation + holiday overlap as non-recuperable (no evening catch-up assumptions).
+- Mark holiday-adjusted capacity in ClickUp sprint description.
+- Flag any sprint forecast >90% utilization as high-risk during planning.
+- Use feature flags for player sub-features (seek, shortcuts, persistence) to allow partial release safely.
+
+Policy: Alternate vacations to maintain continuity and avoid blocking the Player initiative.
+
+Mitigations:
+- Critical player PRs reviewed before time off
+- Incremental technical documentation (avoid large end-of-quarter dump)
+- Feature flags to enable/disable player safely without heavy rollback
+
+---
+
+> Language Policy: All future documentation updates must be written in English to maintain consistency across contributors.
 ```
 
 ---

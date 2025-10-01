@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Linkfy is a full-stack TypeScript project for converting YouTube Music URLs to Spotify URLs, featuring real-time track preview and metadata extraction. It consists of:
+Universal music streaming URL converter. Convert links between Spotify, YouTube Music, Apple Music, and other platforms with real-time track preview and metadata extraction. Built with TypeScript.
 
 - **Frontend**: React (Vite, TypeScript, Tailwind CSS, shadcn/ui)
 - **Backend**: NestJS (TypeScript)

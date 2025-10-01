@@ -1,0 +1,24 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "name": "linkfy-client",
+  "buildCommand": "cd .. && yarn install && yarn build:client",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "installCommand": "cd .. && yarn install",
+  "devCommand": "yarn dev",
+  "regions": ["iad1"],
+  "public": true,
+  "github": {
+    "enabled": true,
+    "silent": false,
+    "autoAlias": true,
+    "autoJobCancelation": true
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

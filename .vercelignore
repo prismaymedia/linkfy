@@ -1,0 +1,86 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Testing
+coverage
+.nyc_output
+*.lcov
+
+# Build artifacts (will be built by Vercel)
+dist
+dist-ssr
+build
+out
+
+# Environment files (use Vercel dashboard)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# CI/CD
+.github
+.gitlab-ci.yml
+.travis.yml
+
+# Documentation
+*.md
+docs
+assets
+backlog
+
+# Test files
+test
+tests
+__tests__
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+
+# Chrome extension
+chrome-addon
+*.crx
+*.pem
+
+# Temporary files
+tmp
+temp
+.tmp
+.temp
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Request files
+requests

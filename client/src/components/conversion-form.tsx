@@ -16,13 +16,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { SiYoutubemusic } from 'react-icons/si';
-import { Loader2, AlertCircle } from 'lucide-react';
+import { Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
 import ResultCard from './result-card';
 import { useTranslation } from 'react-i18next';
 
@@ -41,6 +42,7 @@ export default function ConversionForm() {
 
   const form = useForm<ConvertUrlRequest>({
     resolver: zodResolver(convertUrlSchema),
+    mode: 'onChange', // Enable real-time validation
     defaultValues: {
       youtubeUrl: '',
     },
@@ -114,6 +116,12 @@ export default function ConversionForm() {
 
   const isDuplicateUrl = lastProcessedUrl && watchedUrl === lastProcessedUrl;
   const isFormValid = form.formState.isValid && !isDuplicateUrl;
+  const fieldState = form.getFieldState('youtubeUrl');
+  const isFieldValid =
+    !fieldState.error &&
+    fieldState.isDirty &&
+    watchedUrl &&
+    watchedUrl.trim() !== '';
 
   return (
     <>
@@ -135,12 +143,44 @@ export default function ConversionForm() {
                           {...field}
                           type="url"
                           placeholder={t('form.youtubeUrlPlaceholder')}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-spotify focus:border-spotify transition-colors duration-200 pr-10"
+                          className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-spotify focus:border-spotify transition-colors duration-200 pr-10 ${
+                            fieldState.error
+                              ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                              : isFieldValid
+                                ? 'border-green-500 focus:ring-green-500 focus:border-green-500'
+                                : 'border-gray-300'
+                          }`}
+                          aria-invalid={!!fieldState.error}
+                          aria-describedby={
+                            fieldState.error
+                              ? 'youtubeUrl-error'
+                              : 'youtubeUrl-hint'
+                          }
                         />
-                        <SiYoutubemusic className="absolute right-3 top-1/2 transform -translate-y-1/2 text-youtube opacity-50" />
+                        {isLoadingPreview ? (
+                          <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 animate-spin text-gray-400" />
+                        ) : isFieldValid ? (
+                          <CheckCircle2
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-green-500"
+                            aria-label={t('form.validUrl')}
+                          />
+                        ) : fieldState.error && fieldState.isDirty ? (
+                          <AlertCircle
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-red-500"
+                            aria-label={t('form.invalidUrl')}
+                          />
+                        ) : (
+                          <SiYoutubemusic className="absolute right-3 top-1/2 transform -translate-y-1/2 text-youtube opacity-50" />
+                        )}
                       </div>
                     </FormControl>
-                    <FormMessage />
+                    <FormDescription
+                      id="youtubeUrl-hint"
+                      className="text-xs text-gray-500"
+                    >
+                      {t('form.youtubeUrlHint')}
+                    </FormDescription>
+                    <FormMessage id="youtubeUrl-error" role="alert" />
                   </FormItem>
                 )}
               />

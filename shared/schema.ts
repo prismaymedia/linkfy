@@ -18,21 +18,46 @@ export const insertConversionSchema = createInsertSchema(conversions).pick({
 
 export const convertUrlSchema = z.object({
   youtubeUrl: z
-    .string()
-    .url('Please enter a valid URL')
-    .refine((url) => {
-      try {
-        const urlObj = new URL(url);
-        if (urlObj.hostname !== 'music.youtube.com') return false;
-        if (urlObj.pathname === '/watch' && urlObj.searchParams.has('v'))
-          return true;
-        if (urlObj.pathname === '/playlist' && urlObj.searchParams.has('list'))
-          return true;
-        return false;
-      } catch {
-        return false;
-      }
-    }, 'Please enter a valid YouTube Music URL'),
+    .string({
+      required_error: 'YouTube Music URL is required',
+    })
+    .min(1, 'Please enter a YouTube Music URL')
+    .url('Please enter a valid URL format (starting with https://)')
+    .refine(
+      (url) => {
+        try {
+          const urlObj = new URL(url);
+          return urlObj.hostname === 'music.youtube.com';
+        } catch {
+          return false;
+        }
+      },
+      {
+        message:
+          'URL must be from music.youtube.com (not youtube.com or other domains)',
+      },
+    )
+    .refine(
+      (url) => {
+        try {
+          const urlObj = new URL(url);
+          if (urlObj.pathname === '/watch' && urlObj.searchParams.has('v'))
+            return true;
+          if (
+            urlObj.pathname === '/playlist' &&
+            urlObj.searchParams.has('list')
+          )
+            return true;
+          return false;
+        } catch {
+          return false;
+        }
+      },
+      {
+        message:
+          'URL must be a valid track (/watch?v=...) or playlist (/playlist?list=...)',
+      },
+    ),
 });
 
 export type InsertConversion = z.infer<typeof insertConversionSchema>;

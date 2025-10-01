@@ -14,6 +14,9 @@ vi.mock('react-i18next', () => ({
       const translations: Record<string, string> = {
         'form.youtubeUrlPlaceholder': 'music.youtube.com/watch?v=',
         'form.youtubeUrlLabel': 'YouTube URL',
+        'form.youtubeUrlHint': 'Paste a track or playlist URL from YouTube Music',
+        'form.validUrl': 'Valid URL',
+        'form.invalidUrl': 'Invalid URL',
         'form.convertButton': 'Convert to Spotify',
         'form.converting': 'Converting...',
         'form.urlAlreadyConverted': 'URL Already Converted',
@@ -515,5 +518,125 @@ describe('ConversionForm', () => {
     await waitFor(() =>
       expect(screen.getByText(/Network request failed/i)).toBeInTheDocument(),
     );
+  });
+
+  it('shows validation error for invalid URL format', async () => {
+    renderWithClient(<ConversionForm />);
+    const input = screen.getByPlaceholderText(
+      /music\.youtube\.com\/watch\?v=/i,
+    );
+
+    fireEvent.change(input, { target: { value: 'not a url' } });
+    fireEvent.blur(input);
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(/Please enter a valid URL format/i),
+      ).toBeInTheDocument(),
+    );
+  });
+
+  it('shows validation error for wrong domain', async () => {
+    renderWithClient(<ConversionForm />);
+    const input = screen.getByPlaceholderText(
+      /music\.youtube\.com\/watch\?v=/i,
+    );
+
+    fireEvent.change(input, {
+      target: { value: 'https://youtube.com/watch?v=test123' },
+    });
+    fireEvent.blur(input);
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(/URL must be from music\.youtube\.com/i),
+      ).toBeInTheDocument(),
+    );
+  });
+
+  it('shows validation error for invalid YouTube Music path', async () => {
+    renderWithClient(<ConversionForm />);
+    const input = screen.getByPlaceholderText(
+      /music\.youtube\.com\/watch\?v=/i,
+    );
+
+    fireEvent.change(input, {
+      target: { value: 'https://music.youtube.com/browse' },
+    });
+    fireEvent.blur(input);
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(/URL must be a valid track.*or playlist/i),
+      ).toBeInTheDocument(),
+    );
+  });
+
+  it('displays hint text for URL input', () => {
+    renderWithClient(<ConversionForm />);
+    expect(
+      screen.getByText(/Paste a track or playlist URL from YouTube Music/i),
+    ).toBeInTheDocument();
+  });
+
+  it('shows success indicator icon when URL is valid', async () => {
+    renderWithClient(<ConversionForm />);
+    const input = screen.getByPlaceholderText(
+      /music\.youtube\.com\/watch\?v=/i,
+    );
+
+    fireEvent.change(input, {
+      target: { value: 'https://music.youtube.com/watch?v=test123' },
+    });
+
+    await waitFor(() =>
+      expect(screen.getByText(/YouTube Track Preview/i)).toBeInTheDocument(),
+    );
+
+    await waitFor(() => {
+      const validIcon = screen.getByLabelText(/Valid URL/i);
+      expect(validIcon).toBeInTheDocument();
+    });
+  });
+
+  it('shows error indicator icon when URL is invalid', async () => {
+    renderWithClient(<ConversionForm />);
+    const input = screen.getByPlaceholderText(
+      /music\.youtube\.com\/watch\?v=/i,
+    );
+
+    fireEvent.change(input, { target: { value: 'not a url' } });
+    fireEvent.blur(input);
+
+    await waitFor(() => {
+      const errorIcon = screen.getByLabelText(/Invalid URL/i);
+      expect(errorIcon).toBeInTheDocument();
+    });
+  });
+
+  it('has proper ARIA attributes for accessibility', () => {
+    renderWithClient(<ConversionForm />);
+    const input = screen.getByPlaceholderText(
+      /music\.youtube\.com\/watch\?v=/i,
+    );
+
+    expect(input).toHaveAttribute('aria-invalid', 'false');
+    expect(input).toHaveAttribute('aria-describedby');
+  });
+
+  it('announces errors to screen readers with role=alert', async () => {
+    renderWithClient(<ConversionForm />);
+    const input = screen.getByPlaceholderText(
+      /music\.youtube\.com\/watch\?v=/i,
+    );
+
+    fireEvent.change(input, { target: { value: 'invalid' } });
+    fireEvent.blur(input);
+
+    await waitFor(() => {
+      const errorMessage = screen.getByRole('alert');
+      expect(errorMessage).toBeInTheDocument();
+      expect(errorMessage).toHaveAttribute('id', 'youtubeUrl-error');
+    });
   });
 });

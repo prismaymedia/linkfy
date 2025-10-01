@@ -6,15 +6,16 @@ Universal music streaming URL converter. Convert links between Spotify, YouTube 
 
 - **Frontend**: React (Vite, TypeScript, Tailwind CSS, shadcn/ui)
 - **Backend**: NestJS (TypeScript)
-- **Chrome Extension**: Manifest v3 compatible, shares code with client
-- **APIs**: Integrates YouTube Data API v3 and Spotify Web API
+- **Browser Extensions**: Addons for popular browsers (Chrome, Firefox, Edge, Safari) - Manifest v3 compatible, shares code with client
+- **Public API**: Monetizable REST API for third-party integrations and developers
+- **External APIs**: Integrates YouTube Data API v3 and Spotify Web API
 
 ## Key Directories
 
 - `client/`: React app, UI components, hooks, API calls, localization
-- `server/`: NestJS backend, controllers, services, API integration
+- `server/`: NestJS backend, controllers, services, API integration, public API endpoints
 - `shared/`: Common schemas and types
-- `chrome-addon/`: Chrome extension files (background, manifest, icons)
+- `chrome-addon/`: Browser extension files (background, manifest, icons) - adaptable for multiple browsers
 
 ## Developer Workflows
 
@@ -32,18 +33,22 @@ Universal music streaming URL converter. Convert links between Spotify, YouTube 
 - **Error handling**: Centralized filter in `server/src/global.filter.ts`
 - **UI**: Use shadcn/ui components from `client/src/components/ui/`
 - **Localization**: Add translations in `client/src/locales/`
-- **Extension**: Chrome extension uses code from `client/` for UI consistency
+- **Extensions**: Browser addons use code from `client/` for UI consistency across platforms
+- **Public API**: RESTful endpoints designed for monetization with rate limiting, authentication, and usage tracking
 
 ## Integration Points
 
 - **YouTube API**: Requires API key in `server/.env`, used in `server/src/services/youtube.service.ts`
 - **Spotify API**: Requires client ID/secret in `server/.env`, used in `server/src/services/spotify.service.ts`
 - **Supabase**: Used for storage/auth, configured in `client/src/lib/supabaseClient.ts` and `server/src/supabase/`
+- **Public API**: Monetizable endpoints with authentication, rate limiting, and usage analytics for third-party developers
 
 ## Examples
 
 - To add a new music service, create a service in `server/src/services/`, update API endpoints in `server/src/controllers/`, and add UI in `client/src/components/`
 - For new UI patterns, extend shadcn/ui components in `client/src/components/ui/`
+- To adapt extension for new browsers, modify manifest and build configuration in `chrome-addon/` and `client/vite.extension.config.ts`
+- For public API endpoints, ensure proper authentication, rate limiting, and monetization tracking are implemented
 
 ## Security & Testing
 

@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.3.1](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.3.0...linkfy-v2.3.1) (2025-10-01)
+
+
+### Bug Fixes
+
+* update bug fix tasks with ClickUp references for v2.3.0 ([935d1b3](https://github.com/prismaymedia/linkfy/commit/935d1b3cc48039d4f5579dea4dbdb7255fb9e994))
+
+
+### Documentation
+
+* update q4 sprint plan with december capacity, holidays and language policy ([1df4dfd](https://github.com/prismaymedia/linkfy/commit/1df4dfdd8535e343aac54d926ab4462c961548c0))
+
 ## [2.3.0](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.2.0...linkfy-v2.3.0) (2025-10-01)
 
 

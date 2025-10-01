@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.3.2](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.3.1...linkfy-v2.3.2) (2025-10-01)
+
+
+### Bug Fixes
+
+* enhance project documentation for multi-browser support and user experience improvements ([3602658](https://github.com/prismaymedia/linkfy/commit/3602658bd6db835f8b813deef965ebcc9cc57848))
+* update project overview to clarify Linkfy's functionality as a universal music streaming URL converter ([f617fa6](https://github.com/prismaymedia/linkfy/commit/f617fa66b385d2829c044042cc4ea0d386c8b088))
+
 ## [2.3.1](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.3.0...linkfy-v2.3.1) (2025-10-01)
 
 

@@ -1,4 +1,4 @@
-<div align="center">
+<div align="c[🚀 App](https://prismaymedia.github.io/linkfy/) • [📖 Documentation](https://github.com/prismaymedia/linkfy/wiki) • [🗺️ Roadmap](./ROADMAP.md) • [📅 Q4 Sprint Plan](./docs/Q4_2025_SPRINT_PLAN.md) • [💬 Report Bug](https://github.com/prismaymedia/linkfy/issues) • [✨ Request Feature](https://github.com/prismaymedia/linkfy/issues)nter">
 
 # 🎵 Linkfy
 
@@ -51,6 +51,23 @@ In the era of multiple music streaming platforms, sharing music between friends 
 **New to Linkfy?** [📖 Check out our complete guide](https://github.com/prismaymedia/linkfy/wiki) in the wiki!
 
 </div>
+
+---
+
+## 📅 What's Coming in Q4 2025
+
+We're actively developing exciting new features! Check out our [**Q4 2025 Sprint Plan**](./docs/Q4_2025_SPRINT_PLAN.md) for details.
+
+### Upcoming Releases
+
+- **v2.3.0** (Oct 15) - 🔴 Critical stability fixes & mobile improvements
+- **v2.4.0** (Oct 31) - 🚀 Dark mode + Smart URL detection
+- **v2.5.0** (Nov 15) - 💎 History, favorites & enhanced extension
+- **v2.6.0** (Nov 30) - ⚡ 2x faster with Redis caching
+- **v2.7.0** (Dec 15) - 🎵 Integrated music player
+- **v2.8.0** (Dec 31) - 🎁 Production-ready polish
+
+👉 **Follow our progress**: [Roadmap](./ROADMAP.md) | [Sprint Plan](./docs/Q4_2025_SPRINT_PLAN.md)
 
 ## 🏛️ Architecture & Tech Stack
 

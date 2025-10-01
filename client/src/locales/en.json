@@ -1,6 +1,41 @@
 {
   "home": {
-    "description": "Convert YouTube Music links to Spotify instantly"
+    "description": "Convert YouTube Music links to Spotify instantly",
+    "title": "Convert Music Links Instantly",
+    "subtitle": "Convert YouTube Music links to Spotify seamlessly. Fast, accurate, and free.",
+    "getStarted": "Get Started",
+    "feature1": {
+      "title": "Lightning Fast",
+      "desc": "Convert your music links in seconds with our optimized conversion engine."
+    },
+    "feature2": {
+      "title": "High Accuracy",
+      "desc": "Advanced matching algorithms ensure you get the right track every time."
+    },
+    "feature3": {
+      "title": "Privacy Focused",
+      "desc": "We don't store your URLs or personal data. Your privacy is our priority."
+    },
+    "howItWorks": "How It Works",
+    "step1": {
+      "title": "Copy YouTube Music URL",
+      "desc": "Find the song on YouTube Music and copy its URL from your browser."
+    },
+    "step2": {
+      "title": "Paste and Convert",
+      "desc": "Paste the URL into Linkfy and click the convert button."
+    },
+    "step3": {
+      "title": "Get Spotify Link",
+      "desc": "Copy the generated Spotify URL and enjoy your music on Spotify."
+    },
+    "cta": {
+      "title": "Ready to Convert Your Music?",
+      "subtitle": "Join thousands of users converting music links every day."
+    }
+  },
+  "header": {
+    "login": "Login"
   },
   "conversion": {
     "successTitle": "Success!",

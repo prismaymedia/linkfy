@@ -20,12 +20,7 @@ import { ROUTES } from './lib/routes';
 function AppRouter() {
   return (
     <Switch>
-      {/* Redirect root to /auth */}
-      <Route path="/">
-        <Redirect to={ROUTES.AUTH} />
-      </Route>
-
-      {/* Home route - redirects to dashboard if authenticated */}
+      {/* Home route - landing page, redirects to dashboard if authenticated */}
       <Route path={ROUTES.HOME}>
         {(params) => (
           <RouteGuard path={ROUTES.HOME}>

@@ -11,6 +11,8 @@ The ClickUp task creation system with full tag support is now configured.
 Open a new terminal or run:
 ```bash
 source ~/.zshrc
+# Or manually (from project root):
+source ./backlog/clickup-helpers.sh
 ```
 
 ### 2. Create tasks with one command
@@ -129,8 +131,9 @@ Default: effort=effort-medium
 
 ## 📁 Files
 
-- `.vscode/clickup-config.md` - Complete configuration documentation
-- `.vscode/clickup-helpers.sh` - Helper functions script
+- `backlog/clickup-config.md` - Complete configuration documentation
+- `backlog/clickup-helpers.sh` - Helper functions script
+- `backlog/CLICKUP_SETUP.md` - This file (quick start guide)
 - `~/.zshrc` - Auto-loads helpers on shell start
 
 ## 🎯 Priority Values
@@ -173,9 +176,9 @@ clickup_infra "Setup GitHub Actions" "CI/CD pipeline for tests and deployment" e
 ## 🔄 Updating
 
 To update helper functions:
-1. Edit `.vscode/clickup-helpers.sh`
+1. Edit `backlog/clickup-helpers.sh`
 2. Run `source ~/.zshrc` to reload
 
 ## 📚 Documentation
 
-Full documentation in `.vscode/clickup-config.md`
+Full documentation in `backlog/clickup-config.md`

@@ -2,7 +2,15 @@
 
 <div align="center">
 
-**Strategic development plan for the ultimate music platform conversion tool**
+**Strategic development plan for the ultimate music platform conversio### 🔌 URL Detection & Validation
+- [ ] **Smart URL Handling**
+  - [ ] Implement automatic clipboard URL detection
+  - [ ] Detect copy action for URL validation
+  - [ ] Create smart URL pattern recognition system
+  - [ ] Add support for shortened URLs (bit.ly, tinyurl, etc)
+  - [ ] Implement URL validation with preview
+  - [ ] Create URL format normalization
+  - [ ] Add real-time URL validation feedback
 
 *This roadmap outlines our vision and development priorities for Linkfy's evolution*
 
@@ -175,6 +183,7 @@
   - [ ] Implement shuffle and repeat modes
   - [ ] Create playlist queue management
   - [ ] Add keyboard shortcuts for player controls
+  - [ ] Implement player state persistence across sessions
 
 ---
 

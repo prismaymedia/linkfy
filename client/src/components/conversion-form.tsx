@@ -42,69 +42,35 @@ export default function ConversionForm() {
 
   const form = useForm<ConvertUrlRequest>({
     resolver: zodResolver(convertUrlSchema),
-    mode: 'onChange',
-    defaultValues: { youtubeUrl: '' },
+    mode: 'onChange', // Enable real-time validation
+    defaultValues: {
+      youtubeUrl: '',
+    },
   });
 
   const convertMutation = useMutation({
     mutationFn: async (data: { youtubeUrl: string }) => {
       const response = await apiRequest('POST', '/api/youtube-convert', data);
-      let result;
-      try {
-        result = await response.json();
-      } catch {
-        throw new Error('Invalid server response');
-      }
       if (!response.ok) {
-        const error = new Error(result.message || 'Conversion failed');
-        (error as any).data = result;
-        throw error;
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Conversion failed');
       }
-      return result;
+      return response.json();
     },
     onSuccess: (result) => {
       setSpotifyResult(result);
       setLastProcessedUrl(form.getValues('youtubeUrl'));
+
       toast({
         title: t('conversion.successTitle'),
         description: t('conversion.successDesc'),
       });
     },
     onError: (error: any) => {
-      const errorData = error.data;
-
-      let title = t('conversion.errorTitle');
-      let description = t('conversion.unknownErrorDesc');
-
-      if (errorData?.error) {
-        switch (errorData.error) {
-          case 'CONVERSION_FAILED':
-            title = t('conversion.conversionFailedTitle');
-            description = t('conversion.conversionFailedDesc');
-            break;
-          case 'YOUTUBE_INFO_FAILED':
-            title = t('conversion.youtubeInfoFailedTitle');
-            description = t('conversion.youtubeInfoFailedDesc');
-            break;
-          case 'SPOTIFY_SEARCH_FAILED':
-            title = t('conversion.spotifySearchFailedTitle');
-            description = t('conversion.spotifySearchFailedDesc');
-            break;
-          case 'URL_INVALID':
-            title = t('conversion.urlInvalidTitle');
-            description = t('conversion.urlInvalidDesc');
-            break;
-          default:
-            if (errorData.message) {
-              description = errorData.message;
-            }
-            break;
-        }
-      }
-
+      const errorMessage = t('conversion.errorDesc');
       toast({
-        title,
-        description,
+        title: t('conversion.errorTitle'),
+        description: errorMessage,
         variant: 'destructive',
       });
     },
@@ -120,9 +86,10 @@ export default function ConversionForm() {
     try {
       const response = await apiRequest('POST', '/api/youtube-convert', {
         youtubeUrl: url,
-        convert: false,
+        convert: false, // only preview YouTube data
       });
       const json = await response.json();
+
       setYoutubePreview(json as YouTubeTrackInfo);
     } catch {
       setYoutubePreview(null);
@@ -155,7 +122,10 @@ export default function ConversionForm() {
   const isFormValid = form.formState.isValid && !isDuplicateUrl;
   const fieldState = form.getFieldState('youtubeUrl');
   const isFieldValid =
-    !fieldState.error && fieldState.isDirty && watchedUrl?.trim() !== '';
+    !fieldState.error &&
+    fieldState.isDirty &&
+    watchedUrl &&
+    watchedUrl.trim() !== '';
 
   return (
     <>

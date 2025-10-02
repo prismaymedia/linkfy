@@ -3,20 +3,10 @@
     "description": "Convert YouTube Music links to Spotify instantly"
   },
   "conversion": {
-    "successTitle": "Success!",
-    "successDesc": "Successfully converted to Spotify!",
+    "successTitle": "Conversion Successful",
+    "successDesc": "The song was successfully converted to Spotify.",
     "errorTitle": "Conversion Failed",
-    "conversionFailedTitle": "Conversion Failed",
-    "conversionFailedDesc": "We couldn't convert this song to Spotify. Please try a different track.",
-    "unknownErrorDesc": "An unexpected error occurred. Please try again.",
-    "youtubeInfoFailedTitle": "YouTube Video Unavailable",
-    "youtubeInfoFailedDesc": "Could not retrieve YouTube information. The video might be private or unavailable.",
-    "spotifySearchFailedTitle": "Song Not Found on Spotify",
-    "spotifySearchFailedDesc": "The song could not be found on Spotify. It might not be available on the platform.",
-    "saveConversionFailedTitle": "Save Failed",
-    "saveConversionFailedDesc": "Failed to save the conversion. Please try again.",
-    "urlInvalidTitle": "Invalid URL",
-    "urlInvalidDesc": "The provided URL is not a valid YouTube link."
+    "errorDesc": "An error occurred during the conversion. Please try again."
   },
   "form": {
     "youtubeUrlLabel": "YouTube Music URL",

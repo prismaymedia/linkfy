@@ -1,25 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useLocation } from 'wouter';
-import { getSession, getUser, signOut } from '@/lib/supabaseClient';
-import ConversionForm from '@/components/conversion-form';
-import MusicServiceSelector from '@/components/music-service-selector';
-import { ArrowRight, LogOut, User } from 'lucide-react';
+import { getSession } from '@/lib/supabaseClient';
+import Header from '@/components/header';
+import { ArrowRight, Music, Zap, Shield } from 'lucide-react';
 import { SiYoutubemusic, SiSpotify } from 'react-icons/si';
-import LanguageSwitcher from '@/components/language-switcher';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
-import { User as SupabaseUser } from '@supabase/supabase-js';
+import { Card, CardContent } from '@/components/ui/card';
 import { ROUTES } from '@/lib/routes';
 
-type MusicService = 'YouTube Music' | 'Spotify' | 'SoundCloud';
-
 export default function Home() {
-  const [sourceService, setSourceService] = useState<MusicService | null>(null);
-  const [targetService, setTargetService] = useState<MusicService | null>(null);
-  const [user, setUser] = useState<SupabaseUser | null>(null);
   const { t } = useTranslation();
   const [, setLocation] = useLocation();
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -27,78 +19,161 @@ export default function Home() {
       if (session) {
         // If authenticated, redirect to dashboard
         setLocation(ROUTES.DASHBOARD);
-      } else {
-
-        const userData = await getUser();
-        setUser(userData);
-        setLoading(false);
       }
     };
     checkSession();
   }, [setLocation]);
 
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      setLocation('/auth');
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
+  const handleGetStarted = () => {
+    setLocation(ROUTES.AUTH);
   };
 
-  if (loading) {
-    return <div className="text-center mt-20">Loading...</div>;
-  }
-
   return (
-    <div className="min-h-screen bg-surface flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* Header with Language Switcher and User Info */}
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center space-x-2">
-            <User className="h-4 w-4 text-gray-600" />
-            <span className="text-sm text-gray-600">
-              {user?.user_metadata?.full_name || user?.email || 'User'}
-            </span>
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+      <Header />
+      
+      <main className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
+        {/* Hero Section */}
+        <div className="text-center mb-16 pt-8">
+          <div className="flex items-center justify-center mb-6">
+            <SiYoutubemusic className="text-youtube text-5xl mr-3" />
+            <ArrowRight className="text-gray-400 mx-3" size={32} />
+            <SiSpotify className="text-spotify text-5xl ml-3" />
           </div>
-          <div className="flex items-center space-x-2">
-            <LanguageSwitcher />
-            <Button
-              onClick={handleSignOut}
-              variant="outline"
-              size="sm"
-              className="flex items-center space-x-1"
-            >
-              <LogOut className="h-3 w-3" />
-              <span>Sign Out</span>
-            </Button>
+          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
+            {t('home.title', 'Convert Music Links Instantly')}
+          </h1>
+          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            {t('home.subtitle', 'Convert YouTube Music links to Spotify seamlessly. Fast, accurate, and free.')}
+          </p>
+          <Button
+            onClick={handleGetStarted}
+            size="lg"
+            className="text-lg px-8 py-6"
+          >
+            {t('home.getStarted', 'Get Started')}
+          </Button>
+        </div>
+
+        {/* Features Section */}
+        <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex flex-col items-center text-center">
+                <div className="mb-4 p-3 bg-blue-100 rounded-full">
+                  <Zap className="h-8 w-8 text-blue-600" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">
+                  {t('home.feature1.title', 'Lightning Fast')}
+                </h3>
+                <p className="text-gray-600">
+                  {t('home.feature1.desc', 'Convert your music links in seconds with our optimized conversion engine.')}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex flex-col items-center text-center">
+                <div className="mb-4 p-3 bg-green-100 rounded-full">
+                  <Music className="h-8 w-8 text-green-600" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">
+                  {t('home.feature2.title', 'High Accuracy')}
+                </h3>
+                <p className="text-gray-600">
+                  {t('home.feature2.desc', 'Advanced matching algorithms ensure you get the right track every time.')}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex flex-col items-center text-center">
+                <div className="mb-4 p-3 bg-purple-100 rounded-full">
+                  <Shield className="h-8 w-8 text-purple-600" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">
+                  {t('home.feature3.title', 'Privacy Focused')}
+                </h3>
+                <p className="text-gray-600">
+                  {t('home.feature3.desc', 'We don\'t store your URLs or personal data. Your privacy is our priority.')}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* How It Works Section */}
+        <div className="max-w-4xl mx-auto mb-16">
+          <h2 className="text-3xl font-bold text-center mb-12">
+            {t('home.howItWorks', 'How It Works')}
+          </h2>
+          <div className="space-y-8">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
+                1
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-2">
+                  {t('home.step1.title', 'Copy YouTube Music URL')}
+                </h3>
+                <p className="text-gray-600">
+                  {t('home.step1.desc', 'Find the song on YouTube Music and copy its URL from your browser.')}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
+                2
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-2">
+                  {t('home.step2.title', 'Paste and Convert')}
+                </h3>
+                <p className="text-gray-600">
+                  {t('home.step2.desc', 'Paste the URL into Linkfy and click the convert button.')}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
+                3
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-2">
+                  {t('home.step3.title', 'Get Spotify Link')}
+                </h3>
+                <p className="text-gray-600">
+                  {t('home.step3.desc', 'Copy the generated Spotify URL and enjoy your music on Spotify.')}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center mb-4">
-            <SiYoutubemusic className="text-youtube text-2xl mr-2" />
-            <ArrowRight className="text-gray-400 mx-2" size={20} />
-            <SiSpotify className="text-spotify text-2xl ml-2" />
-          </div>
-          <h1 className="text-2xl font-semibold text-gray-800 mb-2">Linkfy</h1>
-          <p className="text-gray-600 text-sm">{t('home.description')}</p>
+        {/* CTA Section */}
+        <div className="text-center py-12 bg-blue-600 rounded-lg text-white">
+          <h2 className="text-3xl font-bold mb-4">
+            {t('home.cta.title', 'Ready to Convert Your Music?')}
+          </h2>
+          <p className="text-xl mb-6">
+            {t('home.cta.subtitle', 'Join thousands of users converting music links every day.')}
+          </p>
+          <Button
+            onClick={handleGetStarted}
+            size="lg"
+            variant="secondary"
+            className="text-lg px-8 py-6"
+          >
+            {t('home.getStarted', 'Get Started')}
+          </Button>
         </div>
-
-        {/* Music Service Selector */}
-        <div className="mb-6">
-          <MusicServiceSelector
-            sourceService={sourceService}
-            targetService={targetService}
-            onSourceChange={setSourceService}
-            onTargetChange={setTargetService}
-          />
-        </div>
-
-        {/* Conversion Form */}
-        <ConversionForm />
-      </div>
+      </main>
     </div>
   );
 }

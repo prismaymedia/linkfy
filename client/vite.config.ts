@@ -70,7 +70,8 @@ const generateGitHubPages404Plugin = () => ({
 });
 
 export default defineConfig(async () => ({
-  base: process.env.NODE_ENV === 'production' ? '/linkfy/' : '/',
+  // Use '/linkfy/' for GitHub Pages, '/' for Vercel
+  base: process.env.VERCEL ? '/' : (process.env.NODE_ENV === 'production' ? '/linkfy/' : '/'),
   plugins: [
     react(),
     tailwindcss(),

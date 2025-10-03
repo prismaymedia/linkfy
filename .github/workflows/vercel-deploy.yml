@@ -83,15 +83,15 @@ jobs:
             | **Client Preview** | ✅ Ready | [Visit Preview](${previewUrl}) |
             
             ### 📊 Deployment Details
-            - **Branch**: \\`${{ github.head_ref }}\`
-            - **Commit**: ${{ github.sha.substring(0, 7) }}
-            - **Triggered by**: @${{ github.actor }}
+            - **Branch**: \`${context.payload.pull_request.head.ref}\`
+            - **Commit**: ${context.sha.substring(0, 7)}
+            - **Triggered by**: @${context.actor}
             - **Environment**: Preview
             
             ### 🔍 Quick Actions
             - [📱 View Client Preview](${previewUrl})
             - [📊 View Deployment Logs](https://vercel.com)
-            - [🔄 Re-run Deployment](${{ github.event.pull_request.html_url }}/checks)
+            - [🔄 Re-run Deployment](${context.payload.pull_request.html_url}/checks)
             
             ---
             *Deployed via Vercel • Updated on every commit*`;

@@ -17,32 +17,76 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session
+    let mounted = true;
+
+    // Get initial session and restore user if present
     const getInitialSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
+      try {
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
+
+        if (error) {
+          console.error('supabase: getSession error', error);
+        }
+
+        if (!mounted) return;
+        setSession(session ?? null);
+        setUser(session?.user ?? null);
+      } catch (err) {
+        console.error('Error getting initial session', err);
+        setSession(null);
+        setUser(null);
+      } finally {
+        if (mounted) setLoading(false);
+      }
     };
 
     getInitialSession();
 
-    // Listen for auth changes
+    // Listen for auth changes and handle token refresh / expired sessions
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      // Typical events: SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED, USER_UPDATED
+      if (!mounted) return;
+
+      if (event === 'SIGNED_OUT') {
+        setSession(null);
+        setUser(null);
+      } else {
+        setSession(session ?? null);
+        setUser(session?.user ?? null);
+      }
+
+      // stop loading after the first auth state is processed
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      try {
+        subscription.unsubscribe();
+      } catch (e) {}
+    };
   }, []);
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      await supabase.auth.signOut();
+    } catch (err) {
+      console.error('Error signing out', err);
+    } finally {
+      // Ensure local session state cleared to avoid stale tokens
+      try {
+        // supabase stores session in localStorage under 'supabase.auth.token'
+        localStorage.removeItem('supabase.auth.token');
+      } catch (e) {}
+      setSession(null);
+      setUser(null);
+      setLoading(false);
+    }
   };
 
   const value = {

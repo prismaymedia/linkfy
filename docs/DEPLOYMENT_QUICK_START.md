@@ -2,6 +2,8 @@
 
 This is a condensed version of the deployment guide to get you up and running quickly.
 
+> **Note**: This guide covers deploying the client only. The server is deployed separately and is not hosted on Vercel.
+
 ## 🎯 5-Minute Setup
 
 ### Step 1: Install Vercel CLI
@@ -10,26 +12,18 @@ npm install -g vercel
 vercel login
 ```
 
-### Step 2: Link Projects
+### Step 2: Link Project
 ```bash
 # Link client
 cd client
 vercel link
 # Follow prompts, select/create "linkfy-client" project
-
-# Link server  
-cd ../server
-vercel link
-# Follow prompts, select/create "linkfy-server" project
 ```
 
-### Step 3: Get Project IDs
+### Step 3: Get Project ID
 ```bash
 # Client project ID
 cat client/.vercel/project.json
-
-# Server project ID
-cat server/.vercel/project.json
 ```
 
 ### Step 4: Add GitHub Secrets
@@ -40,7 +34,6 @@ Add these secrets:
 - `VERCEL_TOKEN` - Get from: https://vercel.com/account/tokens
 - `VERCEL_ORG_ID` - From `.vercel/project.json`
 - `VERCEL_PROJECT_ID_CLIENT` - From `client/.vercel/project.json`
-- `VERCEL_PROJECT_ID_SERVER` - From `server/.vercel/project.json`
 
 ### Step 5: Configure Environment Variables
 
@@ -49,27 +42,13 @@ Go to: `https://vercel.com/[your-org]/linkfy-client/settings/environment-variabl
 
 Add for **Production** and **Preview**:
 ```env
-VITE_API_URL=https://linkfy-server.vercel.app
+VITE_API_URL=https://your-backend-api-url.com
 VITE_SUPABASE_URL=your-supabase-url
 VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
 VITE_SENTRY_DSN=your-sentry-dsn
 ```
 
-#### Server (linkfy-server)
-Go to: `https://vercel.com/[your-org]/linkfy-server/settings/environment-variables`
-
-Add for **Production**, **Preview**, and **Development**:
-```env
-NODE_ENV=production
-PORT=3000
-YOUTUBE_API_KEY=your-youtube-api-key
-SPOTIFY_CLIENT_ID=your-spotify-client-id
-SPOTIFY_CLIENT_SECRET=your-spotify-client-secret
-SUPABASE_URL=your-supabase-url
-SUPABASE_ANON_KEY=your-supabase-anon-key
-DATABASE_URL=your-database-url
-SENTRY_DSN=your-sentry-dsn
-```
+> **Important**: Replace `your-backend-api-url.com` with your actual backend server URL (not on Vercel).
 
 ### Step 6: Test Deployment
 
@@ -85,10 +64,9 @@ git push origin test/vercel-deployment
 ## ✅ Verification Checklist
 
 After deployment, verify:
-- [ ] PR comment appears with preview URLs
+- [ ] PR comment appears with preview URL
 - [ ] Client preview URL loads correctly
-- [ ] Server preview URL responds to API calls
-- [ ] Client can communicate with server API
+- [ ] Client can communicate with backend API
 - [ ] Environment variables are working
 
 ## 🔍 Quick Troubleshooting
@@ -98,7 +76,7 @@ After deployment, verify:
 | No PR comment | Check GitHub Actions permissions |
 | Build fails | Review build logs in Vercel dashboard |
 | Env vars not working | Verify in Vercel project settings |
-| CORS errors | Add client URL to server CORS_ORIGINS |
+| CORS errors | Add client URL to backend server CORS settings |
 
 ## 📚 Full Documentation
 

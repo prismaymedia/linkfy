@@ -1,6 +1,6 @@
 # 🚀 Vercel Deployment Guide
 
-This guide explains how to deploy Linkfy to Vercel with automated production deployments and PR preview URLs.
+This guide explains how to deploy Linkfy client to Vercel with automated production deployments and PR preview URLs.
 
 ## 📋 Table of Contents
 
@@ -13,7 +13,7 @@ This guide explains how to deploy Linkfy to Vercel with automated production dep
 
 ## 🎯 Overview
 
-Linkfy uses Vercel for deploying both the client (React app) and server (NestJS API) with:
+Linkfy uses Vercel for deploying the client (React app) with:
 
 - ✅ **Production deployments** on push to `master` branch
 - ✅ **Preview deployments** for every Pull Request
@@ -21,41 +21,34 @@ Linkfy uses Vercel for deploying both the client (React app) and server (NestJS 
 - ✅ **Environment-specific configurations**
 - ✅ **Rollback capabilities**
 
+> **Note**: The server (NestJS API) is deployed separately and is not hosted on Vercel.
+
 ## 📦 Prerequisites
 
 Before setting up Vercel deployment, ensure you have:
 
 1. **Vercel Account**: Sign up at [vercel.com](https://vercel.com)
 2. **GitHub Repository**: Connected to Vercel
-3. **Environment Variables**: API keys for YouTube, Spotify, Supabase, and Sentry
+3. **Environment Variables**: Supabase and Sentry keys, and API URL for the backend
 4. **Vercel CLI** (optional for local testing): `npm i -g vercel`
 
 ## 🛠️ Setup Instructions
 
-### Step 1: Create Vercel Projects
+### Step 1: Create Vercel Project
 
 1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
 2. Click **"Add New..." → "Project"**
 3. Import your GitHub repository
-4. Create **TWO separate projects**:
+4. Create the project:
    - **linkfy-client** (for the React frontend)
-   - **linkfy-server** (for the NestJS backend)
 
-### Step 2: Configure Vercel Projects
+### Step 2: Configure Vercel Project
 
 #### Client Configuration (linkfy-client)
 
 1. **Framework Preset**: Vite
 2. **Root Directory**: `client`
 3. **Build Command**: `yarn build`
-4. **Output Directory**: `dist`
-5. **Install Command**: `yarn install`
-
-#### Server Configuration (linkfy-server)
-
-1. **Framework Preset**: Other
-2. **Root Directory**: `server`
-3. **Build Command**: `yarn nest:build`
 4. **Output Directory**: `dist`
 5. **Install Command**: `yarn install`
 
@@ -70,14 +63,10 @@ npm i -g vercel
 # Login to Vercel
 vercel login
 
-# Link projects and get IDs
+# Link project and get IDs
 cd client
 vercel link
 # Copy the Project ID and Org ID
-
-cd ../server
-vercel link
-# Copy the Project ID
 ```
 
 ### Step 4: Add GitHub Secrets
@@ -91,7 +80,6 @@ Add the following secrets:
 | `VERCEL_TOKEN` | Vercel authentication token | [Vercel Account Settings → Tokens](https://vercel.com/account/tokens) |
 | `VERCEL_ORG_ID` | Your Vercel organization ID | Run `vercel link` or find in Vercel project settings |
 | `VERCEL_PROJECT_ID_CLIENT` | Client project ID | Run `vercel link` in `client/` directory |
-| `VERCEL_PROJECT_ID_SERVER` | Server project ID | Run `vercel link` in `server/` directory |
 
 ### Step 5: Configure Environment Variables in Vercel
 
@@ -101,7 +89,7 @@ Go to **Project Settings → Environment Variables** and add:
 
 **Production Environment:**
 ```env
-VITE_API_URL=https://linkfy-server.vercel.app
+VITE_API_URL=https://your-backend-api-url.com
 VITE_SUPABASE_URL=your-supabase-url
 VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
 VITE_SENTRY_DSN=your-sentry-dsn
@@ -109,28 +97,13 @@ VITE_SENTRY_DSN=your-sentry-dsn
 
 **Preview Environment:**
 ```env
-VITE_API_URL=https://linkfy-server-preview.vercel.app
+VITE_API_URL=https://your-backend-api-preview-url.com
 VITE_SUPABASE_URL=your-supabase-url
 VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
 VITE_SENTRY_DSN=your-sentry-dsn
 ```
 
-#### For Server Project (linkfy-server):
-
-Go to **Project Settings → Environment Variables** and add:
-
-**Production & Preview Environments:**
-```env
-NODE_ENV=production
-PORT=3000
-YOUTUBE_API_KEY=your-youtube-api-key
-SPOTIFY_CLIENT_ID=your-spotify-client-id
-SPOTIFY_CLIENT_SECRET=your-spotify-client-secret
-SUPABASE_URL=your-supabase-url
-SUPABASE_ANON_KEY=your-supabase-anon-key
-DATABASE_URL=your-database-url
-SENTRY_DSN=your-sentry-dsn
-```
+> **Important**: Replace `your-backend-api-url.com` with your actual backend server URL.
 
 ## 🔄 Deployment Workflow
 
@@ -138,15 +111,15 @@ SENTRY_DSN=your-sentry-dsn
 
 1. Merge changes to `master` branch
 2. GitHub Actions automatically triggers
-3. Both client and server are deployed to production
-4. Production URLs are updated
+3. Client is deployed to production
+4. Production URL is updated
 
 ### Preview Deployment (Pull Requests)
 
 1. Open a Pull Request
 2. GitHub Actions automatically triggers
-3. Preview deployments are created for both client and server
-4. A comment is posted on the PR with preview URLs:
+3. Preview deployment is created for the client
+4. A comment is posted on the PR with preview URL:
 
 ```markdown
 ## 🚀 Vercel Deployment
@@ -156,7 +129,6 @@ SENTRY_DSN=your-sentry-dsn
 | Environment | Status | URL |
 |------------|--------|-----|
 | **Client Preview** | ✅ Ready | [Visit Preview](https://...) |
-| **Server Preview** | ✅ Ready | [Visit API](https://...) |
 
 ### 📊 Deployment Details
 - **Branch**: `feature/my-feature`
@@ -229,14 +201,14 @@ Solution: Check GitHub Actions permissions
 - Check the workflow run logs for errors
 ```
 
-### CORS Issues
+### API Connection Issues
 
-**Problem**: Client can't connect to server
+**Problem**: Client can't connect to backend API
 ```bash
-Solution: Update CORS configuration in server
-- Add preview domain to allowed origins
-- Check server/src/main.ts CORS settings
-- Verify VITE_API_URL points to correct server
+Solution: Verify API URL configuration
+- Check VITE_API_URL environment variable in Vercel
+- Ensure backend server is running and accessible
+- Verify CORS settings on the backend server
 ```
 
 ## 📊 Monitoring Deployments
@@ -293,7 +265,6 @@ git push origin master
 1. **Test Locally First**: Always test builds locally before pushing
    ```bash
    cd client && yarn build
-   cd ../server && yarn nest:build
    ```
 
 2. **Use Preview Deployments**: Review changes in preview before merging

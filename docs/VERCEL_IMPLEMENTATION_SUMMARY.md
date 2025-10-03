@@ -2,7 +2,9 @@
 
 ## 🎯 Overview
 
-This document summarizes the complete Vercel deployment configuration that has been implemented for the Linkfy project. All acceptance criteria from the original issue have been met.
+This document summarizes the complete Vercel deployment configuration that has been implemented for the Linkfy project client. The server is deployed separately and is not hosted on Vercel.
+
+> **Note**: Only the client (React app) is deployed to Vercel. The server (NestJS API) is deployed separately.
 
 ## ✅ Acceptance Criteria Status
 
@@ -29,11 +31,9 @@ This document summarizes the complete Vercel deployment configuration that has b
    - Security headers
    - Build and output settings
 
-3. **`server/vercel.json`**
-   - NestJS serverless function configuration
-   - Node.js runtime settings
-   - Route handling
-   - Environment variables
+3. **~~server/vercel.json~~** (Removed)
+   - Server is not deployed on Vercel
+   - Deploy server separately (e.g., Railway, Render, AWS, etc.)
 
 4. **`.vercelignore`**
    - Excludes unnecessary files from deployment
@@ -48,10 +48,9 @@ This document summarizes the complete Vercel deployment configuration that has b
 ### GitHub Actions Workflow
 
 6. **`.github/workflows/vercel-deploy.yml`**
-   - Automated deployment pipeline
-   - Separate jobs for client and server
+   - Automated deployment pipeline for client only
    - Production and preview deployments
-   - PR comment automation with preview URLs
+   - PR comment automation with preview URL
    - Deployment summary generation
 
 ### Documentation
@@ -133,8 +132,7 @@ Linkfy Repository
 │   └── Vercel (New - linkfy-client.vercel.app)
 │
 └── Server (NestJS)
-    ├── Railway (Current - linkfy-production.up.railway.app)
-    └── Vercel (New - linkfy-server.vercel.app)
+    └── Railway/Render/AWS (Deployed separately, not on Vercel)
 ```
 
 ### Workflow Process
@@ -144,11 +142,11 @@ Linkfy Repository
    ↓
 2. GitHub Actions triggered
    ↓
-3. Vercel builds client & server
+3. Vercel builds client
    ↓
-4. Preview URLs generated
+4. Preview URL generated
    ↓
-5. Bot comments on PR with URLs
+5. Bot comments on PR with URL
    ↓
 6. Developer/reviewer tests preview
    ↓
@@ -156,7 +154,7 @@ Linkfy Repository
    ↓
 8. Production deployment triggered
    ↓
-9. Production URLs updated
+9. Production URL updated
 ```
 
 ## 🔧 Configuration Details
@@ -168,47 +166,31 @@ Linkfy Repository
 - **Routing**: SPA rewrites to `/index.html`
 - **Security**: Custom headers (CSP, Frame Options, XSS Protection)
 
-### Server Configuration
-- **Framework**: NestJS
-- **Runtime**: Node.js 20.x
-- **Output**: Serverless functions
-- **Routing**: All routes to `main.js`
-- **Environment**: Production mode
-
 ### GitHub Actions Configuration
 - **Triggers**: Push to master, PR events
-- **Jobs**: `deploy-client`, `deploy-server`, `summary`
+- **Jobs**: `deploy-client`
 - **Permissions**: `contents: read`, `pull-requests: write`
-- **Secrets Required**: 4 (VERCEL_TOKEN, ORG_ID, 2 PROJECT_IDs)
+- **Secrets Required**: 3 (VERCEL_TOKEN, ORG_ID, PROJECT_ID_CLIENT)
 
 ## 📊 Environment Variables
 
-### Client (6 variables)
-- `VITE_API_URL` - Backend API URL
+### Client (4 variables)
+- `VITE_API_URL` - Backend API URL (points to separately deployed server)
 - `VITE_SUPABASE_URL` - Supabase project URL
 - `VITE_SUPABASE_ANON_KEY` - Supabase anonymous key
 - `VITE_SENTRY_DSN` - Sentry error tracking
 
-### Server (9 variables)
-- `NODE_ENV` - Runtime environment
-- `PORT` - Server port
-- `YOUTUBE_API_KEY` - YouTube Data API v3
-- `SPOTIFY_CLIENT_ID` - Spotify app ID
-- `SPOTIFY_CLIENT_SECRET` - Spotify app secret
-- `SUPABASE_URL` - Supabase project URL
-- `SUPABASE_ANON_KEY` - Supabase anonymous key
-- `DATABASE_URL` - PostgreSQL connection
-- `SENTRY_DSN` - Sentry error tracking
+### Server (Not on Vercel)
+> The server is deployed separately and does not use Vercel environment variables.
 
 ## 🎯 Next Steps for Maintainer
 
 ### Immediate Actions (Required)
 
-1. **Create Vercel Account & Projects** (10 min)
+1. **Create Vercel Account & Project** (10 min)
    - Sign up at vercel.com
    - Connect GitHub repository
    - Create `linkfy-client` project
-   - Create `linkfy-server` project
 
 2. **Run Setup Script** (5 min)
    ```bash
@@ -217,7 +199,7 @@ Linkfy Repository
 
 3. **Add GitHub Secrets** (5 min)
    - Go to repository Settings → Secrets
-   - Add 4 required secrets (token, org ID, 2 project IDs)
+   - Add 3 required secrets (token, org ID, client project ID)
    - See quick start guide for details
 
 4. **Configure Environment Variables** (15 min)
@@ -234,9 +216,8 @@ Linkfy Repository
 
 ### Optional Enhancements
 
-1. **Custom Domains**
+1. **Custom Domain**
    - Set up custom domain for client (e.g., app.linkfy.io)
-   - Set up custom domain for server (e.g., api.linkfy.io)
    - Configure DNS settings
 
 2. **Monitoring & Analytics**
@@ -260,7 +241,7 @@ Linkfy Repository
 ## 📈 Expected Outcomes
 
 ### Deployment Metrics
-- **Build Time**: ~2-3 minutes (client), ~3-4 minutes (server)
+- **Build Time**: ~2-3 minutes (client)
 - **Preview Creation**: Instant after build
 - **Production Deployment**: Automatic on merge
 - **Comment Posting**: Within 30 seconds of deployment
@@ -308,7 +289,7 @@ For team members new to Vercel:
 ## 💡 Key Features
 
 ### 1. Automatic PR Previews
-Every PR gets instant preview environments for both client and server, with URLs posted automatically.
+Every PR gets instant preview environment for the client, with URL posted automatically.
 
 ### 2. Environment-Specific Configuration
 Separate configurations for Production, Preview, and Development with proper environment variable management.

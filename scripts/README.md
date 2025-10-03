@@ -16,9 +16,11 @@ This directory contains helper scripts for development, deployment, and maintena
 **What it does**:
 - Checks if Vercel CLI is installed (installs if needed)
 - Guides you through Vercel login
-- Links both client and server projects to Vercel
-- Displays project IDs needed for GitHub secrets
-- Provides next steps for completing the setup
+- Links client project to Vercel
+- Displays project IDs and org ID
+- Provides next steps for GitHub secrets and environment variables
+
+> **Note**: The server is deployed separately and is not linked to Vercel.
 
 **Prerequisites**:
 - Node.js and npm installed
@@ -28,8 +30,7 @@ This directory contains helper scripts for development, deployment, and maintena
 **Output**: 
 The script will display:
 - Vercel Org ID
-- Client Project ID  
-- Server Project ID
+- Client Project ID
 
 These values are needed to configure GitHub Actions for automated deployments.
 

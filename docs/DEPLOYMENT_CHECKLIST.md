@@ -8,17 +8,17 @@ This checklist ensures all deployment configurations are properly set up for Lin
 
 - [ ] Vercel account created at [vercel.com](https://vercel.com)
 - [ ] GitHub repository connected to Vercel
-- [ ] Two Vercel projects created:
+- [ ] Vercel project created:
   - [ ] `linkfy-client` (React frontend)
-  - [ ] `linkfy-server` (NestJS backend)
+
+> **Note**: The server is not deployed on Vercel.
 
 ### Local Setup
 
 - [ ] Vercel CLI installed: `npm i -g vercel`
 - [ ] Logged into Vercel CLI: `vercel login`
 - [ ] Client project linked: `cd client && vercel link`
-- [ ] Server project linked: `cd server && vercel link`
-- [ ] Project IDs copied from `.vercel/project.json` files
+- [ ] Project ID copied from `.vercel/project.json` file
 
 ## 🔐 GitHub Secrets Configuration
 
@@ -27,20 +27,19 @@ Go to: `Settings → Secrets and variables → Actions`
 - [ ] `VERCEL_TOKEN` - Created at [vercel.com/account/tokens](https://vercel.com/account/tokens)
 - [ ] `VERCEL_ORG_ID` - Found in `.vercel/project.json`
 - [ ] `VERCEL_PROJECT_ID_CLIENT` - Found in `client/.vercel/project.json`
-- [ ] `VERCEL_PROJECT_ID_SERVER` - Found in `server/.vercel/project.json`
 
 ## 🌍 Environment Variables - Client (linkfy-client)
 
 Go to: `Project Settings → Environment Variables`
 
 ### Production Environment
-- [ ] `VITE_API_URL` - Production server URL
+- [ ] `VITE_API_URL` - Production backend server URL (not on Vercel)
 - [ ] `VITE_SUPABASE_URL` - Supabase project URL
 - [ ] `VITE_SUPABASE_ANON_KEY` - Supabase anonymous key
 - [ ] `VITE_SENTRY_DSN` - Sentry DSN for error tracking
 
 ### Preview Environment
-- [ ] `VITE_API_URL` - Preview server URL
+- [ ] `VITE_API_URL` - Preview backend server URL (not on Vercel)
 - [ ] `VITE_SUPABASE_URL` - Supabase project URL
 - [ ] `VITE_SUPABASE_ANON_KEY` - Supabase anonymous key
 - [ ] `VITE_SENTRY_DSN` - Sentry DSN for error tracking
@@ -51,38 +50,12 @@ Go to: `Project Settings → Environment Variables`
 - [ ] `VITE_SUPABASE_ANON_KEY` - Supabase anonymous key
 - [ ] `VITE_SENTRY_DSN` - Sentry DSN for error tracking
 
-## 🔧 Environment Variables - Server (linkfy-server)
-
-Go to: `Project Settings → Environment Variables`
-
-### All Environments (Production, Preview, Development)
-- [ ] `NODE_ENV` - `production`
-- [ ] `PORT` - `3000`
-- [ ] `YOUTUBE_API_KEY` - YouTube Data API v3 key
-- [ ] `SPOTIFY_CLIENT_ID` - Spotify app client ID
-- [ ] `SPOTIFY_CLIENT_SECRET` - Spotify app client secret
-- [ ] `SUPABASE_URL` - Supabase project URL
-- [ ] `SUPABASE_ANON_KEY` - Supabase anonymous key
-- [ ] `DATABASE_URL` - PostgreSQL connection string
-- [ ] `SENTRY_DSN` - Sentry DSN for error tracking
-
-### Optional
-- [ ] `CORS_ORIGINS` - Comma-separated allowed origins
-
 ## ⚙️ Vercel Project Settings
 
 ### Client Project (linkfy-client)
 - [ ] Framework Preset: **Vite**
 - [ ] Root Directory: `client`
 - [ ] Build Command: `yarn build`
-- [ ] Output Directory: `dist`
-- [ ] Install Command: `yarn install`
-- [ ] Node.js Version: **20.x**
-
-### Server Project (linkfy-server)
-- [ ] Framework Preset: **Other**
-- [ ] Root Directory: `server`
-- [ ] Build Command: `yarn nest:build`
 - [ ] Output Directory: `dist`
 - [ ] Install Command: `yarn install`
 - [ ] Node.js Version: **20.x**
@@ -97,28 +70,25 @@ Go to: `Project Settings → Environment Variables`
 
 ### Initial Test (Manual)
 - [ ] Run `cd client && vercel` to deploy client manually
-- [ ] Run `cd server && vercel` to deploy server manually
-- [ ] Verify both deployments work correctly
-- [ ] Test API connectivity between client and server
+- [ ] Verify deployment works correctly
+- [ ] Test API connectivity between client and backend server
 
 ### Production Deployment Test
 - [ ] Push a commit to `master` branch
 - [ ] Check GitHub Actions workflow runs successfully
-- [ ] Verify production URLs are accessible:
+- [ ] Verify production URL is accessible:
   - [ ] Client: `https://linkfy-client.vercel.app`
-  - [ ] Server: `https://linkfy-server.vercel.app`
-- [ ] Test main functionality on production URLs
+- [ ] Test main functionality on production URL
 
 ### Preview Deployment Test
 - [ ] Create a test Pull Request
 - [ ] Wait for GitHub Actions to complete
-- [ ] Check PR comment for preview URLs
-- [ ] Verify preview deployments work correctly:
+- [ ] Check PR comment for preview URL
+- [ ] Verify preview deployment works correctly:
   - [ ] Client preview URL accessible
-  - [ ] Server preview URL accessible
-  - [ ] API calls from client to server work
+  - [ ] API calls from client to backend server work
 - [ ] Push another commit to the same PR
-- [ ] Verify preview URLs are updated in the comment
+- [ ] Verify preview URL is updated in the comment
 
 ## 🔍 Post-Deployment Verification
 
@@ -132,7 +102,8 @@ Go to: `Project Settings → Environment Variables`
 - [ ] Console has no critical errors
 
 ### Server Verification
-- [ ] Health check endpoint responds: `GET /`
+- [ ] Backend server is running and accessible (deployed separately, not on Vercel)
+- [ ] Health check endpoint responds
 - [ ] API endpoints are accessible
 - [ ] YouTube API integration works
 - [ ] Spotify API integration works
@@ -202,10 +173,10 @@ Go to: `Project Settings → Environment Variables`
 |-------|----------|
 | Build fails | Check build logs in Vercel dashboard |
 | Environment variables not working | Verify in Vercel project settings |
-| CORS errors | Update CORS_ORIGINS in server env vars |
+| CORS errors | Update CORS settings on backend server |
 | Preview URL not in PR comment | Check GitHub Actions permissions |
 | 404 on client routes | Verify rewrites in vercel.json |
-| API calls fail | Check VITE_API_URL points to correct server |
+| API calls fail | Check VITE_API_URL points to correct backend server |
 
 ## 📚 Resources
 

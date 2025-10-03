@@ -1,5 +1,42 @@
 # Changelog
 
+## [2.4.0](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.3.2...linkfy-v2.4.0) (2025-10-03)
+
+
+### Features
+
+* **api:** implement user-facing alerts for conversion failures ([c6cccad](https://github.com/prismaymedia/linkfy/commit/c6cccad35262114837ed3ec40a897d281de8698e))
+* **api:** integrate Drizzle ORM for database operations ([9e67d3d](https://github.com/prismaymedia/linkfy/commit/9e67d3d7c41da57343233292be15bcc81a316676))
+* **client:** implement homepage with header, login button and language switcher ([70541e9](https://github.com/prismaymedia/linkfy/commit/70541e9ddef2c71b4fa7db695119b6d4f4e787e7))
+* **config:** add Vercel deployment configuration and workflow ([84bc180](https://github.com/prismaymedia/linkfy/commit/84bc1802ab6226716c47564de0df4240a44f7a43))
+* **conversion:** display user-facing alert on failed song conversion ([ead11b8](https://github.com/prismaymedia/linkfy/commit/ead11b8fefd3b25ae36a1132b2ab10f199d204a9))
+
+
+### Bug Fixes
+
+* add SHELL environment variable for build steps in Vercel deployment ([8ed26c4](https://github.com/prismaymedia/linkfy/commit/8ed26c4330105cfcd2b407d8154ce598b8ba09c2))
+* correct Vercel project ID environment variable in deployment workflow ([fed7443](https://github.com/prismaymedia/linkfy/commit/fed7443c9ffe8e17d896e186bf3d8c41804c3977))
+* correct Vercel project ID secret reference in deployment workflow ([1653461](https://github.com/prismaymedia/linkfy/commit/165346112499aa669b2e92199809f1e7a0816973))
+* remove SHELL environment variable from build steps in Vercel deployment ([024cde3](https://github.com/prismaymedia/linkfy/commit/024cde391c3b4d2da9ca7fe2561203dab3406e33))
+* remove VERCEL_TOKEN from deployment workflow and update project name in Vercel configuration ([67ac3e2](https://github.com/prismaymedia/linkfy/commit/67ac3e2ff44fa17d30b99c5a5fdef76eccaf424a))
+* separate build steps for Vercel deployment into distinct preview and production jobs ([1aa0c2e](https://github.com/prismaymedia/linkfy/commit/1aa0c2ea3ce3f8e30bef38945ee6b7061ec70a98))
+* **server:** correct Drizzle schema import and remove Supabase module usage ([fe4ec98](https://github.com/prismaymedia/linkfy/commit/fe4ec9836d91433d1874a71bae3498af865525dc))
+* simplify build command in Vercel deployment workflow ([94c2b76](https://github.com/prismaymedia/linkfy/commit/94c2b76dc107f96cfdd0406015e1a3ef95e46aca))
+* streamline Vercel deployment workflow and update configuration ([5996448](https://github.com/prismaymedia/linkfy/commit/5996448f62eef44b467110d1a6dabf7299cf40d3))
+* update application name in Vercel configuration ([e4822d4](https://github.com/prismaymedia/linkfy/commit/e4822d46e4bc447b38d1a4e3c1ce685a9e4bce50))
+* update build command in Vercel deployment workflow to handle pull requests correctly ([dca327f](https://github.com/prismaymedia/linkfy/commit/dca327f4fca2f4532df96a5a5e19958379eafa60))
+* update Node.js setup to use npm cache and install dependencies correctly ([56e7510](https://github.com/prismaymedia/linkfy/commit/56e7510228264f3fe933a24bcd1098147f36967c))
+* update preview deployment details to use context variables for branch, commit, and actor ([a648256](https://github.com/prismaymedia/linkfy/commit/a6482569e8bb204c7d4e3167e537b4ec3f2f064e))
+
+
+### Documentation
+
+* add comprehensive Drizzle ORM integration documentation ([85c1613](https://github.com/prismaymedia/linkfy/commit/85c1613c49565815e76ab79b045a0d35c9b3a382))
+* add comprehensive implementation summary ([7b555e6](https://github.com/prismaymedia/linkfy/commit/7b555e6774caee6dc4a2af93bfcfecac39c24afd))
+* add deployment checklist and update contributing guide ([045c736](https://github.com/prismaymedia/linkfy/commit/045c7360af61c287441d2c9a4c5b4a39e678e8b2))
+* add Drizzle ORM quick start guide ([8a8aabc](https://github.com/prismaymedia/linkfy/commit/8a8aabcc651806742b99f771c4e17e6855b04cf9))
+* add quick start guide and deployment workflow diagram ([2d3eccd](https://github.com/prismaymedia/linkfy/commit/2d3eccdc03341d524906509bdf32b5531b5d22e2))
+
 ## [2.3.2](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.3.1...linkfy-v2.3.2) (2025-10-01)
 
 

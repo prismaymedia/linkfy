@@ -1,7 +1,7 @@
 import { useEffect, useState, ReactNode } from 'react';
 import { useLocation } from 'wouter';
-import { getSession } from '@/lib/supabaseClient';
 import { isProtectedRoute, ROUTES } from '@/lib/routes';
+import { useAuth } from '@/contexts/AuthContext';
 import { Session } from '@supabase/supabase-js';
 
 interface RouteGuardProps {
@@ -10,30 +10,25 @@ interface RouteGuardProps {
 }
 
 export default function RouteGuard({ children, path }: RouteGuardProps) {
-  const [session, setSession] = useState<Session | null>(null);
+  const { session, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
   const [, setLocation] = useLocation();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const currentSession = await getSession();
-      setSession(currentSession);
-      setLoading(false);
+    // Mirror auth loading state into local loading to allow small delay before redirects
+    setLoading(authLoading);
 
-      // Check if the route requires authentication
+    if (!authLoading) {
       const requiresAuth = isProtectedRoute(path);
 
-      if (requiresAuth && !currentSession) {
-        // Redirect to auth if route is protected and user is not authenticated
+      if (requiresAuth && !session) {
         setLocation(ROUTES.AUTH);
-      } else if (!requiresAuth && currentSession && path === ROUTES.AUTH) {
-        // Redirect to dashboard if user is authenticated and trying to access auth page
+      } else if (!requiresAuth && session && path === ROUTES.AUTH) {
         setLocation(ROUTES.DASHBOARD);
       }
-    };
-
-    checkAuth();
-  }, [path, setLocation]);
+    }
+    // only react to auth changes and path
+  }, [authLoading, session, path, setLocation]);
 
   if (loading) {
     return (

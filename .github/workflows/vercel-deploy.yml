@@ -49,41 +49,29 @@ jobs:
         working-directory: ./client
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Deploy to Vercel (Production)
-        id: deploy-prod
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
-        working-directory: ./client
-        run: |
-          url=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
-          echo "deployment-url=$url" >> $GITHUB_OUTPUT
-          echo "✅ Deployed to production: $url"
-
-      - name: Deploy to Vercel (Preview)
-        id: deploy-preview
-        if: github.event_name == 'pull_request'
-        working-directory: ./client
-        run: |
-          url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
-          echo "preview-url=$url" >> $GITHUB_OUTPUT
-          echo "✅ Deployed preview: $url"
-
-      - name: Set deployment output
+      - name: Deploy and Set Outputs
         id: deploy
+        working-directory: ./client
         run: |
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            echo "preview-url=${{ steps.deploy-preview.outputs.preview-url }}" >> $GITHUB_OUTPUT
-            echo "deployment-url=${{ steps.deploy-preview.outputs.preview-url }}" >> $GITHUB_OUTPUT
-          else
-            echo "deployment-url=${{ steps.deploy-prod.outputs.deployment-url }}" >> $GITHUB_OUTPUT
+          set -e
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
+            echo "preview-url=$url" >> $GITHUB_OUTPUT
+            echo "deployment-url=$url" >> $GITHUB_OUTPUT
+            echo "✅ Deployed preview: $url"
+          elif [[ "${{ github.event_name }}" == "push" && ("${{ github.ref }}" == "refs/heads/master" || "${{ github.ref }}" == "refs/heads/main") ]]; then
+            url=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
+            echo "deployment-url=$url" >> $GITHUB_OUTPUT
+            echo "✅ Deployed to production: $url"
           fi
 
       - name: Comment PR with Preview URL
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && steps.deploy.outputs.preview-url
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const previewUrl = '${{ steps.deploy-preview.outputs.preview-url }}';
+            const previewUrl = '${{ steps.deploy.outputs.preview-url }}';
             const prNumber = context.issue.number;
             
             const comment = `## 🚀 Vercel Deployment
@@ -95,15 +83,15 @@ jobs:
             | **Client Preview** | ✅ Ready | [Visit Preview](${previewUrl}) |
             
             ### 📊 Deployment Details
-            - **Branch**: \`${context.ref}\`
-            - **Commit**: ${context.sha.substring(0, 7)}
-            - **Triggered by**: @${context.actor}
+            - **Branch**: \\`${{ github.head_ref }}\`
+            - **Commit**: ${{ github.sha.substring(0, 7) }}
+            - **Triggered by**: @${{ github.actor }}
             - **Environment**: Preview
             
             ### 🔍 Quick Actions
             - [📱 View Client Preview](${previewUrl})
             - [📊 View Deployment Logs](https://vercel.com)
-            - [🔄 Re-run Deployment](${context.payload.pull_request.html_url}/checks)
+            - [🔄 Re-run Deployment](${{ github.event.pull_request.html_url }}/checks)
             
             ---
             *Deployed via Vercel • Updated on every commit*`;

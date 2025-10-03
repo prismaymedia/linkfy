@@ -37,7 +37,7 @@ export class AppController {
   constructor(
     private readonly conversionService: ConversionService,
     private readonly youtubeService: YoutubeService,
-  ) {}
+  ) { }
 
   @Post('youtube-convert')
   @ApiOperation({
@@ -131,18 +131,41 @@ export class AppController {
 
       res.status(HttpStatus.CREATED);
       return { ...youtubeInfo, spotifyUrl: spotifyInfo.spotifyUrl };
-    } catch (error) {
+    } catch (error: any) {
       Sentry.captureException(error);
 
+      // Validation error (invalid YouTube URL)
       if (error instanceof ZodError) {
-        Sentry.captureMessage('Validation error: Invalid YouTube URL');
-        throw new BadRequestException(
-          error.issues[0]?.message || 'Invalid input',
-        );
+        throw new BadRequestException({
+          success: false,
+          error: 'CONVERSION_FAILED',
+          message: 'The provided URL is not a valid YouTube link.',
+        });
       }
 
-      Sentry.captureMessage('Internal server error during YouTube conversion');
-      throw new InternalServerErrorException('Failed to process the request');
+      // Errors from ConversionService
+      if (error.response?.error === 'YOUTUBE_INFO_FAILED') {
+        throw new InternalServerErrorException({
+          success: false,
+          error: 'YOUTUBE_INFO_FAILED',
+          message: 'Could not retrieve YouTube information. The video might be private or unavailable.',
+        });
+      }
+
+      if (error.response?.error === 'SPOTIFY_SEARCH_FAILED') {
+        throw new BadRequestException({
+          success: false,
+          error: 'SPOTIFY_SEARCH_FAILED',
+          message: 'The song could not be found on Spotify. It might not be available on the platform.',
+        });
+      }
+
+      // Default fallback for unexpected errors
+      throw new InternalServerErrorException({
+        success: false,
+        error: 'CONVERSION_FAILED',
+        message: 'An unexpected error occurred. Please try again.',
+      });
     }
   }
 

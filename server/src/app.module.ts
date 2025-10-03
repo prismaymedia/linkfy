@@ -6,10 +6,10 @@ import { ConversionService } from './services/conversion.service';
 import { YoutubeService } from './services/youtube.service';
 import { SpotifyService } from './services/spotify.service';
 import { StorageService } from './services/storage.service';
-import { SupabaseModule } from './supabase/supabase.module';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
-  imports: [SupabaseModule, SentryModule.forRoot()],
+  imports: [DatabaseModule, SentryModule.forRoot()],
   controllers: [AppController],
   providers: [
     ConversionService,
@@ -22,4 +22,4 @@ import { SupabaseModule } from './supabase/supabase.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }

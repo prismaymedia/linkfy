@@ -3,50 +3,34 @@ import {
   CanActivate,
   ExecutionContext,
   UnauthorizedException,
-  Logger,
 } from '@nestjs/common';
-import { SupabaseService } from '../supabase/supabase.service';
 import { Request } from 'express';
+import { createClient } from '@supabase/supabase-js';
 
 @Injectable()
 export class SupabaseAuthGuard implements CanActivate {
-  private readonly logger = new Logger(SupabaseAuthGuard.name);
-
-  constructor(private readonly supabaseService: SupabaseService) {}
+  private supabase = createClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_ANON_KEY!,
+  );
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
     const authHeader = request.headers.authorization;
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      this.logger.warn('No authorization header found');
+    if (!authHeader?.startsWith('Bearer ')) {
       throw new UnauthorizedException('No authorization token provided');
     }
 
-    const token = authHeader.substring(7); // Remove 'Bearer ' prefix
+    const token = authHeader.substring(7);
 
-    try {
-      const {
-        data: { user },
-        error,
-      } = await this.supabaseService.getClient().auth.getUser(token);
+    const { data, error } = await this.supabase.auth.getUser(token);
 
-      if (error || !user) {
-        this.logger.warn(`Invalid token: ${error?.message || 'No user found'}`);
-        throw new UnauthorizedException('Invalid or expired token');
-      }
-
-      // Attach user to request for use in controllers
-      request['user'] = user;
-      this.logger.log(`User authenticated: ${user.email}`);
-
-      return true;
-    } catch (error) {
-      if (error instanceof UnauthorizedException) {
-        throw error;
-      }
-      this.logger.error('Error verifying token:', error);
-      throw new UnauthorizedException('Token verification failed');
+    if (error || !data?.user) {
+      throw new UnauthorizedException('Invalid or expired token');
     }
+
+    request['user'] = data.user;
+    return true;
   }
 }

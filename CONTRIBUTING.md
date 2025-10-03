@@ -217,7 +217,7 @@ yarn test:client --watch
 - Production deployments are triggered automatically when PRs are merged to `master`
 - Only maintainers can deploy to production
 - Production URLs:
-  - Client: Deployed via GitHub Pages
+  - Client: Deployed via Vercel
   - Server: Deployed via Railway
 
 ## 📚 Resources

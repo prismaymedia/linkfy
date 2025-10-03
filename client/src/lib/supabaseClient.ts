@@ -62,6 +62,5 @@ export const getAuthHeaders = async () => {
 
 export const getRedirectUrl = () => {
   const base = window.location.origin;
-  const subpath = import.meta.env.DEV ? '' : '/linkfy';
-  return `${base}${subpath}/auth`;
+  return `${base}/auth`;
 };

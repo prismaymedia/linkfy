@@ -30,7 +30,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'yarn'
+          cache: 'npm'
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
@@ -41,7 +41,9 @@ jobs:
 
       - name: Install Dependencies
         working-directory: ./client
-        run: yarn install
+        run: |
+          rm -f yarn.lock
+          npm install
 
       - name: Build Project Artifacts (Preview)
         if: github.event_name == 'pull_request'

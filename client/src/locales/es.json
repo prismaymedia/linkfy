@@ -38,10 +38,10 @@
     "login": "Iniciar Sesión"
   },
   "conversion": {
-    "successTitle": "¡Éxito!",
-    "successDesc": "¡Convertido a Spotify con éxito!",
-    "errorTitle": "Error en la conversión",
-    "errorDesc": "Por favor, inténtalo de nuevo."
+    "successTitle": "Conversión Exitosa",
+    "successDesc": "La canción se convirtió exitosamente a Spotify.",
+    "errorTitle": "Conversión Fallida",
+    "errorDesc": "Ocurrió un error durante la conversión. Por favor, inténtalo de nuevo."
   },
   "form": {
     "youtubeUrlLabel": "URL de YouTube Music",

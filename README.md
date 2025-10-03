@@ -10,7 +10,6 @@
 [![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org/)
 [![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)](https://reactjs.org/)
 [![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white)](https://nestjs.com/)
-[![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
 
 [🚀 App](https://prismaymedia.github.io/linkfy/) • [📖 Documentation](https://github.com/prismaymedia/linkfy/wiki) • [�️ Roadmap](./ROADMAP.md) • [�💬 Report Bug](https://github.com/prismaymedia/linkfy/issues) • [✨ Request Feature](https://github.com/prismaymedia/linkfy/issues)
 
@@ -48,7 +47,6 @@ In the era of multiple music streaming platforms, sharing music between friends 
 
 [![Launch App](https://img.shields.io/badge/🚀_Launch-App-1DB954?style=for-the-badge&logo=spotify)](https://prismaymedia.github.io/linkfy/)
 [![Self Hosting](https://img.shields.io/badge/🚀_Self_Hosting-Deploy_Guide-FF6B35?style=for-the-badge&logo=docker)](https://github.com/prismaymedia/linkfy/wiki/Self-Hosting-Guide)
-[![Deploy to Vercel](https://img.shields.io/badge/Deploy_to-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](./docs/VERCEL_DEPLOYMENT.md)
 
 **New to Linkfy?** [📖 Check out our complete guide](https://github.com/prismaymedia/linkfy/wiki) in the wiki!
 
@@ -149,7 +147,6 @@ graph TB
 - **📏 ESLint + Prettier** - Code quality & formatting
 - **🐳 Docker** - Containerization support
 - **🚀 GitHub Actions** - CI/CD automation
-- **▲ Vercel** - Automated deployments & preview URLs
 
 ## 🧩 Chrome Extension
 

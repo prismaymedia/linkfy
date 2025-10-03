@@ -210,37 +210,15 @@ yarn test:client --watch
 - Mock external API calls
 - Test both happy path and error cases
 
-## 🚀 Deployment & Preview URLs
-
-### Preview Deployments
-
-When you open a Pull Request, automated preview deployments are created on Vercel:
-
-- **Client Preview**: Your changes are deployed to a temporary URL
-- **Server Preview**: API changes are deployed to a separate preview URL
-- **PR Comment**: A bot will comment on your PR with preview URLs
-
-### Testing Preview Deployments
-
-1. Wait for the deployment to complete (usually 2-5 minutes)
-2. Check the PR comment for preview URLs
-3. Test your changes in the preview environment
-4. Verify that the preview works as expected before requesting reviews
+## 🚀 Deployment
 
 ### Production Deployments
 
 - Production deployments are triggered automatically when PRs are merged to `master`
 - Only maintainers can deploy to production
 - Production URLs:
-  - Client: Deployed via GitHub Pages and Vercel
-  - Server: Deployed via Vercel and Railway
-
-### Deployment Documentation
-
-For detailed deployment setup and troubleshooting:
-- 📖 [Vercel Deployment Guide](./docs/VERCEL_DEPLOYMENT.md)
-- 🔧 [Setup Helper Script](./scripts/setup-vercel.sh)
-- 📋 [Environment Variables Template](./.env.vercel.example)
+  - Client: Deployed via GitHub Pages
+  - Server: Deployed via Railway
 
 ## 📚 Resources
 

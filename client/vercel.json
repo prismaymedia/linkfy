@@ -1,11 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "yarn build",
-  "outputDirectory": "dist",
-  "framework": "vite",
-  "installCommand": "yarn install",
-  "devCommand": "yarn dev",
-  "regions": ["iad1"],
   "rewrites": [
     {
       "source": "/(.*)",

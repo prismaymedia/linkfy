@@ -39,19 +39,19 @@ jobs:
         working-directory: ./client
         run: vercel pull --yes --environment=${{ github.event_name == 'pull_request' && 'preview' || 'production' }} --token=${{ secrets.VERCEL_TOKEN }}
 
+      - name: Install Dependencies
+        working-directory: ./client
+        run: yarn install
+
       - name: Build Project Artifacts (Preview)
         if: github.event_name == 'pull_request'
         working-directory: ./client
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          SHELL: /bin/bash
 
       - name: Build Project Artifacts (Production)
         if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
         working-directory: ./client
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          SHELL: /bin/bash
 
       - name: Deploy and Set Outputs
         id: deploy

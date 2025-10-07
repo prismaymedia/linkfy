@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -61,6 +62,7 @@ export default function ConversionForm() {
       toast({
         title: t('conversion.successTitle'),
         description: t('conversion.successDesc'),
+        variant: 'success',
       });
     },
     onError: (error: any) => {
@@ -122,6 +124,16 @@ export default function ConversionForm() {
     fieldState.isDirty &&
     watchedUrl &&
     watchedUrl.trim() !== '';
+
+  React.useEffect(() => {
+    if (isDuplicateUrl) {
+      toast({
+        title: t('form.duplicateUrlWarning'),
+        variant: 'warning',
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDuplicateUrl]);
 
   return (
     <>

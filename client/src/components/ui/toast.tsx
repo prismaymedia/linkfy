@@ -19,8 +19,8 @@ const ToastViewport = React.forwardRef<
       ref={ref}
       className={cn(
         isMobile
-          ? 'absolute top-4 left-4 flex flex-col items-start w-auto max-w-md p-4 bg-white rounded-lg z-50'
-          : 'fixed bottom-4 right-4 flex flex-col items-end w-full max-w-xs p-4 bg-white rounded-lg z-50',
+          ? 'absolute top-4 left-4 flex flex-col items-start w-auto max-w-md p-4 rounded-lg z-50'
+          : 'fixed bottom-4 right-4 flex flex-col items-end w-full max-w-xs p-4 rounded-lg z-50',
         className,
       )}
       {...props}
@@ -34,9 +34,11 @@ const toastVariants = cva(
   {
     variants: {
       variant: {
-        default: 'border bg-background text-foreground',
-        destructive:
-          'destructive group border-destructive bg-destructive text-destructive-foreground',
+        default: 'border-gray-100 bg-gray-50 text-gray-900 shadow-md',
+        destructive:'destructive group border-red-100 bg-red-50 text-red-900',
+        success: 'border-green-100 bg-green-50 text-green-900',
+        warning: 'border-amber-100 bg-amber-50 text-amber-900',
+        info: 'border-blue-100 bg-blue-50 text-blue-900',
       },
     },
     defaultVariants: {

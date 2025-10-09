@@ -38,10 +38,10 @@
     "login": "Login"
   },
   "conversion": {
-    "successTitle": "Success!",
-    "successDesc": "Successfully converted to Spotify!",
+    "successTitle": "Conversion Successful",
+    "successDesc": "The song was successfully converted to Spotify.",
     "errorTitle": "Conversion Failed",
-    "errorDesc": "Please try again."
+    "errorDesc": "An error occurred during the conversion. Please try again."
   },
   "form": {
     "youtubeUrlLabel": "YouTube Music URL",

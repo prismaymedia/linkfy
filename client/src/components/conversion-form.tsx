@@ -51,8 +51,11 @@ export default function ConversionForm() {
   const convertMutation = useMutation({
     mutationFn: async (data: { youtubeUrl: string }) => {
       const response = await apiRequest('POST', '/api/youtube-convert', data);
-      const result = await response.json();
-      return result;
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Conversion failed');
+      }
+      return response.json();
     },
     onSuccess: (result) => {
       setSpotifyResult(result);
@@ -65,9 +68,10 @@ export default function ConversionForm() {
       });
     },
     onError: (error: any) => {
+      const errorMessage = t('conversion.errorDesc');
       toast({
         title: t('conversion.errorTitle'),
-        description: error.message || t('conversion.errorDesc'),
+        description: errorMessage,
         variant: 'destructive',
       });
     },

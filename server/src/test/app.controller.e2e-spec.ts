@@ -2,7 +2,6 @@ import request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { AppModule } from '../app.module';
-import { SupabaseService } from '../supabase/supabase.service';
 import { YoutubeService } from '../services/youtube.service';
 import { ConversionService } from '../services/conversion.service';
 import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
@@ -15,14 +14,6 @@ describe('YouTube Convert Endpoint (e2e)', () => {
   beforeAll(async () => {
     console.log = jest.fn();
     console.error = jest.fn();
-
-    const mockSupabaseService = {
-      getClient: jest.fn().mockReturnValue({
-        from: jest.fn().mockReturnThis(),
-        select: jest.fn().mockReturnValue({ data: [], error: null }),
-        limit: jest.fn().mockReturnThis(),
-      }),
-    };
 
     const mockYoutubeService: Partial<YoutubeService> = {
       getYoutubeInfo: jest.fn().mockResolvedValue({
@@ -46,8 +37,6 @@ describe('YouTube Convert Endpoint (e2e)', () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     })
-      .overrideProvider(SupabaseService)
-      .useValue(mockSupabaseService)
       .overrideProvider(YoutubeService)
       .useValue(mockYoutubeService)
       .overrideProvider(ConversionService)

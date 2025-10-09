@@ -1,5 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { Conversion, InsertConversion } from '../../../shared/schema';
+import { eq } from 'drizzle-orm';
+import {
+  Conversion,
+  InsertConversion,
+  conversions,
+} from '../../../shared/schema';
+import { DatabaseService } from '../database/database.service';
 
 export interface IStorage {
   getConversion(id: number): Promise<Conversion | undefined>;
@@ -11,36 +17,48 @@ export interface IStorage {
 
 @Injectable()
 export class StorageService implements IStorage {
-  private conversions: Map<number, Conversion> = new Map();
-  private currentId = 1;
+  constructor(private readonly databaseService: DatabaseService) {}
 
   async getConversion(id: number): Promise<Conversion | undefined> {
-    return this.conversions.get(id);
+    const db = this.databaseService.getDb();
+    const results = await db
+      .select()
+      .from(conversions)
+      .where(eq(conversions.id, id))
+      .limit(1);
+    return results[0];
   }
 
   async getConversionByYoutubeUrl(
     youtubeUrl: string,
   ): Promise<Conversion | undefined> {
-    return Array.from(this.conversions.values()).find(
-      (conversion) => conversion.youtubeUrl === youtubeUrl,
-    );
+    const db = this.databaseService.getDb();
+    const results = await db
+      .select()
+      .from(conversions)
+      .where(eq(conversions.youtubeUrl, youtubeUrl))
+      .limit(1);
+    return results[0];
   }
 
   async createConversion(
     insertConversion: InsertConversion,
   ): Promise<Conversion> {
-    const id = this.currentId++;
-    const payload = insertConversion as any;
-    const conversion: Conversion = {
-      id,
-      youtubeUrl: payload.youtubeUrl,
-      spotifyUrl: payload.spotifyUrl ?? '',
-      trackName: payload.trackName ?? null,
-      artistName: payload.artistName ?? null,
-      albumName: payload.albumName ?? null,
-      thumbnailUrl: payload.thumbnailUrl ?? null,
-    };
-    this.conversions.set(id, conversion);
-    return conversion;
+    const db = this.databaseService.getDb();
+    const payload = insertConversion as Record<string, any>;
+    const results = await db
+      .insert(conversions)
+      .values({
+        youtubeUrl: payload['youtubeUrl'] as string,
+        spotifyUrl: (payload['spotifyUrl'] as string | undefined) ?? '',
+        trackName: (payload['trackName'] as string | null | undefined) ?? null,
+        artistName:
+          (payload['artistName'] as string | null | undefined) ?? null,
+        albumName: (payload['albumName'] as string | null | undefined) ?? null,
+        thumbnailUrl:
+          (payload['thumbnailUrl'] as string | null | undefined) ?? null,
+      })
+      .returning();
+    return results[0];
   }
 }

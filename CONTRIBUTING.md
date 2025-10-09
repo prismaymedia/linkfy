@@ -210,6 +210,16 @@ yarn test:client --watch
 - Mock external API calls
 - Test both happy path and error cases
 
+## 🚀 Deployment
+
+### Production Deployments
+
+- Production deployments are triggered automatically when PRs are merged to `master`
+- Only maintainers can deploy to production
+- Production URLs:
+  - Client: Deployed via Vercel
+  - Server: Deployed via Railway
+
 ## 📚 Resources
 
 - [React Documentation](https://reactjs.org/docs)

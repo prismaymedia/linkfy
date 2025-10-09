@@ -1,15 +1,27 @@
 import { Module } from '@nestjs/common';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { ConfigModule } from '@nestjs/config';
 import { SentryModule, SentryGlobalFilter } from '@sentry/nestjs/setup';
 import { AppController } from './controllers/app.controller';
 import { ConversionService } from './services/conversion.service';
 import { YoutubeService } from './services/youtube.service';
 import { SpotifyService } from './services/spotify.service';
 import { StorageService } from './services/storage.service';
-import { SupabaseModule } from './supabase/supabase.module';
+import { DatabaseModule } from './database/database.module';
+import { PrometheusModule } from './prometheus/prometheus.module';
+import { MetricsInterceptor } from './prometheus/metrics.interceptor';
+import grafanaConfig from './config/grafana.config';
 
 @Module({
-  imports: [SupabaseModule, SentryModule.forRoot()],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [grafanaConfig],
+    }),
+    DatabaseModule,
+    SentryModule.forRoot(),
+    PrometheusModule,
+  ],
   controllers: [AppController],
   providers: [
     ConversionService,
@@ -20,6 +32,10 @@ import { SupabaseModule } from './supabase/supabase.module';
       provide: APP_FILTER,
       useClass: SentryGlobalFilter,
     },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: MetricsInterceptor,
+    },
   ],
 })
-export class AppModule {}
+export class AppModule { }

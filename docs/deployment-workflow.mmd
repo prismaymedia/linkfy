@@ -1,0 +1,71 @@
+graph TB
+    subgraph "🔄 Development Flow"
+        DEV[Developer Creates PR]
+        COMMIT[Push Commits to Branch]
+        DEV --> COMMIT
+    end
+    
+    subgraph "🤖 GitHub Actions"
+        TRIGGER[Workflow Triggered]
+        BUILD_CLIENT[Build Client]
+        BUILD_SERVER[Build Server]
+        DEPLOY_CLIENT[Deploy Client to Vercel]
+        DEPLOY_SERVER[Deploy Server to Vercel]
+        
+        COMMIT --> TRIGGER
+        TRIGGER --> BUILD_CLIENT
+        TRIGGER --> BUILD_SERVER
+        BUILD_CLIENT --> DEPLOY_CLIENT
+        BUILD_SERVER --> DEPLOY_SERVER
+    end
+    
+    subgraph "▲ Vercel Platform"
+        PREVIEW_CLIENT[Client Preview URL]
+        PREVIEW_SERVER[Server Preview URL]
+        PROD_CLIENT[Production Client]
+        PROD_SERVER[Production Server]
+        
+        DEPLOY_CLIENT --> PREVIEW_CLIENT
+        DEPLOY_SERVER --> PREVIEW_SERVER
+    end
+    
+    subgraph "💬 GitHub PR"
+        COMMENT[Bot Posts Comment]
+        URLS[Preview URLs Listed]
+        STATUS[Deployment Status]
+        
+        PREVIEW_CLIENT --> COMMENT
+        PREVIEW_SERVER --> COMMENT
+        COMMENT --> URLS
+        COMMENT --> STATUS
+    end
+    
+    subgraph "✅ Merge to Main"
+        MERGE[PR Merged to Master]
+        PROD_DEPLOY[Production Deployment]
+        
+        URLS --> MERGE
+        MERGE --> PROD_DEPLOY
+        PROD_DEPLOY --> PROD_CLIENT
+        PROD_DEPLOY --> PROD_SERVER
+    end
+    
+    subgraph "🧪 Testing & Review"
+        TEST_PREVIEW[Test Preview URLs]
+        REVIEW[Code Review]
+        APPROVE[Approve PR]
+        
+        URLS --> TEST_PREVIEW
+        TEST_PREVIEW --> REVIEW
+        REVIEW --> APPROVE
+        APPROVE --> MERGE
+    end
+    
+    style DEV fill:#61DAFB,stroke:#000,color:#000
+    style TRIGGER fill:#2088FF,stroke:#000,color:#fff
+    style PREVIEW_CLIENT fill:#000,stroke:#000,color:#fff
+    style PREVIEW_SERVER fill:#000,stroke:#000,color:#fff
+    style COMMENT fill:#28A745,stroke:#000,color:#fff
+    style MERGE fill:#6F42C1,stroke:#000,color:#fff
+    style PROD_CLIENT fill:#FF6B35,stroke:#000,color:#fff
+    style PROD_SERVER fill:#FF6B35,stroke:#000,color:#fff

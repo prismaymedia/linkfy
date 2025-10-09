@@ -78,8 +78,6 @@
    - Production optimizations
 
 9. **Cloud Deployment**
-   - Vercel deployment
-   - Netlify deployment
    - Railway deployment
    - DigitalOcean App Platform
    - AWS/GCP deployment options

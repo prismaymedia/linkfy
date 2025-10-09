@@ -17,23 +17,27 @@ export class ConversionService {
     private readonly youtubeService: YoutubeService,
     private readonly spotifyService: SpotifyService,
     private readonly storageService: StorageService,
-  ) {}
+  ) { }
 
   async getOrCreateConversion(youtubeUrl: string): Promise<SpotifyTrackInfo> {
-    console.log('🔄 [ConversionService] Starting conversion for:', youtubeUrl);
+    this.logger.log(`🔄 Starting conversion for: ${youtubeUrl}`);
 
+    // 1️⃣ Validate YouTube URL
     if (!this.isValidYoutubeUrl(youtubeUrl)) {
-      console.warn('❌ [ConversionService] Invalid URL:', youtubeUrl);
-      throw new BadRequestException('The YouTube URL is not valid');
+      this.logger.warn(`❌ Invalid YouTube URL: ${youtubeUrl}`);
+      throw new BadRequestException({
+        success: false,
+        error: 'CONVERSION_FAILED',
+        message: 'The YouTube URL is not valid',
+      });
     }
 
-    const existing =
-      await this.storageService.getConversionByYoutubeUrl(youtubeUrl);
+    // 2️⃣ Check if conversion already exists in storage
+    const existing = await this.storageService.getConversionByYoutubeUrl(
+      youtubeUrl,
+    );
     if (existing?.spotifyUrl) {
-      console.log(
-        '✅ [ConversionService] Existing conversion found:',
-        existing,
-      );
+      this.logger.log(`✅ Existing conversion found: ${existing.spotifyUrl}`);
       return {
         spotifyUrl: existing.spotifyUrl ?? '',
         trackName: existing.trackName ?? '',
@@ -43,23 +47,31 @@ export class ConversionService {
       };
     }
 
+    // 3️⃣ Get YouTube info
     const youtubeInfo = await this.youtubeService.getYoutubeInfo(youtubeUrl);
     if (!youtubeInfo) {
-      throw new InternalServerErrorException(
-        'Could not retrieve YouTube information',
-      );
+      throw new InternalServerErrorException({
+        success: false,
+        error: 'YOUTUBE_INFO_FAILED',
+        message:
+          'Could not retrieve YouTube information. The video might be private or unavailable.',
+      });
     }
 
+    // 4️⃣ Search track on Spotify
     const spotifyInfo = await this.spotifyService.searchSpotifyTrack(
       youtubeInfo.trackName,
       youtubeInfo.artistName,
     );
     if (!spotifyInfo) {
-      throw new InternalServerErrorException(
-        'Could not find the song on Spotify',
-      );
+      throw new BadRequestException({
+        success: false,
+        error: 'SPOTIFY_SEARCH_FAILED',
+        message: `Could not find the song on Spotify: "${youtubeInfo.trackName}" by "${youtubeInfo.artistName}"`,
+      });
     }
 
+    // 5️⃣ Save conversion
     const conversion = await this.storageService.createConversion({
       youtubeUrl,
       spotifyUrl: spotifyInfo.spotifyUrl,
@@ -69,7 +81,7 @@ export class ConversionService {
       thumbnailUrl: spotifyInfo.thumbnailUrl,
     });
 
-    console.log('💾 [ConversionService] Conversion saved:', conversion);
+    this.logger.log(`💾 Conversion saved: ${conversion.spotifyUrl}`);
     return spotifyInfo;
   }
 

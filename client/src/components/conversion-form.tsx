@@ -1,4 +1,3 @@
-import React from 'react';
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -113,27 +112,25 @@ export default function ConversionForm() {
   }, [watchedUrl, lastProcessedUrl]);
 
   const onSubmit = (data: ConvertUrlRequest) => {
+    // Check if this is a duplicate URL before submitting
+    if (isDuplicateUrl) {
+      toast({
+        title: t('form.duplicateUrlWarning'),
+        variant: 'warning',
+      });
+      return; // Don't submit if it's a duplicate
+    }
     convertMutation.mutate(data);
   };
 
   const isDuplicateUrl = lastProcessedUrl && watchedUrl === lastProcessedUrl;
-  const isFormValid = form.formState.isValid && !isDuplicateUrl;
+  const isFormValid = form.formState.isValid;
   const fieldState = form.getFieldState('youtubeUrl');
   const isFieldValid =
     !fieldState.error &&
     fieldState.isDirty &&
     watchedUrl &&
     watchedUrl.trim() !== '';
-
-  React.useEffect(() => {
-    if (isDuplicateUrl) {
-      toast({
-        title: t('form.duplicateUrlWarning'),
-        variant: 'warning',
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isDuplicateUrl]);
 
   return (
     <>

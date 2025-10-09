@@ -78,7 +78,8 @@ export class SupabaseAuthGuard implements CanActivate {
 
       return true;
     } catch (err) {
-      this.logger.error('Error verifying token', err);
+      const msg = (err as any)?.message ?? String(err);
+      this.logger.error('Error verifying token: ' + msg);
       throw new UnauthorizedException('Error verifying token');
     }
   }

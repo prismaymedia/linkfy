@@ -79,10 +79,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('Error signing out', err);
     } finally {
       // Ensure local session state cleared to avoid stale tokens
-      try {
-        // supabase stores session in localStorage under 'supabase.auth.token'
-        localStorage.removeItem('supabase.auth.token');
-      } catch (e) {}
       setSession(null);
       setUser(null);
       setLoading(false);

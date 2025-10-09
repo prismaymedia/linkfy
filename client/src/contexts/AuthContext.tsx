@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabaseClient';
+import * as Sentry from '@sentry/react';
 
 interface AuthContextType {
   user: User | null;
@@ -25,6 +26,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+
+      // Attach non-PII user context to Sentry
+      try {
+        if (session?.user) {
+          const u = session.user;
+          Sentry.setUser({
+            id: u.id,
+            username: u.email ? u.email.split('@')[0] : undefined,
+          });
+        } else {
+          Sentry.setUser(null);
+        }
+      } catch (e) {}
     };
 
     getInitialSession();
@@ -36,6 +50,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+      try {
+        if (session?.user) {
+          const u = session.user;
+          Sentry.setUser({
+            id: u.id,
+            username: u.email ? u.email.split('@')[0] : undefined,
+          });
+        } else {
+          Sentry.setUser(null);
+        }
+      } catch (e) {}
     });
 
     return () => subscription.unsubscribe();
@@ -43,6 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     await supabase.auth.signOut();
+    Sentry.setUser(null);
   };
 
   const value = {

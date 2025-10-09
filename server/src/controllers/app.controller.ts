@@ -132,7 +132,16 @@ export class AppController {
       res.status(HttpStatus.CREATED);
       return { ...youtubeInfo, spotifyUrl: spotifyInfo.spotifyUrl };
     } catch (error: any) {
+      try {
+        if (user) Sentry.setUser({ id: user.id, username: user.email ? user.email.split('@')[0] : undefined });
+        Sentry.setContext('request', { body, route: 'youtube-convert' });
+      } catch (e) { }
+
       Sentry.captureException(error);
+
+      try {
+        if (error?.response?.error) Sentry.captureMessage(`Conversion error: ${error.response.error}`, 'error');
+      } catch (e) { }
 
       // Validation error (invalid YouTube URL)
       if (error instanceof ZodError) {

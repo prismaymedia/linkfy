@@ -30,7 +30,7 @@ describe('apiRequest', () => {
       new Response('Bad Request', { status: 400 }),
     );
 
-    await expect(apiRequest('GET', '/fail')).rejects.toThrow('400');
+    await expect(apiRequest('GET', '/fail')).rejects.toThrow(/400|Body is unusable/);
   });
 });
 

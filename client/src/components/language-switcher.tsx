@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { setDocumentDir } from '@/lib/setDocumentDir';
+import clsx from 'clsx';
 
 type Language = {
   code: string;
@@ -18,17 +20,17 @@ export default function LanguageSwitcher() {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Cargar idioma guardado en localStorage al montar
+  // On mount, load saved language from localStorage and set document direction.
   useEffect(() => {
     const savedLang = localStorage.getItem('language');
     if (savedLang && savedLang !== i18n.language) {
       i18n.changeLanguage(savedLang).then(() => {
-      document.dir = LANGUAGES.find(l => l.code === savedLang)?.dir || 'ltr';
+        setDocumentDir(LANGUAGES.find(l => l.code === savedLang)?.dir || 'ltr');
       });
     }
-  }, []);
+  }, [i18n]);
 
-  // Cerrar el dropdown si se hace clic fuera
+  // Close dropdown if clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -39,9 +41,10 @@ export default function LanguageSwitcher() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Change language and update document direction
   const handleLanguageChange = (lang: Language) => {
     i18n.changeLanguage(lang.code);
-    document.dir = lang.dir || 'ltr';
+    setDocumentDir(lang.dir || 'ltr');
     localStorage.setItem('language', lang.code);
     setOpen(false);
   };
@@ -65,7 +68,7 @@ export default function LanguageSwitcher() {
         aria-haspopup="true"
         aria-expanded={open}
       >
-        <span className={`fi fi-${currentLang.flag} text-base`}></span>
+        <span className={clsx('fi', `fi-${currentLang.flag}`, 'text-base')}></span>
         <span className="uppercase text-xs">{currentLang.code}</span>
       </button>
 
@@ -78,11 +81,13 @@ export default function LanguageSwitcher() {
             <li key={lang.code}>
               <button
                 onClick={() => handleLanguageChange(lang)}
-                className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center gap-2 ${i18n.language === lang.code ? 'bg-gray-50 font-semibold' : ''
-                  }`}
+                className={clsx(
+                  'w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center gap-2',
+                  i18n.language === lang.code && 'bg-gray-50 font-semibold'
+                )}
                 role="menuitem"
               >
-                <span className={`fi fi-${lang.flag} text-base`}></span>
+                <span className={clsx('fi', `fi-${lang.flag}`, 'text-base')}></span>
                 <span>{lang.label}</span>
               </button>
             </li>

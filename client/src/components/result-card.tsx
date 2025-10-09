@@ -26,7 +26,8 @@ export default function ResultCard({ result }: ResultCardProps) {
         description: t('result.copiedDescription'),
       });
       setTimeout(() => setCopied(false), 2000);
-    } catch {
+    } catch (error) {
+      console.error(error);
       toast({
         title: t('result.copyFailedTitle'),
         description: t('result.copyFailedDescription'),
@@ -70,7 +71,7 @@ export default function ResultCard({ result }: ResultCardProps) {
             htmlFor="spotify-url"
             className="text-xs font-medium text-gray-600"
           >
-            {t('result.spotifyUrl', 'Spotify URL')}
+            {t('result.spotifyUrl')}
           </label>
           <Input
             value={result.spotifyUrl}
@@ -82,7 +83,7 @@ export default function ResultCard({ result }: ResultCardProps) {
         {/* Copy Button */}
         <Button
           onClick={handleCopyToClipboard}
-          className="w-full bg-spotify hover:bg-green-600 text-white font-medium py-3 rounded-xl transition-all duration-200 flex items-center justify-center gap-2"
+          className="w-full bg-spotify hover:bg-spotify-dark text-white font-medium py-3 rounded-xl transition-all duration-200 flex items-center justify-center gap-2"
         >
           {copied ? (
             <>

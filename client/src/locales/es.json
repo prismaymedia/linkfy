@@ -54,6 +54,13 @@
     "urlAlreadyConverted": "URL ya convertida",
     "convertButton": "Convertir a Spotify"
   },
+  "validation": {
+    "youtubeUrlRequired": "Se requiere una URL de YouTube Music",
+    "urlFormat": "Por favor ingresa un formato de URL válido (que comience con https://)",
+    "urlMustStart": "La URL debe comenzar con http:// o https://",
+    "youtubeHost": "La URL debe ser de YouTube / YouTube Music (music.youtube.com, youtube.com, m.youtube.com o youtu.be)",
+    "youtubePath": "La URL debe apuntar a un video válido de YouTube (/watch?v=..., youtu.be/{id}, /shorts/{id}, /embed/{id}), lista de reproducción (/playlist?list=...), o álbum (/album/{id})"
+  },
   "preview": {
     "youtubeTrack": "Vista previa de la pista de YouTube",
     "original": "Original"

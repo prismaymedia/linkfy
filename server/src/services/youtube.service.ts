@@ -24,22 +24,62 @@ export class YoutubeService {
 
     try {
       const url = new URL(youtubeUrl);
-      let id: string;
-      let apiMethod: 'videos' | 'playlists';
+      let id: string | undefined;
+      let apiMethod: 'videos' | 'playlists' | undefined;
 
-      if (url.pathname === '/watch' && url.searchParams.has('v')) {
-        id = url.searchParams.get('v')!;
-        apiMethod = 'videos';
-      } else if (url.pathname === '/playlist' && url.searchParams.has('list')) {
+      const hostname = url.hostname.toLowerCase();
+      const pathname = url.pathname || '';
+
+      // Playlist by list param
+      if (url.searchParams.has('list')) {
         id = url.searchParams.get('list')!;
         apiMethod = 'playlists';
-      } else {
+      }
+
+      // Album URLs: /album/{id}
+      if (!id) {
+        const albumMatch = pathname.match(/^\/album\/([^\/\?]+)/i);
+        if (albumMatch) {
+          id = albumMatch[1];
+          apiMethod = 'playlists'; // Albums are treated as playlists in YouTube API
+        }
+      }
+
+      // Video by v param
+      if (!id && url.searchParams.has('v')) {
+        id = url.searchParams.get('v')!;
+        apiMethod = 'videos';
+      }
+
+      // youtu.be short links: https://youtu.be/{id}
+      if (!id && hostname === 'youtu.be') {
+        const parts = pathname.split('/').filter(Boolean);
+        if (parts.length >= 1) {
+          id = parts[0];
+          apiMethod = 'videos';
+        }
+      }
+
+      // /shorts/{id} or /embed/{id} or /v/{id}
+      if (!id) {
+        const shortsMatch = pathname.match(/^\/shorts\/([^\/\?]+)/i);
+        const embedMatch = pathname.match(/^\/(?:embed|v)\/([^\/\?]+)/i);
+        if (shortsMatch) {
+          id = shortsMatch[1];
+          apiMethod = 'videos';
+        } else if (embedMatch) {
+          id = embedMatch[1];
+          apiMethod = 'videos';
+        }
+      }
+
+      if (!id || !apiMethod) {
         throw new Error('Invalid YouTube Music URL format');
       }
 
       this.logger.log(
         `🎥 ${apiMethod === 'videos' ? 'Video' : 'Playlist'} ID extracted: ` +
-          id,
+        id,
       );
 
       const response = await this.youtube[apiMethod].list({
@@ -70,10 +110,10 @@ export class YoutubeService {
         );
         this.logger.log(
           '🔍 DEBUG - After parsing - Track: "' +
-            trackName +
-            '" | Artist: "' +
-            artistName +
-            '"',
+          trackName +
+          '" | Artist: "' +
+          artistName +
+          '"',
         );
 
         return {

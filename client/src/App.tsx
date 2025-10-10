@@ -16,6 +16,7 @@ import History from '@/pages/history';
 import Help from '@/pages/help';
 import NotFound from '@/pages/not-found';
 import { ROUTES } from './lib/routes';
+import { Analytics } from '@vercel/analytics/react';
 
 function AppRouter() {
   return (
@@ -102,6 +103,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <AppRouter />
+          <Analytics />
         </TooltipProvider>
       </AuthProvider>
     </QueryClientProvider>

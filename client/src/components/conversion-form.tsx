@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import {
   convertUrlSchema,
+  createConvertUrlSchema,
   type ConvertUrlRequest,
   type SpotifyTrackInfo,
   type YouTubeTrackInfo,
@@ -38,15 +39,28 @@ export default function ConversionForm() {
   const [lastProcessedUrl, setLastProcessedUrl] = useState<string>('');
 
   const { toast } = useToast();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  const validationSchema = useMemo(() => {
+    return createConvertUrlSchema(t);
+  }, [t]);
 
   const form = useForm<ConvertUrlRequest>({
-    resolver: zodResolver(convertUrlSchema),
+    resolver: zodResolver(validationSchema),
     mode: 'onChange', // Enable real-time validation
     defaultValues: {
       youtubeUrl: '',
     },
   });
+
+  useEffect(() => {
+    form.clearErrors();
+    
+    const currentValue = form.getValues('youtubeUrl');
+    if (currentValue) {
+      form.trigger('youtubeUrl');
+    }
+  }, [validationSchema, form]);
 
   const convertMutation = useMutation({
     mutationFn: async (data: { youtubeUrl: string }) => {
@@ -77,7 +91,7 @@ export default function ConversionForm() {
   });
 
   const fetchYouTubePreview = async (url: string) => {
-    if (!url || !convertUrlSchema.safeParse({ youtubeUrl: url }).success) {
+    if (!url || !createConvertUrlSchema(t).safeParse({ youtubeUrl: url }).success) {
       setYoutubePreview(null);
       return;
     }

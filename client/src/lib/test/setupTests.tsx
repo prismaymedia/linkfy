@@ -25,6 +25,9 @@ beforeAll(() => server.listen());
 afterEach(() => {
   cleanup();
   server.resetHandlers();
+  // Clear all toasts between tests
+  const toasts = document.querySelectorAll('[data-radix-collection-item]');
+  toasts.forEach(toast => toast.remove());
 });
 
 // Close MSW after all tests

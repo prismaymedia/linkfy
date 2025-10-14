@@ -24,6 +24,7 @@ export default function ResultCard({ result }: ResultCardProps) {
       toast({
         title: t('result.copiedTitle'),
         description: t('result.copiedDescription'),
+        variant: 'success',
       });
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {

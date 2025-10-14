@@ -21,12 +21,17 @@ async function bootstrap() {
 
   app.use(
     cors({
-      origin: [
-        'http://localhost:5173',
-        'https://linkfy-app.vercel.app',
-        'chrome-extension://mefdblccfmhfhhcgeckmcicgfnfgolpf',
-      ],
+      origin: process.env.ALLOWED_ORIGINS
+        ? process.env.ALLOWED_ORIGINS.split(',')
+        : [
+          'http://localhost:5173',
+          'https://prismaymedia.github.io',
+          'chrome-extension://mefdblccfmhfhhcgeckmcicgfnfgolpf',
+        ],
       credentials: true,
+      allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+      exposedHeaders: ['Authorization'],
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     }),
   );
 

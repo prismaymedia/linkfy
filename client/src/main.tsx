@@ -12,7 +12,7 @@ Sentry.init({
 });
 
 createRoot(document.getElementById('root')!).render(
-  <Router base="/">
+  <Router base={'/'}>
     <App />
   </Router>,
 );

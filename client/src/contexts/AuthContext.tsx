@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabaseClient';
+import * as Sentry from '@sentry/react';
 
 interface AuthContextType {
   user: User | null;
@@ -21,26 +22,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Get initial session and restore user if present
     const getInitialSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+
+      // Attach non-PII user context to Sentry
       try {
-        const {
-          data: { session },
-          error,
-        } = await supabase.auth.getSession();
-
-        if (error) {
-          console.error('supabase: getSession error', error);
+        if (session?.user) {
+          const u = session.user;
+          Sentry.setUser({
+            id: u.id,
+            username: u.email ? u.email.split('@')[0] : undefined,
+          });
+        } else {
+          Sentry.setUser(null);
         }
-
-        if (!mounted) return;
-        setSession(session ?? null);
-        setUser(session?.user ?? null);
-      } catch (err) {
-        console.error('Error getting initial session', err);
-        setSession(null);
-        setUser(null);
-      } finally {
-        if (mounted) setLoading(false);
-      }
+      } catch (e) {}
     };
 
     getInitialSession();
@@ -62,6 +62,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       // stop loading after the first auth state is processed
       setLoading(false);
+      try {
+        if (session?.user) {
+          const u = session.user;
+          Sentry.setUser({
+            id: u.id,
+            username: u.email ? u.email.split('@')[0] : undefined,
+          });
+        } else {
+          Sentry.setUser(null);
+        }
+      } catch (e) {}
     });
 
     return () => {
@@ -73,16 +84,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signOut = async () => {
-    try {
-      await supabase.auth.signOut();
-    } catch (err) {
-      console.error('Error signing out', err);
-    } finally {
-      // Ensure local session state cleared to avoid stale tokens
-      setSession(null);
-      setUser(null);
-      setLoading(false);
-    }
+    await supabase.auth.signOut();
+    Sentry.setUser(null);
   };
 
   const value = {

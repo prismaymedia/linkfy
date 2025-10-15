@@ -8,11 +8,14 @@ import * as Sentry from '@sentry/react';
 
 Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN,
-  sendDefaultPii: true,
+  tracesSampleRate: 0.2,
+  sendDefaultPii: false,
 });
 
 createRoot(document.getElementById('root')!).render(
-  <Router base={'/'}>
-    <App />
+  <Router base={import.meta.env.DEV ? '/' : '/linkfy'}>
+    <Sentry.ErrorBoundary fallback={<div>Something went wrong</div>}>
+      <App />
+    </Sentry.ErrorBoundary>
   </Router>,
 );

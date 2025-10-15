@@ -8,9 +8,9 @@ const baseUrl =
     ? 'http://localhost:3000'
     : 'https://linkfy-production.up.railway.app');
 
-async function throwIfResNotOk(res: Response) {
+async function throwIfResNotOk(res: Response, body?: string) {
   if (!res.ok) {
-    const text = (await res.text()) || res.statusText;
+    const text = body ?? ((await res.text()) || res.statusText);
     throw new Error(`${res.status}: ${text}`);
   }
 }
@@ -33,11 +33,11 @@ export async function apiRequest(
 
   if (!res.ok) {
     try {
-      Sentry.addBreadcrumb({ category: 'api', message: `${method} ${url} -> ${res.status}`, level: 'error', data: { status: res.status, url } });
       const text = await res.text();
+      Sentry.addBreadcrumb({ category: 'api', message: `${method} ${url} -> ${res.status}`, level: 'error', data: { status: res.status, url } });
       Sentry.captureException(new Error(`API request failed: ${method} ${url} -> ${res.status}: ${text}`));
+      await throwIfResNotOk(res, text);
     } catch (e) { }
-    await throwIfResNotOk(res);
   }
 
   return res;

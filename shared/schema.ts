@@ -46,7 +46,18 @@ export const convertUrlSchema = z.object({
       (url) => {
         try {
           const urlObj = new URL(url);
-          if (urlObj.pathname.startsWith('/channel/') || urlObj.pathname.startsWith('/@')) return false;
+          // This refine is specifically to block channel URLs.
+          return !(urlObj.pathname.startsWith('/channel/') || urlObj.pathname.startsWith('/@'));
+        } catch {
+          return true; // Let the URL validation handle malformed URLs
+        }
+      }, {
+      message: 'URL must be a valid track, playlist, or album link, not a channel.',
+    })
+    .refine(
+      (url) => {
+        try {
+          const urlObj = new URL(url);
           if (urlObj.hostname === 'youtu.be' && urlObj.pathname.length > 1) return true;
           return urlObj.searchParams.has('v') || urlObj.searchParams.has('list') || urlObj.pathname.startsWith('/browse/MPREb_');
         } catch {

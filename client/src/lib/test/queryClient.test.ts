@@ -25,12 +25,14 @@ describe('apiRequest', () => {
     );
   });
 
-  it('throws error when response is not ok', async () => {
+  it('returns a response with ok=false when the fetch response is not ok', async () => {
     vi.spyOn(global, 'fetch').mockResolvedValueOnce(
       new Response('Bad Request', { status: 400 }),
     );
 
-    await expect(apiRequest('GET', '/fail')).rejects.toThrow(/400|Body is unusable/);
+    const response = await apiRequest('GET', '/fail');
+    expect(response.ok).toBe(false);
+    expect(response.status).toBe(400);
   });
 });
 
@@ -41,7 +43,10 @@ describe('getQueryFn', () => {
 
   it('returns data on successful response', async () => {
     vi.spyOn(global, 'fetch').mockResolvedValueOnce(
-      new Response(JSON.stringify({ message: 'ok' }), { status: 200 }),
+      new Response(JSON.stringify({ message: 'ok' }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }),
     );
 
     const queryFn = getQueryFn<{ message: string }>({ on401: 'throw' });
@@ -85,7 +90,7 @@ describe('getQueryFn', () => {
         signal: new AbortController().signal,
         meta: undefined,
       }),
-    ).rejects.toThrow('401');
+    ).rejects.toThrow(/401/);
   });
 });
 

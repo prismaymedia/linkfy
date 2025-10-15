@@ -26,36 +26,35 @@ export const convertUrlSchema = z.object({
     .refine(
       (url) => {
         try {
-          const urlObj = new URL(url);
-          return urlObj.hostname === 'music.youtube.com';
+          const { hostname } = new URL(url);
+          return [
+            'music.youtube.com',
+            'www.youtube.com',
+            'm.youtube.com',
+            'youtube.com',
+            'youtu.be',
+          ].includes(hostname.toLowerCase());
         } catch {
           return false;
         }
       },
       {
-        message:
-          'URL must be from music.youtube.com (not youtube.com or other domains)',
+        message: 'URL must be a valid YouTube or YouTube Music link.',
       },
     )
     .refine(
       (url) => {
         try {
           const urlObj = new URL(url);
-          if (urlObj.pathname === '/watch' && urlObj.searchParams.has('v'))
-            return true;
-          if (
-            urlObj.pathname === '/playlist' &&
-            urlObj.searchParams.has('list')
-          )
-            return true;
-          return false;
+          if (urlObj.pathname.startsWith('/channel/') || urlObj.pathname.startsWith('/@')) return false;
+          if (urlObj.hostname === 'youtu.be' && urlObj.pathname.length > 1) return true;
+          return urlObj.searchParams.has('v') || urlObj.searchParams.has('list') || urlObj.pathname.startsWith('/browse/MPREb_');
         } catch {
           return false;
         }
       },
       {
-        message:
-          'URL must be a valid track (/watch?v=...) or playlist (/playlist?list=...)',
+        message: 'URL must be a valid track (/watch?v=...) or playlist (/playlist?list=...)',
       },
     ),
 });

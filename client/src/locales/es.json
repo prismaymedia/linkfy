@@ -46,7 +46,7 @@
   "form": {
     "youtubeUrlLabel": "URL de YouTube Music",
     "youtubeUrlPlaceholder": "https://music.youtube.com/watch?v=...",
-    "youtubeUrlHint": "Pega una URL de pista o lista de reproducción de YouTube Music",
+    "youtubeUrlHint": "Pega una URL de pista o lista de reproducción de YouTube o YouTube Music.",
     "validUrl": "URL válida",
     "invalidUrl": "URL inválida",
     "duplicateUrlWarning": "Esta URL ya fue convertida. Ingresa una URL diferente de YouTube Music para convertir.",

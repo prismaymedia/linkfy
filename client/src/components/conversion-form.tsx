@@ -127,7 +127,8 @@ export default function ConversionForm() {
     convertMutation.mutate(data);
   };
 
-  const isDuplicateUrl = lastProcessedUrl && watchedUrl === lastProcessedUrl;
+  const isDuplicateUrl =
+    lastProcessedUrl && watchedUrl === lastProcessedUrl && spotifyResult;
   const isFormValid = form.formState.isValid;
   const fieldState = form.getFieldState('youtubeUrl');
   const isFieldValid =

@@ -18,7 +18,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session
+    let mounted = true;
+
+    // Get initial session and restore user if present
     const getInitialSession = async () => {
       const {
         data: { session },
@@ -43,12 +45,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     getInitialSession();
 
-    // Listen for auth changes
+    // Listen for auth changes and handle token refresh / expired sessions
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      // Typical events: SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED, USER_UPDATED
+      if (!mounted) return;
+
+      if (event === 'SIGNED_OUT') {
+        setSession(null);
+        setUser(null);
+      } else {
+        setSession(session ?? null);
+        setUser(session?.user ?? null);
+      }
+
+      // stop loading after the first auth state is processed
       setLoading(false);
       try {
         if (session?.user) {
@@ -63,7 +75,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } catch (e) {}
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      try {
+        subscription.unsubscribe();
+      } catch (e) {}
+    };
   }, []);
 
   const signOut = async () => {

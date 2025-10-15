@@ -64,6 +64,7 @@ export default function ConversionForm() {
       toast({
         title: t('conversion.successTitle'),
         description: t('conversion.successDesc'),
+        variant: 'success',
       });
     },
     onError: (error: any) => {
@@ -115,11 +116,19 @@ export default function ConversionForm() {
   }, [watchedUrl, lastProcessedUrl]);
 
   const onSubmit = (data: ConvertUrlRequest) => {
+    // Check if this is a duplicate URL before submitting
+    if (isDuplicateUrl) {
+      toast({
+        title: t('form.duplicateUrlWarning'),
+        variant: 'warning',
+      });
+      return; // Don't submit if it's a duplicate
+    }
     convertMutation.mutate(data);
   };
 
   const isDuplicateUrl = lastProcessedUrl && watchedUrl === lastProcessedUrl;
-  const isFormValid = form.formState.isValid && !isDuplicateUrl;
+  const isFormValid = form.formState.isValid;
   const fieldState = form.getFieldState('youtubeUrl');
   const isFieldValid =
     !fieldState.error &&

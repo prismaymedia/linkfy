@@ -36,8 +36,13 @@ export class YoutubeService {
 
     try {
       const parsedLink = this._parseUrl(youtubeUrl);
-      if (parsedLink.type === YouTubeLinkType.UNKNOWN) {
-        this.logger.warn(`⚠️ Could not determine API method for URL.`);
+      if (
+        parsedLink.type === YouTubeLinkType.UNKNOWN ||
+        parsedLink.type === YouTubeLinkType.ALBUM
+      ) {
+        this.logger.warn(
+          `⚠️ Unsupported or unknown link type: ${parsedLink.type}. Falling back to oEmbed.`,
+        );
       } else {
         const response = await this.youtube[parsedLink.type].list({
           part: ['snippet'],
@@ -130,7 +135,7 @@ export class YoutubeService {
     if (url.pathname.startsWith('/browse/')) {
       const albumId = url.pathname.split('/browse/')[1];
       if (albumId) {
-        return { id: albumId, type: YouTubeLinkType.ALBUM };
+        return { id: albumId, type: YouTubeLinkType.UNKNOWN };
       }
     }
 

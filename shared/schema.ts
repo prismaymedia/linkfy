@@ -16,6 +16,9 @@ export const insertConversionSchema = createInsertSchema(conversions).pick({
   youtubeUrl: true,
 }) as unknown as z.ZodType<any, any, any>;
 
+// This prefix identifies YouTube Music album URLs.
+const YOUTUBE_ALBUM_PATH_PREFIX = '/browse/MPREb_';
+
 export const convertUrlSchema = z.object({
   youtubeUrl: z
     .string({
@@ -59,7 +62,7 @@ export const convertUrlSchema = z.object({
         try {
           const urlObj = new URL(url);
           if (urlObj.hostname === 'youtu.be' && urlObj.pathname.length > 1) return true;
-          return urlObj.searchParams.has('v') || urlObj.searchParams.has('list') || urlObj.pathname.startsWith('/browse/MPREb_');
+          return urlObj.searchParams.has('v') || urlObj.searchParams.has('list') || urlObj.pathname.startsWith(YOUTUBE_ALBUM_PATH_PREFIX);
         } catch {
           return false;
         }

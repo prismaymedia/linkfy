@@ -26,6 +26,7 @@ async function bootstrap() {
         : [
           'http://localhost:5173',
           'https://prismaymedia.github.io',
+          'https://linkfy-app.vercel.app',
           'chrome-extension://mefdblccfmhfhhcgeckmcicgfnfgolpf',
         ],
       credentials: true,

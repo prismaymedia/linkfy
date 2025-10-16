@@ -61,6 +61,8 @@ export const getAuthHeaders = async () => {
 };
 
 export const getRedirectUrl = () => {
-  const base = window.location.origin;
-  return `${base}/auth`;
+  const url =
+    import.meta.env.VITE_SITE_URL ||
+    (typeof window !== 'undefined' ? window.location.origin : '');
+  return `${url}/auth`;
 };

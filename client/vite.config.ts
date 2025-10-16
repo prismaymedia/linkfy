@@ -8,40 +8,46 @@ import tailwindcss from '@tailwindcss/vite';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export default defineConfig(async () => {
-  return {
-    base: '/',
-    plugins: [
-      react(),
-      tailwindcss(),
-      runtimeErrorOverlay(),
-      ...(process.env.NODE_ENV !== 'production' &&
-      process.env.REPL_ID !== undefined
-        ? [(await import('@replit/vite-plugin-cartographer')).cartographer()]
-        : []),
-    ],
-    resolve: {
-      alias: {
-        '@': path.resolve(__dirname, './src'),
-        '@shared': path.resolve(__dirname, '../shared'),
-        '@assets': path.resolve(__dirname, '../attached_assets'),
+export default defineConfig({
+  base: '/',
+  plugins: [
+    react(),
+    tailwindcss(),
+    runtimeErrorOverlay(),
+  ],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+      '@shared': path.resolve(__dirname, '../shared'),
+      '@assets': path.resolve(__dirname, '../attached_assets'),
+    },
+  },
+  build: {
+    outDir: 'dist',
+    target: 'esnext',
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
       },
     },
-    build: {
-      outDir: 'dist',
-      target: 'esnext',
-    },
-    server: {
-      fs: {
-        strict: true,
-        deny: ['**/.*'],
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-hook-form'],
+          'vendor-ui': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-select'],
+          'vendor-query': ['@tanstack/react-query'],
+          'vendor-supabase': ['@supabase/supabase-js'],
+        },
       },
     },
-    test: {
-      globals: true,
-      environment: 'jsdom',
-      setupFiles: './src/lib/test/setupTests.tsx',
+    chunkSizeWarningLimit: 1000,
+  },
+  server: {
+    fs: {
+      strict: true,
+      deny: ['**/.*'],
     },
-  };
-});
+  },
+} as any);
 

@@ -13,7 +13,7 @@ Sentry.init({
 });
 
 createRoot(document.getElementById('root')!).render(
-  <Router base={import.meta.env.DEV ? '/' : '/linkfy'}>
+  <Router base="/">
     <Sentry.ErrorBoundary fallback={<div>Something went wrong</div>}>
       <App />
     </Sentry.ErrorBoundary>

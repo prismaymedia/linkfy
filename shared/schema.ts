@@ -16,6 +16,9 @@ export const insertConversionSchema = createInsertSchema(conversions).pick({
   youtubeUrl: true,
 }) as unknown as z.ZodType<any, any, any>;
 
+// This prefix identifies YouTube Music album URLs.
+const YOUTUBE_ALBUM_PATH_PREFIX = '/browse/MPREb_';
+
 export const convertUrlSchema = z.object({
   youtubeUrl: z
     .string({
@@ -26,36 +29,46 @@ export const convertUrlSchema = z.object({
     .refine(
       (url) => {
         try {
-          const urlObj = new URL(url);
-          return urlObj.hostname === 'music.youtube.com';
+          const { hostname } = new URL(url);
+          return [
+            'music.youtube.com',
+            'www.youtube.com',
+            'm.youtube.com',
+            'youtube.com',
+            'youtu.be',
+          ].includes(hostname.toLowerCase());
         } catch {
           return false;
         }
       },
       {
-        message:
-          'URL must be from music.youtube.com (not youtube.com or other domains)',
+        message: 'URL must be a valid YouTube or YouTube Music link.',
       },
     )
     .refine(
       (url) => {
         try {
           const urlObj = new URL(url);
-          if (urlObj.pathname === '/watch' && urlObj.searchParams.has('v'))
-            return true;
-          if (
-            urlObj.pathname === '/playlist' &&
-            urlObj.searchParams.has('list')
-          )
-            return true;
-          return false;
+          // This refine is specifically to block channel URLs.
+          return !(urlObj.pathname.startsWith('/channel/') || urlObj.pathname.startsWith('/@'));
+        } catch {
+          return true; // Let the URL validation handle malformed URLs
+        }
+      }, {
+      message: 'URL must be a valid track, playlist, or album link, not a channel.',
+    })
+    .refine(
+      (url) => {
+        try {
+          const urlObj = new URL(url);
+          if (urlObj.hostname === 'youtu.be' && urlObj.pathname.length > 1) return true;
+          return urlObj.searchParams.has('v') || urlObj.searchParams.has('list') || urlObj.pathname.startsWith(YOUTUBE_ALBUM_PATH_PREFIX);
         } catch {
           return false;
         }
       },
       {
-        message:
-          'URL must be a valid track (/watch?v=...) or playlist (/playlist?list=...)',
+        message: 'URL must be a valid track (/watch?v=...) or playlist (/playlist?list=...)',
       },
     ),
 });

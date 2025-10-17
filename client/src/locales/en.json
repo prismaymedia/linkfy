@@ -46,7 +46,7 @@
   "form": {
     "youtubeUrlLabel": "YouTube Music URL",
     "youtubeUrlPlaceholder": "https://music.youtube.com/watch?v=...",
-    "youtubeUrlHint": "Paste a track or playlist URL from YouTube Music",
+    "youtubeUrlHint": "Paste a track or playlist URL from YouTube or YouTube Music.",
     "validUrl": "Valid URL",
     "invalidUrl": "Invalid URL",
     "duplicateUrlWarning": "This URL has already been converted. Enter a different YouTube Music URL to convert.",

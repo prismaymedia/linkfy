@@ -1,5 +1,5 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import { describe, it, vi, expect, beforeEach } from 'vitest';
+import { render, screen, waitFor, act } from '@testing-library/react';
+import { describe, it, vi, expect, beforeEach, Mock } from 'vitest';
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import React from 'react';
 
@@ -34,6 +34,8 @@ function TestComponent() {
 const mockUser = { id: '123', email: 'test@example.com' } as any;
 const mockSession = { user: mockUser } as any;
 
+let onAuthStateChangeCallback: (event: string, session: any) => void;
+
 describe('AuthProvider', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -47,11 +49,12 @@ describe('AuthProvider', () => {
     });
 
     // Mock onAuthStateChange to provide an unsubscribe function
-    (
-      supabase.auth.onAuthStateChange as unknown as ReturnType<typeof vi.fn>
-    ).mockReturnValue({
-      data: { subscription: { unsubscribe: vi.fn() } },
-    });
+    (supabase.auth.onAuthStateChange as unknown as Mock).mockImplementation(
+      (callback) => {
+        onAuthStateChangeCallback = callback;
+        return { data: { subscription: { unsubscribe: vi.fn() } } };
+      },
+    );
 
     // Mock signOut to return no error
     (
@@ -87,6 +90,10 @@ describe('AuthProvider', () => {
     });
 
     screen.getByText('signOut').click();
+
+    act(() => {
+      onAuthStateChangeCallback('SIGNED_OUT', null);
+    });
 
     await waitFor(() => {
       expect(screen.getByTestId('user').textContent).toBe('no-user');

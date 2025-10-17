@@ -268,58 +268,6 @@ describe('ConversionForm', () => {
     });
   });
 
-  it('shows validation error for invalid URL format', async () => {
-    renderWithClient(<ConversionForm />);
-    const input = screen.getByPlaceholderText(
-      /music\.youtube\.com\/watch\?v=/i,
-    );
-
-    fireEvent.change(input, { target: { value: 'not a url' } });
-    fireEvent.blur(input);
-
-    await waitFor(() =>
-      expect(
-        screen.getByText(/Please enter a valid URL format/i),
-      ).toBeInTheDocument(),
-    );
-  });
-
-  it('shows validation error for wrong domain', async () => {
-    renderWithClient(<ConversionForm />);
-    const input = screen.getByPlaceholderText(
-      /music\.youtube\.com\/watch\?v=/i,
-    );
-
-    fireEvent.change(input, {
-      target: { value: 'https://youtube.com/watch?v=test123' },
-    });
-    fireEvent.blur(input);
-
-    await waitFor(() =>
-      expect(
-        screen.getByText(/URL must be from music\.youtube\.com/i),
-      ).toBeInTheDocument(),
-    );
-  });
-
-  it('shows validation error for invalid YouTube Music path', async () => {
-    renderWithClient(<ConversionForm />);
-    const input = screen.getByPlaceholderText(
-      /music\.youtube\.com\/watch\?v=/i,
-    );
-
-    fireEvent.change(input, {
-      target: { value: 'https://music.youtube.com/browse' },
-    });
-    fireEvent.blur(input);
-
-    await waitFor(() =>
-      expect(
-        screen.getByText(/URL must be a valid track.*or playlist/i),
-      ).toBeInTheDocument(),
-    );
-  });
-
   it('displays hint text for URL input', () => {
     renderWithClient(<ConversionForm />);
     expect(

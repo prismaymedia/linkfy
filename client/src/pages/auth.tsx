@@ -12,24 +12,40 @@ export default function AuthPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [session, setSession] = useState<Session | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [, setLocation] = useLocation();
 
   useEffect(() => {
-    const fetchSession = async () => {
-      const currentSession = await getSession();
-      setSession(currentSession);
-      if (currentSession) {
-        setLocation(ROUTES.DASHBOARD);
+    // Check if we're coming back from an OAuth callback
+    const handleAuthCallback = async () => {
+      try {
+        setIsLoading(true);
+        
+        // Get the current session - Supabase will automatically process the hash
+        const currentSession = await getSession();
+        setSession(currentSession);
+        
+        if (currentSession) {
+          // Small delay to ensure session is properly set before redirect
+          setTimeout(() => {
+            setLocation(ROUTES.DASHBOARD);
+          }, 100);
+        }
+      } catch (err) {
+        console.error('Error handling auth callback:', err);
+        setError(t('errors.authError') || 'Authentication error');
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    fetchSession();
+    handleAuthCallback();
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setSession(session);
-        if (session) {
+        if (event === 'SIGNED_IN' && session) {
           setLocation(ROUTES.DASHBOARD);
         }
       },
@@ -38,7 +54,7 @@ export default function AuthPage() {
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, [setLocation]);
+  }, [setLocation, t]);
 
   const handleSocialLogin = async (provider: 'google') => {
     setError(null);

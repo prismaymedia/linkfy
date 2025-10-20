@@ -21,9 +21,6 @@ export default defineConfig({
       provider: 'v8',
     },
   },
-  define: {
-    global: 'globalThis',
-  },
   esbuild: {
     jsx: 'automatic',
   },

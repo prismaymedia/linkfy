@@ -2,6 +2,10 @@ import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
 import { afterAll, afterEach, beforeAll, vi } from 'vitest';
 import { server } from '../mocks/server';
+import React from 'react';
+
+// Make React available globally for JSX
+(globalThis as any).React = React;
 
 // Mock matchMedia
 Object.defineProperty(window, 'matchMedia', {

@@ -12,6 +12,12 @@ import { useTranslation } from 'react-i18next';
 import { Home } from 'lucide-react';
 import clsx from 'clsx';
 
+interface Crumb {
+  label: string;
+  path: string;
+  icon?: typeof Home | null;
+}
+
 export default function BreadcrumbNav() {
   const { t } = useTranslation();
   const [location, setLocation] = useLocation();
@@ -27,17 +33,13 @@ export default function BreadcrumbNav() {
     return null;
   }
 
-  const breadcrumbs = [
+  const breadcrumbs: Crumb[] = [
     {
       label: t('breadcrumb.dashboard', 'Dashboard'),
-      path: ROUTES.DASHBOARD as string,
-      icon: Home as React.ComponentType<any> | null,
+      path: ROUTES.DASHBOARD,
+      icon: Home,
     },
-  ] as {
-    label: string
-    path: string
-    icon: React.ComponentType<any> | null
-  }[];
+  ];
 
 
   // Add current page if it's not dashboard
@@ -69,7 +71,9 @@ export default function BreadcrumbNav() {
                   className={clsx(
                     'inline-flex items-center min-w-0',
                     // Responsive max-widths for better truncation
-                    isLast ? 'max-w-[200px] sm:max-w-[300px] md:max-w-[400px]' : 'max-w-[150px] sm:max-w-[200px] md:max-w-[250px]'
+                    isLast
+                      ? 'max-w-[200px] sm:max-w-[300px] md:max-w-[400px]'
+                      : 'max-w-[150px] sm:max-w-[200px] md:max-w-[250px]'
                   )}
                 >
                   {index > 0 && (
@@ -115,9 +119,7 @@ export default function BreadcrumbNav() {
                           aria-hidden="true"
                         />
                       )}
-                      <span className="truncate">
-                        {crumb.label}
-                      </span>
+                      <span className="truncate">{crumb.label}</span>
                     </BreadcrumbLink>
                   )}
                 </BreadcrumbItem>

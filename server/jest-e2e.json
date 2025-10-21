@@ -5,10 +5,8 @@
   "moduleFileExtensions": ["ts", "js", "json"],
   "testRegex": ".*\\.e2e-spec\\.ts$",
   "transform": {
-    "^.+\\.ts$": "ts-jest"
+    "^.+\\.(t|j)s$": "ts-jest"
   },
   "silent": false,
-  "transformIgnorePatterns": [
-    "node_modules/(?!(@paralleldrive/cuid2|formidable|superagent|supertest)/)"
-  ]
+  "transformIgnorePatterns": ["/node_modules/(?!@paralleldrive/cuid2)"]
 }

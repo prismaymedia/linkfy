@@ -16,8 +16,6 @@ export const insertConversionSchema = createInsertSchema(conversions).pick({
   youtubeUrl: true,
 }) as unknown as z.ZodType<any, any, any>;
 
-// This prefix identifies YouTube Music album URLs.
-const YOUTUBE_ALBUM_PATH_PREFIX = '/browse/MPREb_';
 
 export const convertUrlSchema = z.object({
   youtubeUrl: z
@@ -29,46 +27,66 @@ export const convertUrlSchema = z.object({
     .refine(
       (url) => {
         try {
-          const { hostname } = new URL(url);
-          return [
-            'music.youtube.com',
-            'www.youtube.com',
-            'm.youtube.com',
-            'youtube.com',
-            'youtu.be',
-          ].includes(hostname.toLowerCase());
+          let { hostname, pathname, searchParams } = new URL(url);
+          const normalizedHostname = hostname.toLowerCase().replace('www.', '');
+
+          // Check if it's a supported domain
+          if (
+            ![
+              'music.youtube.com',
+              'youtube.com',
+              'youtu.be',
+              'm.youtube.com',
+              'open.spotify.com',
+            ].includes(normalizedHostname)
+          ) {
+            return false;
+          }
+
+          // Block YouTube channel URLs
+          if (
+            (normalizedHostname.includes('youtube') ||
+              normalizedHostname.includes('youtu.be')) &&
+            (pathname.startsWith('/@') || pathname.startsWith('/channel/'))
+          ) {
+            return false;
+          }
+
+          // Normalize pathname by removing trailing slash if it exists
+          if (pathname.length > 1 && pathname.endsWith('/')) {
+            pathname = pathname.slice(0, -1);
+          }
+
+          // For YouTube URLs, check for valid patterns
+          if (normalizedHostname.includes('youtube') || normalizedHostname.includes('youtu.be')) {
+            // Video URLs: watch?v=, youtu.be/, embed/, shorts/
+            if (pathname.includes('/watch') && searchParams.has('v')) return true;
+            if (normalizedHostname === 'youtu.be' && pathname.length > 1 && pathname.match(/^\/[a-zA-Z0-9_-]+/)) return true;
+            if (pathname.includes('/embed/')) return true;
+            if (pathname.includes('/shorts/')) return true;
+
+            // Playlist URLs
+            if (pathname.includes('/playlist') && searchParams.has('list')) return true;
+
+            // Browse URLs (albums)
+            if (pathname.startsWith('/browse/')) return true;
+
+            return false;
+          }
+
+          // For Spotify URLs
+          if (normalizedHostname === 'open.spotify.com') {
+            return pathname.match(/^\/(track|album|playlist)\/[a-zA-Z0-9]+/) !== null;
+          }
+
+          return false;
         } catch {
           return false;
         }
       },
       {
-        message: 'URL must be a valid YouTube or YouTube Music link.',
-      },
-    )
-    .refine(
-      (url) => {
-        try {
-          const urlObj = new URL(url);
-          // This refine is specifically to block channel URLs.
-          return !(urlObj.pathname.startsWith('/channel/') || urlObj.pathname.startsWith('/@'));
-        } catch {
-          return true; // Let the URL validation handle malformed URLs
-        }
-      }, {
-      message: 'URL must be a valid track, playlist, or album link, not a channel.',
-    })
-    .refine(
-      (url) => {
-        try {
-          const urlObj = new URL(url);
-          if (urlObj.hostname === 'youtu.be' && urlObj.pathname.length > 1) return true;
-          return urlObj.searchParams.has('v') || urlObj.searchParams.has('list') || urlObj.pathname.startsWith(YOUTUBE_ALBUM_PATH_PREFIX);
-        } catch {
-          return false;
-        }
-      },
-      {
-        message: 'URL must be a valid track (/watch?v=...) or playlist (/playlist?list=...)',
+        message:
+          'URL must be a valid track (/watch?v=...) or playlist (/playlist?list=...).',
       },
     ),
 });

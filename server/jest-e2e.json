@@ -2,13 +2,17 @@
   "preset": "ts-jest",
   "testEnvironment": "node",
   "rootDir": "./src",
-  "moduleFileExtensions": ["ts", "js", "json"],
+  "moduleFileExtensions": [
+    "ts",
+    "js",
+    "json"
+  ],
   "testRegex": ".*\\.e2e-spec\\.ts$",
   "transform": {
     "^.+\\.ts$": "ts-jest"
   },
+  "silent": false,
   "transformIgnorePatterns": [
-    "node_modules/(?!(@paralleldrive/cuid2|formidable|supertest|superagent)/)"
-  ],
-  "silent": false
+    "node_modules/(?!@paralleldrive/cuid2)"
+  ]
 }

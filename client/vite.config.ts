@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
@@ -49,5 +50,9 @@ export default defineConfig({
       deny: ['**/.*'],
     },
   },
-} as any);
-
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/lib/test/setupTests.tsx',
+  },
+});

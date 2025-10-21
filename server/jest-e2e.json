@@ -7,8 +7,6 @@
   "transform": {
     "^.+\\.ts$": "ts-jest"
   },
-  "transformIgnorePatterns": [
-    "node_modules/(?!(@paralleldrive/cuid2|formidable|supertest|superagent)/)"
-  ],
-  "silent": false
+  "silent": false,
+  "transformIgnorePatterns": ["node_modules/(?!@paralleldrive/cuid2)"]
 }

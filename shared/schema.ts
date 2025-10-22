@@ -28,7 +28,7 @@ export const convertUrlSchema = z.object({
       (url) => {
         try {
           let { hostname, pathname, searchParams } = new URL(url);
-          const normalizedHostname = hostname.toLowerCase().replace('www.', '');
+          const normalizedHostname = hostname.toLowerCase().replace(/^www\./, '');
 
           // Check if it's a supported domain
           if (
@@ -60,13 +60,13 @@ export const convertUrlSchema = z.object({
           // For YouTube URLs, check for valid patterns
           if (normalizedHostname.includes('youtube') || normalizedHostname.includes('youtu.be')) {
             // Video URLs: watch?v=, youtu.be/, embed/, shorts/
-            if (pathname.includes('/watch') && searchParams.has('v')) return true;
-            if (normalizedHostname === 'youtu.be' && pathname.length > 1 && pathname.match(/^\/[a-zA-Z0-9_-]+/)) return true;
-            if (pathname.includes('/embed/')) return true;
-            if (pathname.includes('/shorts/')) return true;
+            if (pathname === '/watch' && searchParams.has('v')) return true;
+            if (normalizedHostname === 'youtu.be' && pathname.length > 1 && pathname.match(/^\/[a-zA-Z0-9_-]+$/)) return true;
+            if (pathname.startsWith('/embed/')) return true;
+            if (pathname.startsWith('/shorts/')) return true;
 
             // Playlist URLs
-            if (pathname.includes('/playlist') && searchParams.has('list')) return true;
+            if (pathname.startsWith('/playlist') && searchParams.has('list')) return true;
 
             // Browse URLs (albums)
             if (pathname.startsWith('/browse/')) return true;
@@ -76,7 +76,7 @@ export const convertUrlSchema = z.object({
 
           // For Spotify URLs
           if (normalizedHostname === 'open.spotify.com') {
-            return pathname.match(/^\/(track|album|playlist)\/[a-zA-Z0-9]+/) !== null;
+            return pathname.match(/^\/(track|album|playlist)\/[a-zA-Z0-9]+$/) !== null;
           }
 
           return false;
@@ -86,7 +86,7 @@ export const convertUrlSchema = z.object({
       },
       {
         message:
-          'URL must be a valid track (/watch?v=...) or playlist (/playlist?list=...).',
+          'URL must be a valid YouTube Music or Spotify track, album, or playlist link.',
       },
     ),
 });

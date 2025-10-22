@@ -70,7 +70,7 @@ describe('convertUrlSchema', () => {
             const result = convertUrlSchema.safeParse({ youtubeUrl: url });
             if (!result.success) {
                 expect(result.error.errors[0].message).toBe(
-                    'URL must be a valid track (/watch?v=...) or playlist (/playlist?list=...).',
+                    'URL must be a valid YouTube Music or Spotify track, album, or playlist link.',
                 );
             } else {
                 // Fail the test if it unexpectedly succeeds
@@ -83,7 +83,7 @@ describe('convertUrlSchema', () => {
             const result = convertUrlSchema.safeParse({ youtubeUrl: url });
             if (!result.success) {
                 expect(result.error.errors[0].message).toBe(
-                    'URL must be a valid track (/watch?v=...) or playlist (/playlist?list=...).',
+                    'URL must be a valid YouTube Music or Spotify track, album, or playlist link.',
                 );
             } else {
                 fail('Non-YouTube URL should have failed validation');

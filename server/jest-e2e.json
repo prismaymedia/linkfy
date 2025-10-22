@@ -8,6 +8,7 @@
     "^.+\\.(t|j)s$": "ts-jest"
   },
   "silent": false,
+  "__comment": "The following packages are included in transformIgnorePatterns because they use non-standard syntax or require transpilation for tests to run correctly: @paralleldrive/cuid2, formidable, supertest, superagent, @noble/hashes.",
   "transformIgnorePatterns": [
     "node_modules/(?!(@paralleldrive/cuid2|formidable|supertest|superagent|@noble/hashes)/)"
   ],

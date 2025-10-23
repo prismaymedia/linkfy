@@ -7,6 +7,7 @@ import {
   type ConvertUrlRequest,
   type SpotifyTrackInfo,
   type YouTubeTrackInfo,
+  type PlaylistTrack,
 } from '../../../shared/schema';
 import { apiRequest } from '@/lib/queryClient';
 import {
@@ -36,17 +37,20 @@ export default function ConversionForm() {
   );
   const [isLoadingPreview, setIsLoadingPreview] = useState(false);
   const [lastProcessedUrl, setLastProcessedUrl] = useState<string>('');
+  const [singleTrackResult, setSingleTrackResult] =
+    useState<SpotifyTrackInfo | null>(null);
 
   const { toast } = useToast();
   const { t } = useTranslation();
 
   const form = useForm<ConvertUrlRequest>({
     resolver: zodResolver(convertUrlSchema),
-    mode: 'onChange', // Enable real-time validation
-    defaultValues: {
-      youtubeUrl: '',
-    },
+    mode: 'onChange',
+    defaultValues: { youtubeUrl: '' },
   });
+
+  const [convertedTracks, setConvertedTracks] = useState<string[]>([]);
+  const [convertingTracks, setConvertingTracks] = useState<string[]>([]);
 
   const convertMutation = useMutation({
     mutationFn: async (data: { youtubeUrl: string }) => {
@@ -60,18 +64,16 @@ export default function ConversionForm() {
     onSuccess: (result) => {
       setSpotifyResult(result);
       setLastProcessedUrl(form.getValues('youtubeUrl'));
-
       toast({
         title: t('conversion.successTitle'),
         description: t('conversion.successDesc'),
         variant: 'success',
       });
     },
-    onError: (error: any) => {
-      const errorMessage = t('conversion.errorDesc');
+    onError: () => {
       toast({
         title: t('conversion.errorTitle'),
-        description: errorMessage,
+        description: t('conversion.errorDesc'),
         variant: 'destructive',
       });
     },
@@ -90,8 +92,7 @@ export default function ConversionForm() {
         convert: false, // only preview YouTube data
       });
       const json = await response.json();
-
-      setYoutubePreview(json as YouTubeTrackInfo);
+      setYoutubePreview(json);
     } catch {
       setYoutubePreview(null);
     } finally {
@@ -108,24 +109,14 @@ export default function ConversionForm() {
         watchedUrl.trim() !== '' &&
         watchedUrl !== lastProcessedUrl
       ) {
+        setSpotifyResult(null);
+        setSingleTrackResult(null);
         fetchYouTubePreview(watchedUrl);
+        setConvertedTracks([]);
       }
     }, 500);
-
     return () => clearTimeout(timeoutId);
   }, [watchedUrl, lastProcessedUrl]);
-
-  const onSubmit = (data: ConvertUrlRequest) => {
-    // Check if this is a duplicate URL before submitting
-    if (isDuplicateUrl) {
-      toast({
-        title: t('form.duplicateUrlWarning'),
-        variant: 'warning',
-      });
-      return; // Don't submit if it's a duplicate
-    }
-    convertMutation.mutate(data);
-  };
 
   const isDuplicateUrl = lastProcessedUrl && watchedUrl === lastProcessedUrl;
   const isFormValid = form.formState.isValid;
@@ -135,6 +126,38 @@ export default function ConversionForm() {
     fieldState.isDirty &&
     watchedUrl &&
     watchedUrl.trim() !== '';
+
+  const onSubmit = (data: ConvertUrlRequest) => {
+    if (isDuplicateUrl) {
+      toast({
+        title: t('form.duplicateUrlWarning'),
+        variant: 'warning',
+      });
+      return;
+    }
+    convertMutation.mutate(data);
+  };
+
+  const handleSingleTrackConversion = async (track: PlaylistTrack) => {
+    const youtubeUrl = `https://music.youtube.com/watch?v=${track.videoId}`;
+
+    if (convertingTracks.includes(track.videoId)) return;
+
+    setConvertingTracks((prev) => [...prev, track.videoId]);
+
+    try {
+      const result = await convertMutation.mutateAsync({ youtubeUrl });
+      setSingleTrackResult(result);
+      toast({
+        title: t('conversion.successTitle'),
+        description: t('conversion.successDesc'),
+        variant: 'success',
+      });
+      setConvertedTracks((prev) => [...prev, track.videoId]);
+    } catch (error) {
+      console.error('Error converting track:', error);
+    }
+  };
 
   return (
     <>
@@ -154,6 +177,8 @@ export default function ConversionForm() {
                       <div className="relative">
                         <Input
                           {...field}
+                          aria-invalid={!!fieldState.error}
+                          aria-describedby="youtubeUrl-hint youtubeUrl-error"
                           type="url"
                           placeholder={t('form.youtubeUrlPlaceholder')}
                           className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-spotify focus:border-spotify transition-colors duration-200 pr-10 ${
@@ -163,12 +188,6 @@ export default function ConversionForm() {
                                 ? 'border-green-500 focus:ring-green-500 focus:border-green-500'
                                 : 'border-gray-300'
                           }`}
-                          aria-invalid={!!fieldState.error}
-                          aria-describedby={
-                            fieldState.error
-                              ? 'youtubeUrl-error'
-                              : 'youtubeUrl-hint'
-                          }
                         />
                         {isLoadingPreview ? (
                           <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 animate-spin text-gray-400" />
@@ -193,7 +212,7 @@ export default function ConversionForm() {
                     >
                       {t('form.youtubeUrlHint')}
                     </FormDescription>
-                    <FormMessage id="youtubeUrl-error" role="alert" />
+                    <FormMessage role="alert" />
                   </FormItem>
                 )}
               />
@@ -207,22 +226,36 @@ export default function ConversionForm() {
                 </div>
               )}
 
-              <Button
-                type="submit"
-                disabled={convertMutation.isPending || !isFormValid}
-                className="w-full bg-spotify hover:bg-green-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
-              >
-                {convertMutation.isPending ? (
-                  <>
-                    {t('form.converting')}
-                    <Loader2 className="ml-2 h-4 w-4 animate-spin" />
-                  </>
-                ) : isDuplicateUrl ? (
-                  t('form.urlAlreadyConverted')
-                ) : (
-                  t('form.convertButton')
-                )}
-              </Button>
+              {youtubePreview?.type === 'album' ||
+              youtubePreview?.type === 'playlist' ? null : (
+                <Button
+                  type="submit"
+                  disabled={
+                    !!convertMutation.isPending ||
+                    !isFormValid ||
+                    !!isDuplicateUrl ||
+                    (spotifyResult !== null && watchedUrl === lastProcessedUrl)
+                  }
+                  className={`w-full text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 ${
+                    convertMutation.isPending
+                      ? 'bg-spotify cursor-wait'
+                      : spotifyResult && watchedUrl === lastProcessedUrl
+                        ? 'bg-gray-400 opacity-70 cursor-not-allowed'
+                        : 'bg-spotify hover:bg-green-600'
+                  }`}
+                >
+                  {convertMutation.isPending ? (
+                    <>
+                      Converting...
+                      <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                    </>
+                  ) : spotifyResult && watchedUrl === lastProcessedUrl ? (
+                    'Converted'
+                  ) : (
+                    'Convert to Spotify'
+                  )}
+                </Button>
+              )}
             </form>
           </Form>
         </CardContent>
@@ -234,37 +267,98 @@ export default function ConversionForm() {
             <div className="flex items-center">
               <SiYoutubemusic className="text-youtube text-xl mr-2" />
               <h3 className="text-lg font-semibold text-gray-800">
-                {t('preview.youtubeTrack')}
+                {t('preview.youtubeTrack', { defaultValue: 'YouTube Preview' })}
               </h3>
             </div>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <div className="flex items-center space-x-4">
-              <img
-                src={youtubePreview.thumbnailUrl}
-                alt="YouTube thumbnail"
-                className="w-16 h-16 rounded-lg object-cover shadow-md"
-              />
-              <div className="flex-1 min-w-0">
-                <h4 className="font-medium text-gray-900 truncate">
-                  {youtubePreview.trackName}
-                </h4>
-                <p className="text-sm text-gray-600 truncate">
-                  {youtubePreview.artistName}
+            {youtubePreview.type !== 'track' &&
+              youtubePreview.playlistTitle && (
+                <p className="text-sm text-gray-500">
+                  {youtubePreview.playlistTitle}
                 </p>
-                <p className="text-xs text-gray-500 truncate">
-                  {t('preview.original')}: {youtubePreview.originalTitle}
-                </p>
-              </div>
-              {isLoadingPreview && (
-                <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
               )}
-            </div>
+          </CardHeader>
+
+          <CardContent className="pt-0">
+            {youtubePreview.type === 'playlist' ||
+            youtubePreview.type === 'album' ? (
+              <div className="max-h-[400px] overflow-y-auto space-y-3 pr-2 custom-scrollbar">
+                {youtubePreview.tracks.map((track) => (
+                  <div
+                    key={track.videoId}
+                    className="flex items-center justify-between space-x-4 border-b border-gray-100 pb-2 last:border-none"
+                  >
+                    <div className="flex items-center space-x-4">
+                      <img
+                        src={track.thumbnailUrl}
+                        alt={track.trackName}
+                        className="w-12 h-12 rounded-md object-cover shadow-sm"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-medium text-gray-900 truncate">
+                          {track.trackName}
+                        </h4>
+                        <p className="text-sm text-gray-600 truncate">
+                          {track.artistName}
+                        </p>
+                      </div>
+                    </div>
+
+                    <Button
+                      onClick={() => handleSingleTrackConversion(track)}
+                      disabled={convertingTracks.includes(track.videoId)}
+                      size="sm"
+                      className={`text-white font-medium py-1 px-3 rounded-md transition-colors duration-200 ${
+                        convertedTracks.includes(track.videoId)
+                          ? 'bg-gray-400 opacity-70 cursor-not-allowed'
+                          : convertingTracks.includes(track.videoId)
+                            ? 'bg-spotify/80 cursor-wait'
+                            : 'bg-spotify hover:bg-green-600'
+                      }`}
+                    >
+                      {convertedTracks.includes(track.videoId)
+                        ? t('form.converted', { defaultValue: 'Converted' })
+                        : convertingTracks.includes(track.videoId)
+                          ? t('form.converting', {
+                              defaultValue: 'Converting...',
+                            })
+                          : t('form.convertSingle', {
+                              defaultValue: 'Convert',
+                            })}
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            ) : youtubePreview.type === 'track' ? (
+              <div className="flex items-center space-x-4">
+                <img
+                  src={youtubePreview.thumbnailUrl ?? ''}
+                  alt="YouTube thumbnail"
+                  className="w-16 h-16 rounded-lg object-cover shadow-md"
+                />
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-medium text-gray-900 truncate">
+                    {youtubePreview.trackName}
+                  </h4>
+                  <p className="text-sm text-gray-600 truncate">
+                    {youtubePreview.artistName}
+                  </p>
+                  <p className="text-xs text-gray-500 truncate">
+                    {youtubePreview.originalTitle
+                      ? `${t('preview.original')}: ${youtubePreview.originalTitle}`
+                      : ''}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <p>No preview available.</p>
+            )}
           </CardContent>
         </Card>
       )}
 
-      {spotifyResult && <ResultCard result={spotifyResult} />}
+      {(spotifyResult || singleTrackResult) && (
+        <ResultCard result={(singleTrackResult || spotifyResult)!} />
+      )}
     </>
   );
 }

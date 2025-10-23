@@ -55,7 +55,9 @@
     "convertButton": "Convert to Spotify"
   },
   "preview": {
-    "youtubeTrack": "YouTube Track Preview",
+    "youtubeTrack": "YouTube Preview",
+    "youtubePlaylist": "YouTube Preview",
+    "youtubeAlbum": "YouTube Preview",
     "original": "Original"
   },
   "demo": {

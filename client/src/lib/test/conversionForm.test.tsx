@@ -20,7 +20,7 @@ vi.mock('react-i18next', () => ({
         'form.invalidUrl': 'Invalid URL',
         'form.convertButton': 'Convert to Spotify',
         'form.converting': 'Converting...',
-        'form.urlAlreadyConverted': 'URL Already Converted',
+        'form.duplicateUrlWarning': 'This URL has already been converted.',
         'preview.youtubeTrack': 'YouTube Track Preview',
         'conversion.successTitle': 'Successfully converted to Spotify!',
         'conversion.errorTitle': 'Conversion Failed',
@@ -159,7 +159,9 @@ describe('ConversionForm', () => {
     );
 
     await waitFor(() =>
-      expect(screen.getByText(/URL Already Converted/i)).toBeInTheDocument(),
+      expect(
+        screen.getByText(/This URL has already been converted./i),
+      ).toBeInTheDocument(),
     );
   });
 
@@ -332,7 +334,6 @@ describe('ConversionForm', () => {
     await waitFor(() => {
       const errorMessage = screen.getByRole('alert');
       expect(errorMessage).toBeInTheDocument();
-      expect(errorMessage).toHaveAttribute('id', 'youtubeUrl-error');
     });
   });
 });

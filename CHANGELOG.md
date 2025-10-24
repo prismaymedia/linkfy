@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.0](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.4.0...linkfy-v2.5.0) (2025-10-24)
+
+
+### Features
+
+* Complete Q4 2025 Reorganization for Sprint 3-4 ([137bdcc](https://github.com/prismaymedia/linkfy/commit/137bdcca56fdc15da508fded08f432205667ba9b))
+
 ## [2.4.0](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.3.2...linkfy-v2.4.0) (2025-10-22)
 
 

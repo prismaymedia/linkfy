@@ -24,8 +24,36 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { SiYoutubemusic } from 'react-icons/si';
 import { Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
-import ResultCard from './result-card';
+import ResultCard, { ResultCardSkeleton } from './result-card';
 import { useTranslation } from 'react-i18next';
+import { Skeleton } from '@/components/ui/skeleton';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const PreviewCardSkeleton = () => {
+  const { t } = useTranslation();
+  return (
+    <Card className="bg-white rounded-2xl shadow-lg mb-6">
+      <CardHeader className="pb-3">
+        <div className="flex items-center">
+          <SiYoutubemusic className="text-youtube text-xl mr-2" />
+          <h3 className="text-lg font-semibold text-gray-800">
+            {t('preview.youtubeTrack')}
+          </h3>
+        </div>
+      </CardHeader>
+      <CardContent className="pt-0">
+        <div className="flex items-center space-x-4">
+          <Skeleton className="w-16 h-16 rounded-lg" />
+          <div className="flex-1 space-y-2">
+            <Skeleton className="h-5 w-3/4" />
+            <Skeleton className="h-4 w-1/2" />
+            <Skeleton className="h-3 w-2/4" />
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
 
 export default function ConversionForm() {
   const [spotifyResult, setSpotifyResult] = useState<SpotifyTrackInfo | null>(
@@ -68,10 +96,10 @@ export default function ConversionForm() {
       });
     },
     onError: (error: any) => {
-      const errorMessage = t('conversion.errorDesc');
+      const message = error?.message || t('conversion.errorDesc');
       toast({
         title: t('conversion.errorTitle'),
-        description: errorMessage,
+        description: message,
         variant: 'destructive',
       });
     },
@@ -90,7 +118,6 @@ export default function ConversionForm() {
         convert: false, // only preview YouTube data
       });
       const json = await response.json();
-
       setYoutubePreview(json as YouTubeTrackInfo);
     } catch {
       setYoutubePreview(null);
@@ -111,9 +138,17 @@ export default function ConversionForm() {
         fetchYouTubePreview(watchedUrl);
       }
     }, 500);
-
     return () => clearTimeout(timeoutId);
   }, [watchedUrl, lastProcessedUrl]);
+
+  const isDuplicateUrl = lastProcessedUrl && watchedUrl === lastProcessedUrl;
+  const isFormValid = form.formState.isValid;
+  const fieldState = form.getFieldState('youtubeUrl');
+  const isFieldValid =
+    !fieldState.error &&
+    fieldState.isDirty &&
+    watchedUrl &&
+    watchedUrl.trim() !== '';
 
   const onSubmit = (data: ConvertUrlRequest) => {
     // Check if this is a duplicate URL before submitting
@@ -127,18 +162,9 @@ export default function ConversionForm() {
     convertMutation.mutate(data);
   };
 
-  const isDuplicateUrl = lastProcessedUrl && watchedUrl === lastProcessedUrl;
-  const isFormValid = form.formState.isValid;
-  const fieldState = form.getFieldState('youtubeUrl');
-  const isFieldValid =
-    !fieldState.error &&
-    fieldState.isDirty &&
-    watchedUrl &&
-    watchedUrl.trim() !== '';
-
   return (
     <>
-      <Card className="bg-white rounded-2xl shadow-lg mb-6">
+      <Card className="bg-white rounded-2xl shadow-lg mb-6 transition-all">
         <CardContent className="p-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -156,6 +182,9 @@ export default function ConversionForm() {
                           {...field}
                           type="url"
                           placeholder={t('form.youtubeUrlPlaceholder')}
+                          disabled={
+                            convertMutation.isPending || isLoadingPreview
+                          }
                           className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-spotify focus:border-spotify transition-colors duration-200 pr-10 ${
                             fieldState.error
                               ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
@@ -171,19 +200,19 @@ export default function ConversionForm() {
                           }
                         />
                         {isLoadingPreview ? (
-                          <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 animate-spin text-gray-400" />
+                          <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 animate-spin text-gray-400" />
                         ) : isFieldValid ? (
                           <CheckCircle2
-                            className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-green-500"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-green-500"
                             aria-label={t('form.validUrl')}
                           />
                         ) : fieldState.error && fieldState.isDirty ? (
                           <AlertCircle
-                            className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-red-500"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500"
                             aria-label={t('form.invalidUrl')}
                           />
                         ) : (
-                          <SiYoutubemusic className="absolute right-3 top-1/2 transform -translate-y-1/2 text-youtube opacity-50" />
+                          <SiYoutubemusic className="absolute right-3 top-1/2 -translate-y-1/2 text-youtube opacity-50" />
                         )}
                       </div>
                     </FormControl>
@@ -228,43 +257,86 @@ export default function ConversionForm() {
         </CardContent>
       </Card>
 
-      {youtubePreview && (
-        <Card className="bg-white rounded-2xl shadow-lg mb-6">
-          <CardHeader className="pb-3">
-            <div className="flex items-center">
-              <SiYoutubemusic className="text-youtube text-xl mr-2" />
-              <h3 className="text-lg font-semibold text-gray-800">
-                {t('preview.youtubeTrack')}
-              </h3>
-            </div>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <div className="flex items-center space-x-4">
-              <img
-                src={youtubePreview.thumbnailUrl}
-                alt="YouTube thumbnail"
-                className="w-16 h-16 rounded-lg object-cover shadow-md"
-              />
-              <div className="flex-1 min-w-0">
-                <h4 className="font-medium text-gray-900 truncate">
-                  {youtubePreview.trackName}
-                </h4>
-                <p className="text-sm text-gray-600 truncate">
-                  {youtubePreview.artistName}
-                </p>
-                <p className="text-xs text-gray-500 truncate">
-                  {t('preview.original')}: {youtubePreview.originalTitle}
-                </p>
-              </div>
-              {isLoadingPreview && (
-                <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      <AnimatePresence mode="wait">
+        {isLoadingPreview && (
+          <motion.div
+            key="preview-loading"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <PreviewCardSkeleton />
+          </motion.div>
+        )}
 
-      {spotifyResult && <ResultCard result={spotifyResult} />}
+        {!isLoadingPreview && youtubePreview && (
+          <motion.div
+            key="preview-card"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Card className="bg-white rounded-2xl shadow-lg mb-6">
+              <CardHeader className="pb-3">
+                <div className="flex items-center">
+                  <SiYoutubemusic className="text-youtube text-xl mr-2" />
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    {t('preview.youtubeTrack')}
+                  </h3>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="flex items-center space-x-4">
+                  <img
+                    src={youtubePreview.thumbnailUrl}
+                    alt="YouTube thumbnail"
+                    className="w-16 h-16 rounded-lg object-cover shadow-md"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-medium text-gray-900 truncate">
+                      {youtubePreview.trackName}
+                    </h4>
+                    <p className="text-sm text-gray-600 truncate">
+                      {youtubePreview.artistName}
+                    </p>
+                    <p className="text-xs text-gray-500 truncate">
+                      {t('preview.original')}: {youtubePreview.originalTitle}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence mode="wait">
+        {convertMutation.isPending && (
+          <motion.div
+            key="result-loading"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <ResultCardSkeleton />
+          </motion.div>
+        )}
+
+        {spotifyResult && !convertMutation.isPending && (
+          <motion.div
+            key="result-card"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <ResultCard result={spotifyResult} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

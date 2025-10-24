@@ -7,6 +7,64 @@ import { ArrowRight, History, Settings, User } from 'lucide-react';
 import { SiYoutubemusic, SiSpotify } from 'react-icons/si';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@/lib/routes';
+import { Skeleton } from '@/components/ui/skeleton';
+
+const DashboardSkeleton = () => (
+  <div className="min-h-screen bg-surface p-4">
+    <div className="max-w-6xl mx-auto">
+      <div className="mb-8">
+        <div className="flex items-center justify-center mb-4">
+          <Skeleton className="h-8 w-8 rounded-full" />
+          <Skeleton className="h-4 w-20 mx-3" />
+          <Skeleton className="h-8 w-8 rounded-full" />
+        </div>
+        <Skeleton className="h-9 w-1/3 mx-auto mb-2" />
+        <Skeleton className="h-5 w-1/2 mx-auto" />
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-7 w-1/4" />
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-1/5" />
+                  <Skeleton className="h-12 w-full" />
+                  <Skeleton className="h-3 w-2/5" />
+                </div>
+                <Skeleton className="h-12 w-full" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-7 w-1/3" />
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-full" />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-7 w-1/4" />
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Skeleton className="h-5 w-full" />
+              <Skeleton className="h-5 w-full" />
+              <Skeleton className="h-5 w-full" />
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  </div>
+);
 
 export default function Dashboard() {
   const { t } = useTranslation();
@@ -26,7 +84,7 @@ export default function Dashboard() {
   }, [setLocation]);
 
   if (loading) {
-    return <div className="text-center mt-20">Loading...</div>;
+    return <DashboardSkeleton />;
   }
 
   return (

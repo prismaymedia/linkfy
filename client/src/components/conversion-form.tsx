@@ -138,10 +138,10 @@ export default function ConversionForm() {
 
   return (
     <>
-      <Card className="bg-white rounded-2xl shadow-lg mb-6">
-        <CardContent className="p-6">
+      <Card className="bg-white rounded-2xl shadow-lg mb-4 sm:mb-6">
+        <CardContent className="p-4 sm:p-6">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
               <FormField
                 control={form.control}
                 name="youtubeUrl"
@@ -156,7 +156,7 @@ export default function ConversionForm() {
                           {...field}
                           type="url"
                           placeholder={t('form.youtubeUrlPlaceholder')}
-                          className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-spotify focus:border-spotify transition-colors duration-200 pr-10 ${
+                          className={`w-full px-3 sm:px-4 py-3 sm:py-4 border rounded-lg focus:ring-2 focus:ring-spotify focus:border-spotify transition-colors duration-200 pr-10 text-sm sm:text-base ${
                             fieldState.error
                               ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
                               : isFieldValid
@@ -171,19 +171,19 @@ export default function ConversionForm() {
                           }
                         />
                         {isLoadingPreview ? (
-                          <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 animate-spin text-gray-400" />
+                          <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 animate-spin text-gray-400" />
                         ) : isFieldValid ? (
                           <CheckCircle2
-                            className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-green-500"
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-green-500"
                             aria-label={t('form.validUrl')}
                           />
                         ) : fieldState.error && fieldState.isDirty ? (
                           <AlertCircle
-                            className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-red-500"
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-red-500"
                             aria-label={t('form.invalidUrl')}
                           />
                         ) : (
-                          <SiYoutubemusic className="absolute right-3 top-1/2 transform -translate-y-1/2 text-youtube opacity-50" />
+                          <SiYoutubemusic className="absolute right-3 top-1/2 transform -translate-y-1/2 text-youtube opacity-50 h-4 w-4 sm:h-5 sm:w-5" />
                         )}
                       </div>
                     </FormControl>
@@ -200,7 +200,7 @@ export default function ConversionForm() {
 
               {isDuplicateUrl && (
                 <div className="flex items-center space-x-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                  <AlertCircle className="h-4 w-4 text-amber-600" />
+                  <AlertCircle className="h-4 w-4 text-amber-600 flex-shrink-0" />
                   <span className="text-sm text-amber-700">
                     {t('form.duplicateUrlWarning')}
                   </span>
@@ -210,7 +210,7 @@ export default function ConversionForm() {
               <Button
                 type="submit"
                 disabled={convertMutation.isPending || !isFormValid}
-                className="w-full bg-spotify hover:bg-green-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                className="w-full bg-spotify hover:bg-green-600 text-white font-medium py-3 sm:py-4 px-4 sm:px-6 rounded-lg transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed touch-target text-sm sm:text-base"
               >
                 {convertMutation.isPending ? (
                   <>
@@ -229,27 +229,27 @@ export default function ConversionForm() {
       </Card>
 
       {youtubePreview && (
-        <Card className="bg-white rounded-2xl shadow-lg mb-6">
-          <CardHeader className="pb-3">
+        <Card className="bg-white rounded-2xl shadow-lg mb-4 sm:mb-6">
+          <CardHeader className="pb-3 p-4 sm:p-6">
             <div className="flex items-center">
-              <SiYoutubemusic className="text-youtube text-xl mr-2" />
-              <h3 className="text-lg font-semibold text-gray-800">
+              <SiYoutubemusic className="text-youtube text-lg sm:text-xl mr-2" />
+              <h3 className="text-base sm:text-lg font-semibold text-gray-800">
                 {t('preview.youtubeTrack')}
               </h3>
             </div>
           </CardHeader>
-          <CardContent className="pt-0">
-            <div className="flex items-center space-x-4">
+          <CardContent className="pt-0 p-4 sm:p-6">
+            <div className="flex items-center space-x-3 sm:space-x-4">
               <img
                 src={youtubePreview.thumbnailUrl}
                 alt="YouTube thumbnail"
-                className="w-16 h-16 rounded-lg object-cover shadow-md"
+                className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg object-cover shadow-md flex-shrink-0"
               />
               <div className="flex-1 min-w-0">
-                <h4 className="font-medium text-gray-900 truncate">
+                <h4 className="font-medium text-gray-900 truncate text-sm sm:text-base">
                   {youtubePreview.trackName}
                 </h4>
-                <p className="text-sm text-gray-600 truncate">
+                <p className="text-xs sm:text-sm text-gray-600 truncate">
                   {youtubePreview.artistName}
                 </p>
                 <p className="text-xs text-gray-500 truncate">
@@ -257,7 +257,7 @@ export default function ConversionForm() {
                 </p>
               </div>
               {isLoadingPreview && (
-                <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+                <Loader2 className="h-4 w-4 animate-spin text-gray-400 flex-shrink-0" />
               )}
             </div>
           </CardContent>

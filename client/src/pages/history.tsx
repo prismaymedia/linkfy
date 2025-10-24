@@ -114,27 +114,27 @@ export default function History() {
   }
 
   return (
-    <div className="min-h-screen bg-surface p-4">
+    <div className="min-h-screen bg-surface p-3 sm:p-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
             {t('history.title', 'Conversion History')}
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 text-sm sm:text-base">
             {t('history.subtitle', 'View and manage your past conversions')}
           </p>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8">
           <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <HistoryIcon className="h-8 w-8 text-blue-500" />
-                <div>
-                  <p className="text-2xl font-bold">{history.length}</p>
-                  <p className="text-sm text-gray-600">
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <HistoryIcon className="h-6 w-6 sm:h-8 sm:w-8 text-blue-500 flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-xl sm:text-2xl font-bold">{history.length}</p>
+                  <p className="text-xs sm:text-sm text-gray-600">
                     {t('history.totalConversions', 'Total Conversions')}
                   </p>
                 </div>
@@ -143,14 +143,14 @@ export default function History() {
           </Card>
 
           <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <SiSpotify className="h-8 w-8 text-spotify" />
-                <div>
-                  <p className="text-2xl font-bold">
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <SiSpotify className="h-6 w-6 sm:h-8 sm:w-8 text-spotify flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-xl sm:text-2xl font-bold">
                     {history.filter((h) => h.status === 'success').length}
                   </p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-xs sm:text-sm text-gray-600">
                     {t('history.successful', 'Successful')}
                   </p>
                 </div>
@@ -158,12 +158,12 @@ export default function History() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <Calendar className="h-8 w-8 text-green-500" />
-                <div>
-                  <p className="text-2xl font-bold">
+          <Card className="sm:col-span-2 lg:col-span-1">
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <Calendar className="h-6 w-6 sm:h-8 sm:w-8 text-green-500 flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-xl sm:text-2xl font-bold">
                     {Math.round(
                       (history.filter((h) => h.status === 'success').length /
                         history.length) *
@@ -171,7 +171,7 @@ export default function History() {
                     ) || 0}
                     %
                   </p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-xs sm:text-sm text-gray-600">
                     {t('history.successRate', 'Success Rate')}
                   </p>
                 </div>
@@ -182,60 +182,63 @@ export default function History() {
 
         {/* History List */}
         <Card>
-          <CardHeader>
-            <CardTitle>
+          <CardHeader className="p-4 sm:p-6">
+            <CardTitle className="text-base sm:text-lg">
               {t('history.recentConversions', 'Recent Conversions')}
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4 sm:p-6 pt-0">
             {history.length === 0 ? (
-              <div className="text-center py-8">
-                <HistoryIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-500">
+              <div className="text-center py-6 sm:py-8">
+                <HistoryIcon className="h-10 w-10 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-3 sm:mb-4" />
+                <p className="text-gray-500 text-sm sm:text-base">
                   {t('history.noHistory', 'No conversion history yet')}
                 </p>
                 <Button
                   onClick={() => setLocation(ROUTES.DASHBOARD)}
-                  className="mt-4"
+                  className="mt-3 sm:mt-4 touch-target"
                 >
                   {t('history.startConverting', 'Start Converting')}
                 </Button>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {history.map((record) => (
                   <div
                     key={record.id}
-                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border rounded-lg hover:bg-gray-50 transition-colors gap-3 sm:gap-4"
                   >
-                    <div className="flex items-center gap-4 flex-1">
-                      <div className="flex items-center gap-2">
-                        <SiYoutubemusic className="h-5 w-5 text-youtube" />
-                        <span className="text-gray-400">→</span>
-                        <SiSpotify className="h-5 w-5 text-spotify" />
+                    {/* Main content */}
+                    <div className="flex items-start sm:items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                      <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+                        <SiYoutubemusic className="h-4 w-4 sm:h-5 sm:w-5 text-youtube" />
+                        <span className="text-gray-400 text-sm">→</span>
+                        <SiSpotify className="h-4 w-4 sm:h-5 sm:w-5 text-spotify" />
                       </div>
 
-                      <div className="flex-1">
-                        <h3 className="font-medium">{record.title}</h3>
-                        <p className="text-sm text-gray-600">{record.artist}</p>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-sm sm:text-base truncate">{record.title}</h3>
+                        <p className="text-xs sm:text-sm text-gray-600 truncate">{record.artist}</p>
                         <p className="text-xs text-gray-500">
                           {new Date(record.createdAt).toLocaleDateString()}
                         </p>
                       </div>
 
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-shrink-0">
                         {getStatusBadge(record.status)}
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    {/* Action buttons */}
+                    <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => openUrl(record.youtubeUrl)}
                         title={t('history.openYoutube', 'Open YouTube')}
+                        className="touch-target-sm p-2"
                       >
-                        <ExternalLink className="h-4 w-4" />
+                        <ExternalLink className="h-3 w-3 sm:h-4 sm:w-4" />
                       </Button>
 
                       {record.status === 'success' && record.spotifyUrl && (
@@ -245,8 +248,9 @@ export default function History() {
                             size="sm"
                             onClick={() => openUrl(record.spotifyUrl)}
                             title={t('history.openSpotify', 'Open Spotify')}
+                            className="touch-target-sm p-2"
                           >
-                            <SiSpotify className="h-4 w-4" />
+                            <SiSpotify className="h-3 w-3 sm:h-4 sm:w-4" />
                           </Button>
 
                           <Button
@@ -257,8 +261,9 @@ export default function History() {
                               'history.copySpotifyUrl',
                               'Copy Spotify URL',
                             )}
+                            className="touch-target-sm p-2"
                           >
-                            <Copy className="h-4 w-4" />
+                            <Copy className="h-3 w-3 sm:h-4 sm:w-4" />
                           </Button>
                         </>
                       )}
@@ -268,9 +273,9 @@ export default function History() {
                         size="sm"
                         onClick={() => deleteRecord(record.id)}
                         title={t('history.delete', 'Delete')}
-                        className="text-red-500 hover:text-red-700"
+                        className="text-red-500 hover:text-red-700 touch-target-sm p-2"
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
                       </Button>
                     </div>
                   </div>
@@ -281,16 +286,18 @@ export default function History() {
         </Card>
 
         {/* Actions */}
-        <div className="flex gap-4 mt-8">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6 sm:mt-8">
           <Button
             onClick={() => setLocation(ROUTES.DASHBOARD)}
             variant="outline"
+            className="touch-target text-sm sm:text-base"
           >
             {t('history.backToDashboard', 'Back to Dashboard')}
           </Button>
           <Button
             onClick={() => setLocation(ROUTES.SETTINGS)}
             variant="outline"
+            className="touch-target text-sm sm:text-base"
           >
             {t('history.settings', 'Settings')}
           </Button>

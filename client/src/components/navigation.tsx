@@ -109,19 +109,19 @@ export default function Navigation({ className }: NavigationProps) {
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-14 sm:h-16">
           {/* Logo */}
           <div className="flex items-center">
             <button
               onClick={() => navigateToRoute(ROUTES.DASHBOARD)}
-              className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
+              className="flex items-center space-x-1 sm:space-x-2 hover:opacity-80 transition-opacity touch-target-sm"
             >
               <div className="flex items-center">
-                <SiYoutubemusic className="text-youtube text-xl" />
-                <ArrowRight className="text-gray-400 mx-1" size={20} />
-                <SiSpotify className="text-spotify text-xl" />
+                <SiYoutubemusic className="text-youtube text-lg sm:text-xl" />
+                <ArrowRight className="text-gray-400 mx-0.5 sm:mx-1" size={16} />
+                <SiSpotify className="text-spotify text-lg sm:text-xl" />
               </div>
-              <span className="font-bold text-xl text-gray-800">Linkfy</span>
+              <span className="font-bold text-lg sm:text-xl text-gray-800">Linkfy</span>
             </button>
           </div>
 
@@ -218,18 +218,19 @@ export default function Navigation({ className }: NavigationProps) {
           </div>
 
           {/* Language Switcher & Mobile Menu Button */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1 sm:space-x-2">
             <LanguageSwitcher />
             <div className="md:hidden">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="touch-target-sm p-2"
               >
                 {mobileMenuOpen ? (
-                  <X className="h-5 w-5" />
+                  <X className="h-4 w-4 sm:h-5 sm:w-5" />
                 ) : (
-                  <Menu className="h-5 w-5" />
+                  <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
                 )}
               </Button>
             </div>
@@ -254,20 +255,21 @@ export default function Navigation({ className }: NavigationProps) {
                 initial="closed"
                 animate="open"
                 exit="closed"
-                className="fixed top-0 right-0 h-full w-4/5 max-w-xs bg-white z-50 md:hidden p-6"
+                className="fixed top-0 right-0 h-full w-4/5 max-w-xs bg-white z-50 md:hidden p-4 sm:p-6"
               >
-                <div className="flex justify-between items-center mb-6">
-                  <span className="font-bold text-lg">Menu</span>
+                <div className="flex justify-between items-center mb-4 sm:mb-6">
+                  <span className="font-bold text-base sm:text-lg">Menu</span>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setMobileMenuOpen(false)}
+                    className="touch-target-sm p-2"
                   >
-                    <X className="h-5 w-5" />
+                    <X className="h-4 w-4 sm:h-5 sm:w-5" />
                   </Button>
                 </div>
 
-                <nav className="flex flex-col space-y-2">
+                <nav className="flex flex-col space-y-1 sm:space-y-2">
                   {navigationRoutes.map((route) => {
                     const Icon =
                       iconMap[route.icon as keyof typeof iconMap] || Home;
@@ -278,13 +280,13 @@ export default function Navigation({ className }: NavigationProps) {
                         key={route.path}
                         onClick={() => navigateToRoute(route.path)}
                         className={cn(
-                          'w-full flex items-center px-3 py-3 text-left rounded-md text-base font-medium transition-colors',
+                          'w-full flex items-center px-3 py-3 text-left rounded-md text-sm sm:text-base font-medium transition-colors touch-target',
                           isActive
                             ? 'bg-gray-100 text-gray-900'
                             : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
                         )}
                       >
-                        <Icon className="h-5 w-5 mr-3" />
+                        <Icon className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
                         {t(
                           `navigation.${route.title.toLowerCase()}`,
                           route.title,
@@ -293,9 +295,9 @@ export default function Navigation({ className }: NavigationProps) {
                     );
                   })}
 
-                  <div className="border-t border-gray-200 pt-4 mt-4 space-y-2">
+                  <div className="border-t border-gray-200 pt-3 sm:pt-4 mt-3 sm:mt-4 space-y-1 sm:space-y-2">
                     <div className="px-3 py-2">
-                      <p className="text-sm font-medium text-gray-900 truncate">
+                      <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">
                         {session?.user?.email}
                       </p>
                       <p className="text-xs text-gray-500">
@@ -305,25 +307,25 @@ export default function Navigation({ className }: NavigationProps) {
 
                     <button
                       onClick={() => navigateToRoute(ROUTES.PROFILE)}
-                      className="w-full flex items-center px-3 py-3 text-left rounded-md text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+                      className="w-full flex items-center px-3 py-3 text-left rounded-md text-sm sm:text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors touch-target"
                     >
-                      <User className="h-5 w-5 mr-3" />
+                      <User className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
                       {t('navigation.profile', 'Profile')}
                     </button>
 
                     <button
                       onClick={() => navigateToRoute(ROUTES.SETTINGS)}
-                      className="w-full flex items-center px-3 py-3 text-left rounded-md text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+                      className="w-full flex items-center px-3 py-3 text-left rounded-md text-sm sm:text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors touch-target"
                     >
-                      <Settings className="h-5 w-5 mr-3" />
+                      <Settings className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
                       {t('navigation.settings', 'Settings')}
                     </button>
 
                     <button
                       onClick={handleSignOut}
-                      className="w-full flex items-center px-3 py-3 text-left rounded-md text-base font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors"
+                      className="w-full flex items-center px-3 py-3 text-left rounded-md text-sm sm:text-base font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors touch-target"
                     >
-                      <LogOut className="h-5 w-5 mr-3" />
+                      <LogOut className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
                       {t('navigation.signOut', 'Sign Out')}
                     </button>
                   </div>

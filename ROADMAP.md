@@ -99,103 +99,193 @@
 
 ---
 
-### Sprint 3-4 (Oct 16-31, 2025) - Quick Value Features 🚀
-**Theme**: Features users can see and use immediately  
-**Estimated effort**: ~80 hours (40h per dev)
+### Sprint 3-4 (Oct 28 - Nov 10, 2025) - Universal API + Notion Backlog + Quick Features �
+**Theme**: API modernization + Backlog integration + User-visible features  
+**Status**: 🚀 STARTING MONDAY, OCTOBER 28, 2025  
+**Estimated effort**: ~80 hours (40h per dev, FULL CAPACITY)
 
-#### Week 3 - Visual Improvements
-- [ ] Implement dark mode theme toggle (12h)
-- [ ] Add real-time conversion progress indicator (8h)
-- [ ] Implement conversion preview before processing (10h)
-- [ ] Add drag and drop URL input interface (10h)
+#### Week 1 - Core API Architecture & Backlog Priority Items
+**Backend (Dev A - 18h)**:
+- [🔄] Build universal `/api/convert` endpoint (8h) - **Auto-detects YouTube/Spotify, routes to services, maintains backward compatibility**
+  - [🔄] Service detection logic from URL patterns (4h)
+  - [🔄] Multi-platform routing system (3h)
+  - [🔄] Zod validation for request/response (1h)
+- [🔄] YouTube service migration to new endpoint (2h)
+- [🔄] Spotify service integration setup (6h)
+- [🔄] Error handling & edge cases (2h)
 
-#### Week 4 - Smart URL Handling
-- [ ] Detect copy action for URL validation (8h)
-- [ ] Implement automatic clipboard URL detection (8h)
-- [ ] Add real-time URL validation feedback (6h)
-- [ ] Create smart URL pattern recognition (8h)
-- [ ] Testing & refinement (10h)
+**Frontend (Dev B - 18h)**: **[NOTION BACKLOG PRIORITY]**
+- [🔄] Dynamic service icons component (6h) - **Icon changes based on detected platform**
+  - [🔄] Icon mapping service (3h)
+  - [🔄] Smooth CSS transitions (2h)
+  - [🔄] Fallback icon handling (1h)
+- [🔄] Clean icon with hover actions (6h) - **Clear input on focus/hover**
+- [🔄] Replace "Get Started" with Music Converter component (6h) - **Extracted, reusable component**
 
-**Deliverable**: v2.4.0 - Dark mode + Smart URL handling
+**Shared (Both - 6h)**:
+- [🔄] Dark mode CSS structure & variables (4h)
+- [🔄] Theme switcher component setup (2h)
+
+#### Week 2 - UX Polish, Smart URL Handling & Testing
+**Smart URL Features (Dev A - 12h)**:
+- [🔄] Copy action detection system (4h)
+- [🔄] Clipboard auto-detection on input focus (5h)
+- [🔄] Real-time URL validation feedback (3h)
+
+**Dark Mode Complete (Dev B - 14h)**:
+- [🔄] Full component dark theme updates (8h)
+- [🔄] Dark mode styling & polish (6h)
+
+**Quality Assurance (Both - 12h)**:
+- [🔄] Cross-browser testing (Chrome, Firefox, Safari, Edge) (4h)
+- [🔄] Mobile responsiveness validation (4h)
+- [🔄] Integration testing (API + Frontend) (2h)
+- [🔄] Final bug fixes & refinements (2h)
+
+**Release Preparation**:
+- [🔄] Release notes for v2.4.0
+- [🔄] Staging deployment & validation
+- [🔄] Production deployment Friday Nov 10
+
+**Notion Backlog Items Completed in Sprint 3-4** ✅:
+1. ✅ Universal `/api/convert` endpoint
+2. ✅ Dynamic service icons
+3. ✅ Clean icon with hover actions
+4. ✅ Replace "Get Started" → Music Converter
+5. ✅ Dark mode implementation
+6. ✅ Copy action detection
+7. ✅ Clipboard auto-detection
+8. ✅ Real-time validation
+
+**Deliverable**: v2.4.0 - **Universal API + All Notion backlog items + Dark mode + Smart URLs**
+
+**Success Metrics**:
+- ✅ All 8 Notion backlog items working
+- ✅ `/api/convert` endpoint live with auto-detection
+- ✅ 50% dark mode adoption within 1 week
+- ✅ 80% clipboard detection usage
+- ✅ <2s conversion time maintained
+- ✅ Zero critical bugs in first 24h post-release
 
 ---
 
-### Sprint 5-6 (Nov 1-15, 2025) - User Engagement 💎
-**Theme**: Keep users coming back  
-**Estimated effort**: ~80 hours (40h per dev)
+### Sprint 5-6 (Nov 13-24, 2025) - Extension Complete + User Engagement 💎
+**Theme**: Backlog overflow + Keep users coming back  
+**Estimated effort**: ~80 hours (40h per dev, adjusted for Nov 3 holiday)
 
-#### Week 5 - History & Favorites
-- [ ] Create user favorites/bookmarks system (12h)
-- [ ] Add conversion history with search (12h)
-- [ ] Implement history filters (basic) (8h)
-- [ ] Add keyboard shortcuts for power users (8h)
+#### Week 5 - Backlog Overflow Items & History
+**Backlog Continuation (From Sprint 3-4)**:
+- [🔄] Review & implement user menu position changes (6h)
+- [🔄] Change `/api/user-info` to new category (4h)
+- [🔄] Implement conversion preview feature (10h)
+- [🔄] Add drag and drop URL interface (8h)
 
-#### Week 6 - Chrome Extension Enhancement
-- [ ] Add context menu for right-click conversion (8h)
-- [ ] Implement automatic URL detection on page load (10h)
-- [ ] Create extension settings panel (8h)
-- [ ] Add extension notification system (6h)
-- [ ] Testing & polish (8h)
+**User Retention (Shared)**:
+- [🔄] Create user favorites/bookmarks system (12h)
+- [🔄] Add conversion history with filtering (10h)
 
-**Deliverable**: v2.5.0 - History, favorites + Enhanced extension
+#### Week 6 - Chrome Extension Complete
+- [🔄] Add context menu for right-click conversion (8h)
+- [🔄] Implement automatic URL detection on page load (8h)
+- [🔄] Create extension settings panel (8h)
+- [🔄] Add extension notification system (6h)
+- [🔄] Testing & polish (6h)
 
----
+**Notion Backlog Items Completed in Sprint 5-6** ✅:
+1. ✅ User menu position review
+2. ✅ Change `/api/user-info` category
+3. ✅ Conversion preview
+4. ✅ Drag & drop UI
 
-### Sprint 7-8 (Nov 16-30, 2025) - Performance & Reliability ⚡
-**Theme**: Make it fast and reliable  
-**Estimated effort**: ~80 hours (40h per dev)
+**All Notion Backlog: 8/8 COMPLETE** ✅
 
-#### Week 7 - Backend Optimization
-- [ ] Implement Redis caching for API responses (12h)
-- [ ] Add database query optimization (8h)
-- [ ] Optimize conversion speed performance (10h)
-- [ ] Add request/response logging middleware (10h)
+**Deliverable**: v2.5.0 - Complete backlog + History/favorites + Full extension features
 
-#### Week 8 - Frontend Performance
-- [ ] Implement lazy loading for components (8h)
-- [ ] Optimize bundle size with code splitting (10h)
-- [ ] Add image optimization pipeline (6h)
-- [ ] Fix memory leaks in React components (8h)
-- [ ] Performance testing & optimization (8h)
-
-**Deliverable**: v2.6.0 - 2x faster conversions + caching
+**Success Metrics**:
+- ✅ All Notion backlog items (100% complete)
+- ✅ 30% user adoption of favorites
+- ✅ 70% extension daily active users
+- ✅ Full feature parity with web app
 
 ---
 
-### Sprint 9 (Dec 1-15, 2025) - Music Player MVP 🎵
+### Sprint 7-8 (Nov 27 - Dec 8, 2025) - Performance & Reliability + Extension Polish ⚡
+**Theme**: Make it fast and reliable + Complete extension  
+**Estimated effort**: ~76 hours (40h per dev, adjusted for Nov 17 + Dec 8 holidays)
+
+#### Week 7 - Backend Performance
+- [🔄] Implement Redis caching for API responses (12h)
+- [🔄] Add database query optimization (8h)
+- [🔄] Optimize conversion speed performance to <1.5s (10h)
+- [🔄] Add request/response logging middleware (8h)
+
+#### Week 8 - Frontend Performance + Extension Overflow
+- [🔄] Implement lazy loading for components (8h)
+- [🔄] Optimize bundle size with code splitting (10h)
+- [🔄] Complete extension overflow items (6h)
+- [🔄] Add basic keyboard shortcuts (6h)
+- [🔄] Performance testing & optimization (6h)
+
+**Deliverable**: v2.6.0 - 2x faster conversions + Complete extension
+
+**Success Metrics**:
+- ✅ <1.5s conversion time average
+- ✅ <100ms API response (p95)
+- ✅ Complete extension feature set
+- ✅ 80% performance improvement from v2.3
+
+---
+
+### Sprint 9 (Dec 11-22, 2025) - Music Player MVP + Refinements 🎵
 **Theme**: Preview tracks before converting  
-**Estimated effort**: ~80 hours (40h per dev)
+**Estimated effort**: ~68 hours (40h per dev, Dev A vacation impact ~10% reduction)
 
-#### Week 9-10 - Integrated Player
-- [ ] Implement integrated music player component (16h)
-- [ ] Add play/pause controls for track previews (8h)
-- [ ] Create progress bar with seek functionality (8h)
-- [ ] Add volume control with mute option (6h)
-- [ ] Implement player state persistence (8h)
-- [ ] Add keyboard shortcuts for player controls (6h)
-- [ ] Player UI/UX polish (10h)
-- [ ] Cross-browser testing (8h)
-- [ ] Bug fixes & refinements (10h)
+#### Integrated Music Player Core
+- [🔄] Implement core player shell & layout (10h)
+- [🔄] Add audio engine integration (10h)
+- [🔄] Add play/pause controls for track previews (6h)
+- [🔄] Create progress bar with seek functionality (6h)
+- [🔄] Add volume control with mute option (4h)
+- [🔄] Implement player state persistence (6h)
+- [🔄] Add advanced error handling (fallback streams) (6h)
+- [🔄] Cross-browser initial testing (6h)
+- [🔄] Bug fixes & refinements (8h)
 
-**Deliverable**: v2.7.0 - Integrated music player
+**Deferred to Sprint 10**: Deep cross-browser testing, advanced UI polish, advanced metrics.
+
+**Deliverable**: v2.7.0 - Complete music player MVP
+
+**Success Metrics**:
+- ✅ 45% of users interact with preview
+- ✅ <2% critical playback errors
+- ✅ <800ms player init time (p95)
+- ✅ Smooth performance on mobile devices
 
 ---
 
-### Sprint 10 (Dec 16-31, 2025) - Year-End Polish & Planning 🎁
+### Sprint 10 (Dec 26-31, 2025) - Final Polish & Q1 Planning 🎁
 **Theme**: Wrap up Q4, prepare for Q1  
-**Estimated effort**: ~60 hours (30h per dev, holidays considered)
+**Estimated effort**: ~48 hours (reduced capacity, Dev B vacation + holidays)
 
-#### Week 11-12 - Quality & Documentation
-- [ ] Fix remaining critical bugs from backlog (12h)
-- [ ] Add comprehensive error handling (8h)
-- [ ] Create user onboarding flow (8h)
-- [ ] Update documentation (8h)
-- [ ] Performance monitoring setup (6h)
-- [ ] Year-end release notes (4h)
-- [ ] Q1 2026 planning session (8h)
-- [ ] Code cleanup & refactoring (6h)
+#### Final Quality & Wrap-up
+- [🔄] Deep cross-browser testing (player) (6h)
+- [🔄] Advanced UI polish & animations (player) (8h)
+- [🔄] Player accessibility audit & fixes (4h)
+- [🔄] Final bug fixes & optimizations (6h)
+- [🔄] Create comprehensive release notes (6h)
+- [🔄] Update user documentation (6h)
+- [🔄] Q1 2026 planning & roadmap (6h)
+- [🔄] Code cleanup & refactoring (2h)
+
+**Deferred to 2026**: Advanced analytics, AI features, platform expansion.
 
 **Deliverable**: v2.8.0 - Production-ready, polished experience
+
+**Success Metrics**:
+- ✅ Zero critical bugs in production
+- ✅ Player p95 init <700ms
+- ✅ Full cross-browser compatibility
+- ✅ Complete documentation for Q1 2026
 
 ---
 

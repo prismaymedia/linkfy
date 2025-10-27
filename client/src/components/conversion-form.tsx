@@ -96,7 +96,16 @@ export default function ConversionForm() {
       });
     },
     onError: (error: any) => {
-      const message = error?.message || t('conversion.errorDesc');
+      // Log the actual error for debugging purposes
+      console.error('Conversion error:', error);
+
+      // Attempt to localize backend error messages if possible
+      let message = t('conversion.errorDesc');
+      if (error?.message) {
+        message =
+          t(error.message) !== error.message ? t(error.message) : error.message;
+      }
+
       toast({
         title: t('conversion.errorTitle'),
         description: message,
@@ -141,15 +150,6 @@ export default function ConversionForm() {
     return () => clearTimeout(timeoutId);
   }, [watchedUrl, lastProcessedUrl]);
 
-  const isDuplicateUrl = lastProcessedUrl && watchedUrl === lastProcessedUrl;
-  const isFormValid = form.formState.isValid;
-  const fieldState = form.getFieldState('youtubeUrl');
-  const isFieldValid =
-    !fieldState.error &&
-    fieldState.isDirty &&
-    watchedUrl &&
-    watchedUrl.trim() !== '';
-
   const onSubmit = (data: ConvertUrlRequest) => {
     // Check if this is a duplicate URL before submitting
     if (isDuplicateUrl) {
@@ -161,6 +161,15 @@ export default function ConversionForm() {
     }
     convertMutation.mutate(data);
   };
+
+  const isDuplicateUrl = lastProcessedUrl && watchedUrl === lastProcessedUrl;
+  const isFormValid = form.formState.isValid;
+  const fieldState = form.getFieldState('youtubeUrl');
+  const isFieldValid =
+    !fieldState.error &&
+    fieldState.isDirty &&
+    watchedUrl &&
+    watchedUrl.trim() !== '';
 
   return (
     <>

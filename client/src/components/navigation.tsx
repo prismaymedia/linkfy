@@ -128,7 +128,7 @@ export default function Navigation({ className }: NavigationProps) {
           {/* Desktop Navigation */}
           <div className="hidden md:block">
             <NavigationMenu>
-              <NavigationMenuList>
+              <NavigationMenuList className="justify-end">
                 {navigationRoutes.map((route) => {
                   const Icon =
                     iconMap[route.icon as keyof typeof iconMap] || Home;
@@ -161,12 +161,12 @@ export default function Navigation({ className }: NavigationProps) {
                     {t('navigation.account', 'Account')}
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <div className="grid gap-3 p-4 w-[250px]">
-                      <div className="space-y-1">
-                        <p className="text-sm font-medium leading-none">
+                    <div className="grid gap-3 p-4 w-[280px] sm:w-[320px] bg-white">
+                      <div className="space-y-1 bg-gray-50 p-3 rounded-md">
+                        <p className="text-sm font-medium leading-none text-gray-900 truncate">
                           {session?.user?.email}
                         </p>
-                        <p className="text-xs leading-none text-muted-foreground">
+                        <p className="text-xs leading-none text-gray-500">
                           {t('navigation.signedIn', 'Signed in')}
                         </p>
                       </div>
@@ -174,12 +174,13 @@ export default function Navigation({ className }: NavigationProps) {
                         <NavigationMenuLink asChild>
                           <Link
                             href={ROUTES.PROFILE}
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer"
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-50 hover:text-gray-900 focus:bg-gray-50 focus:text-gray-900 cursor-pointer group"
                           >
-                            <div className="text-sm font-medium leading-none">
+                            <div className="text-sm font-medium leading-none flex items-center">
+                              <User className="h-4 w-4 mr-2" />
                               {t('navigation.profile', 'Profile')}
                             </div>
-                            <p className="text-xs leading-none text-muted-foreground">
+                            <p className="text-xs leading-none text-gray-500 mt-1">
                               {t(
                                 'navigation.profileDesc',
                                 'Manage your account',
@@ -190,21 +191,22 @@ export default function Navigation({ className }: NavigationProps) {
                         <NavigationMenuLink asChild>
                           <Link
                             href={ROUTES.SETTINGS}
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer"
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-50 hover:text-gray-900 focus:bg-gray-50 focus:text-gray-900 cursor-pointer group"
                           >
-                            <div className="text-sm font-medium leading-none">
+                            <div className="text-sm font-medium leading-none flex items-center">
+                              <Settings className="h-4 w-4 mr-2 " />
                               {t('navigation.settings', 'Settings')}
                             </div>
-                            <p className="text-xs leading-none text-muted-foreground">
+                            <p className="text-xs leading-none text-gray-500 mt-1">
                               {t('navigation.settingsDesc', 'App preferences')}
                             </p>
                           </Link>
                         </NavigationMenuLink>
                         <NavigationMenuLink
-                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-destructive hover:text-destructive-foreground focus:bg-destructive focus:text-destructive-foreground cursor-pointer"
+                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-red-50 hover:text-red-700 focus:bg-red-50 focus:text-red-700 cursor-pointer"
                           onClick={handleSignOut}
                         >
-                          <div className="text-sm font-medium leading-none flex items-center">
+                          <div className="text-sm font-medium leading-none flex items-center text-red-600">
                             <LogOut className="h-4 w-4 mr-2" />
                             {t('navigation.signOut', 'Sign Out')}
                           </div>
@@ -296,11 +298,11 @@ export default function Navigation({ className }: NavigationProps) {
                   })}
 
                   <div className="border-t border-gray-200 pt-3 sm:pt-4 mt-3 sm:mt-4 space-y-1 sm:space-y-2">
-                    <div className="px-3 py-2">
+                    <div className="px-3 py-3 bg-gray-50 rounded-md">
                       <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">
                         {session?.user?.email}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 mt-0.5">
                         {t('navigation.signedIn', 'Signed in')}
                       </p>
                     </div>
@@ -310,7 +312,7 @@ export default function Navigation({ className }: NavigationProps) {
                       className="w-full flex items-center px-3 py-3 text-left rounded-md text-sm sm:text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors touch-target"
                     >
                       <User className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
-                      {t('navigation.profile', 'Profile')}
+                      <span>{t('navigation.profile', 'Profile')}</span>
                     </button>
 
                     <button
@@ -318,7 +320,7 @@ export default function Navigation({ className }: NavigationProps) {
                       className="w-full flex items-center px-3 py-3 text-left rounded-md text-sm sm:text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors touch-target"
                     >
                       <Settings className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
-                      {t('navigation.settings', 'Settings')}
+                      <span>{t('navigation.settings', 'Settings')}</span>
                     </button>
 
                     <button
@@ -326,7 +328,7 @@ export default function Navigation({ className }: NavigationProps) {
                       className="w-full flex items-center px-3 py-3 text-left rounded-md text-sm sm:text-base font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors touch-target"
                     >
                       <LogOut className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
-                      {t('navigation.signOut', 'Sign Out')}
+                      <span>{t('navigation.signOut', 'Sign Out')}</span>
                     </button>
                   </div>
                 </nav>

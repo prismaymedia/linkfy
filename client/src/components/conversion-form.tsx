@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   convertUrlSchema,
   type ConvertUrlRequest,
@@ -39,6 +39,7 @@ export default function ConversionForm() {
 
   const { toast } = useToast();
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
 
   const form = useForm<ConvertUrlRequest>({
     resolver: zodResolver(convertUrlSchema),
@@ -49,6 +50,7 @@ export default function ConversionForm() {
   });
 
   const convertMutation = useMutation({
+    mutationKey: ['conversion'],
     mutationFn: async (data: { youtubeUrl: string }) => {
       const response = await apiRequest('POST', '/api/youtube-convert', data);
       if (!response.ok) {
@@ -60,6 +62,12 @@ export default function ConversionForm() {
     onSuccess: (result) => {
       setSpotifyResult(result);
       setLastProcessedUrl(form.getValues('youtubeUrl'));
+
+      // Cache the result for future requests
+      queryClient.setQueryData(
+        ['conversion', form.getValues('youtubeUrl')],
+        result,
+      );
 
       toast({
         title: t('conversion.successTitle'),
@@ -116,14 +124,23 @@ export default function ConversionForm() {
   }, [watchedUrl, lastProcessedUrl]);
 
   const onSubmit = (data: ConvertUrlRequest) => {
-    // Check if this is a duplicate URL before submitting
-    if (isDuplicateUrl) {
+    const youtubeUrl = data.youtubeUrl;
+
+    // Check if cached result exists
+    const cachedResult = queryClient.getQueryData(['conversion', youtubeUrl]);
+    if (cachedResult) {
+      console.log(
+        `[Deduplication] Prevented duplicate request for URL: ${youtubeUrl}. Showing cached result.`,
+      );
+      setSpotifyResult(cachedResult as SpotifyTrackInfo);
       toast({
-        title: t('form.duplicateUrlWarning'),
-        variant: 'warning',
+        title: t('conversion.successTitle'),
+        description: t('conversion.successDesc'),
+        variant: 'success',
       });
-      return; // Don't submit if it's a duplicate
+      return; // Don't submit if cached
     }
+
     convertMutation.mutate(data);
   };
 
@@ -198,7 +215,7 @@ export default function ConversionForm() {
                 )}
               />
 
-              {isDuplicateUrl && (
+              {!!queryClient.getQueryData(['conversion', watchedUrl]) && (
                 <div className="flex items-center space-x-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
                   <AlertCircle className="h-4 w-4 text-amber-600" />
                   <span className="text-sm text-amber-700">
@@ -209,7 +226,11 @@ export default function ConversionForm() {
 
               <Button
                 type="submit"
-                disabled={convertMutation.isPending || !isFormValid}
+                disabled={
+                  convertMutation.isPending ||
+                  !isFormValid ||
+                  !!queryClient.getQueryData(['conversion', watchedUrl])
+                }
                 className="w-full bg-spotify hover:bg-green-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
                 {convertMutation.isPending ? (
@@ -217,7 +238,7 @@ export default function ConversionForm() {
                     {t('form.converting')}
                     <Loader2 className="ml-2 h-4 w-4 animate-spin" />
                   </>
-                ) : isDuplicateUrl ? (
+                ) : !!queryClient.getQueryData(['conversion', watchedUrl]) ? (
                   t('form.urlAlreadyConverted')
                 ) : (
                   t('form.convertButton')

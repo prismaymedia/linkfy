@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -129,9 +129,6 @@ export default function ConversionForm() {
     // Check if cached result exists
     const cachedResult = queryClient.getQueryData(['conversion', youtubeUrl]);
     if (cachedResult) {
-      console.log(
-        `[Deduplication] Prevented duplicate request for URL: ${youtubeUrl}. Showing cached result.`,
-      );
       setSpotifyResult(cachedResult as SpotifyTrackInfo);
       toast({
         title: t('conversion.successTitle'),
@@ -143,6 +140,19 @@ export default function ConversionForm() {
 
     convertMutation.mutate(data);
   };
+
+  const [cacheTick, setCacheTick] = useState(0);
+  useEffect(() => {
+    const unsubscribe = queryClient.getQueryCache().subscribe(() => {
+      setCacheTick((tick) => tick + 1);
+    });
+    return unsubscribe;
+  }, [queryClient]);
+
+  const cachedResultForWatchedUrl = useMemo(() => {
+    if (!watchedUrl) return undefined;
+    return queryClient.getQueryData(['conversion', watchedUrl]);
+  }, [queryClient, watchedUrl, cacheTick]);
 
   const isDuplicateUrl = lastProcessedUrl && watchedUrl === lastProcessedUrl;
   const isFormValid = form.formState.isValid;
@@ -215,7 +225,7 @@ export default function ConversionForm() {
                 )}
               />
 
-              {!!queryClient.getQueryData(['conversion', watchedUrl]) && (
+              {!!cachedResultForWatchedUrl && (
                 <div className="flex items-center space-x-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
                   <AlertCircle className="h-4 w-4 text-amber-600" />
                   <span className="text-sm text-amber-700">
@@ -229,7 +239,7 @@ export default function ConversionForm() {
                 disabled={
                   convertMutation.isPending ||
                   !isFormValid ||
-                  !!queryClient.getQueryData(['conversion', watchedUrl])
+                  !!cachedResultForWatchedUrl
                 }
                 className="w-full bg-spotify hover:bg-green-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
@@ -238,7 +248,7 @@ export default function ConversionForm() {
                     {t('form.converting')}
                     <Loader2 className="ml-2 h-4 w-4 animate-spin" />
                   </>
-                ) : !!queryClient.getQueryData(['conversion', watchedUrl]) ? (
+                ) : !!cachedResultForWatchedUrl ? (
                   t('form.urlAlreadyConverted')
                 ) : (
                   t('form.convertButton')

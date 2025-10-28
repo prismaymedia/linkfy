@@ -38,7 +38,6 @@ export class ConversionService {
     );
     if (existing?.spotifyUrl) {
       this.logger.log(`✅ Existing conversion found: ${existing.spotifyUrl}`);
-      this.logger.log(`🔄 Duplicate request detected, returning existing conversion for: ${youtubeUrl}`);
       return {
         spotifyUrl: existing.spotifyUrl ?? '',
         trackName: existing.trackName ?? '',

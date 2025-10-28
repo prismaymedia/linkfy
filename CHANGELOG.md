@@ -1,5 +1,79 @@
 # Changelog
 
+## [2.4.0](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.3.2...linkfy-v2.4.0) (2025-10-22)
+
+
+### Features
+
+* add color variants and handle warning toast via useEffect ([05d3470](https://github.com/prismaymedia/linkfy/commit/05d34709c3e89870473ee69ceccdcdfb3f06f05b))
+* Add Grafana Cloud integration with Prometheus metrics ([f6f5088](https://github.com/prismaymedia/linkfy/commit/f6f5088f456a14054af96b1fd9098065e43d98c2))
+* add Vercel Analytics integration and update dependencies ([d65651f](https://github.com/prismaymedia/linkfy/commit/d65651f5186c2425c3620cf15672d3cc5d15b1fe))
+* **api:** implement user-facing alerts for conversion failures ([c6cccad](https://github.com/prismaymedia/linkfy/commit/c6cccad35262114837ed3ec40a897d281de8698e))
+* **api:** integrate Drizzle ORM for database operations ([9e67d3d](https://github.com/prismaymedia/linkfy/commit/9e67d3d7c41da57343233292be15bcc81a316676))
+* **client:** implement homepage with header, login button and language switcher ([70541e9](https://github.com/prismaymedia/linkfy/commit/70541e9ddef2c71b4fa7db695119b6d4f4e787e7))
+* **config:** add Vercel deployment configuration and workflow ([84bc180](https://github.com/prismaymedia/linkfy/commit/84bc1802ab6226716c47564de0df4240a44f7a43))
+* **conversion:** display user-facing alert on failed song conversion ([ead11b8](https://github.com/prismaymedia/linkfy/commit/ead11b8fefd3b25ae36a1132b2ab10f199d204a9))
+* **i18n:** enhance language switcher UX, persistence and accessibility ([457c8cd](https://github.com/prismaymedia/linkfy/commit/457c8cda8f58c8005fd60bab5f50bfce758713f6))
+* **sentry:** integrate and verify error tracking in client and server ([a6db90e](https://github.com/prismaymedia/linkfy/commit/a6db90ed4e7986022883f648495ae929e15cc8a1))
+
+
+### Bug Fixes
+
+* add SHELL environment variable for build steps in Vercel deployment ([8ed26c4](https://github.com/prismaymedia/linkfy/commit/8ed26c4330105cfcd2b407d8154ce598b8ba09c2))
+* **api:** prevent response body double-read and correct Sentry DSN variable ([8fb0fed](https://github.com/prismaymedia/linkfy/commit/8fb0fed8e350785c178e293ac96d020b7f304e74))
+* **auth:** add production URL to CORS and frontend environment config… ([cd74590](https://github.com/prismaymedia/linkfy/commit/cd74590d88d9fcc9106df2db7975d5c6ca556410))
+* **auth:** add production URL to CORS and frontend environment configuration ([495a5c2](https://github.com/prismaymedia/linkfy/commit/495a5c2b7ad8118ed1d385a224a1804eb6d2b668))
+* **auth:** improve error typing and message handling in catch blocks ([2f272dc](https://github.com/prismaymedia/linkfy/commit/2f272dcd4bc4bd042b187f98f275bd198c9410ae))
+* **auth:** improve Supabase authentication flow ([e383166](https://github.com/prismaymedia/linkfy/commit/e383166cd23b37dd40c9bd8f4e01d2b70bbcd044))
+* **breadcrumb:** resolve component structure ([8b0c84d](https://github.com/prismaymedia/linkfy/commit/8b0c84dd0241e025fe2c45253d6e35bb5e7fdf2e))
+* **breadcrumb:** resolve visual and functional issues in breadcrumb navigation ([d5dce93](https://github.com/prismaymedia/linkfy/commit/d5dce9301b097590af923c96f4617b74f20041fa))
+* **ci:** Resolve e2e test failures on ESM modules ([f2672d5](https://github.com/prismaymedia/linkfy/commit/f2672d5818c9540cf4c8f5747f986ff21ea2fd14))
+* **client:** resolve vercel spa routing and auth callback handling ([2a186dd](https://github.com/prismaymedia/linkfy/commit/2a186ddb47ea0d7d441616138df5d275983b55da))
+* **conversion:** improve toast handling and duplicate URL logic in tests ([ff188b3](https://github.com/prismaymedia/linkfy/commit/ff188b3163ecdf224e52623ef4b6a9928c3b2d5b))
+* correct Vercel project ID environment variable in deployment workflow ([fed7443](https://github.com/prismaymedia/linkfy/commit/fed7443c9ffe8e17d896e186bf3d8c41804c3977))
+* correct Vercel project ID secret reference in deployment workflow ([1653461](https://github.com/prismaymedia/linkfy/commit/165346112499aa669b2e92199809f1e7a0816973))
+* **e2e:** adjust Jest config to support ESM dependencies in tests ([08125c3](https://github.com/prismaymedia/linkfy/commit/08125c3aeaf3db4fbfcba2b615b3ddc769d66201))
+* **env:** set correct production API URL for Linkfy backend ([2dff60c](https://github.com/prismaymedia/linkfy/commit/2dff60c2011cffdf89110ecea09be1094fd2079c))
+* keep master version of yarn.lock to resolve merge conflict ([2d62e0c](https://github.com/prismaymedia/linkfy/commit/2d62e0c7adb4bc9b95c303cdca0a7fa30921eb33))
+* **navigation:** adjust mobile menu alignment and layout ([21fc3cc](https://github.com/prismaymedia/linkfy/commit/21fc3cc53781724676ada740b0eb0768b79cf0ce))
+* remove SHELL environment variable from build steps in Vercel deployment ([024cde3](https://github.com/prismaymedia/linkfy/commit/024cde391c3b4d2da9ca7fe2561203dab3406e33))
+* remove VERCEL_TOKEN from deployment workflow and update project name in Vercel configuration ([67ac3e2](https://github.com/prismaymedia/linkfy/commit/67ac3e2ff44fa17d30b99c5a5fdef76eccaf424a))
+* resolve Jest e2e test configuration for ES6 modules ([c8a7d0b](https://github.com/prismaymedia/linkfy/commit/c8a7d0b8b1719b4872d5f05c6aff152a29ff1231))
+* **result-card:** apply ui and error handling adjustments ([eb4036c](https://github.com/prismaymedia/linkfy/commit/eb4036cab8a43b31b20b899a75f46c7b4cf30879))
+* **router:** simplify base path configuration in main.tsx and vite.config.ts ([0585b48](https://github.com/prismaymedia/linkfy/commit/0585b4890f648374a0ffd1668857da914841800d))
+* **routing:** configure Wouter to serve main app only on root path ([b6fc442](https://github.com/prismaymedia/linkfy/commit/b6fc4423e698f2ef7d42a6fc47fbe5f1a3f264d3))
+* **routing:** remove /linkfy base path to load app from root ([d0d414a](https://github.com/prismaymedia/linkfy/commit/d0d414ac3b220c407bd504a52cb09afe9f04d6d6))
+* **sentry:** update DSN configuration to use correct project endpoin ([674d3ad](https://github.com/prismaymedia/linkfy/commit/674d3ad1bbdac6b63d9ebf7b162207aff88bded4))
+* separate build steps for Vercel deployment into distinct preview and production jobs ([1aa0c2e](https://github.com/prismaymedia/linkfy/commit/1aa0c2ea3ce3f8e30bef38945ee6b7061ec70a98))
+* **server:** correct Drizzle schema import and remove Supabase module usage ([fe4ec98](https://github.com/prismaymedia/linkfy/commit/fe4ec9836d91433d1874a71bae3498af865525dc))
+* simplify build command in Vercel deployment workflow ([94c2b76](https://github.com/prismaymedia/linkfy/commit/94c2b76dc107f96cfdd0406015e1a3ef95e46aca))
+* streamline Vercel deployment workflow and update configuration ([5996448](https://github.com/prismaymedia/linkfy/commit/5996448f62eef44b467110d1a6dabf7299cf40d3))
+* **tests:** adjust Vitest configuration and setup file ([e6a31ae](https://github.com/prismaymedia/linkfy/commit/e6a31aeec8b4686110724cec3004d818cd432bf1))
+* **tests:** fix queryclient test ([f74f4f5](https://github.com/prismaymedia/linkfy/commit/f74f4f520ed28c5812addaa69cfcc0690c1202c4))
+* **tests:** resolve failing test cases ([9f29695](https://github.com/prismaymedia/linkfy/commit/9f29695eee3c9d1cb45ee42f76529b4ecc49e9b5))
+* update application name in Vercel configuration ([e4822d4](https://github.com/prismaymedia/linkfy/commit/e4822d46e4bc447b38d1a4e3c1ce685a9e4bce50))
+* update build command in Vercel deployment workflow to handle pull requests correctly ([dca327f](https://github.com/prismaymedia/linkfy/commit/dca327f4fca2f4532df96a5a5e19958379eafa60))
+* update Node.js setup to use npm cache and install dependencies correctly ([56e7510](https://github.com/prismaymedia/linkfy/commit/56e7510228264f3fe933a24bcd1098147f36967c))
+* update preview deployment details to use context variables for branch, commit, and actor ([a648256](https://github.com/prismaymedia/linkfy/commit/a6482569e8bb204c7d4e3167e537b4ec3f2f064e))
+* **validation:** improve URL detection and validation for YouTube Music and Spotify ([a138d3d](https://github.com/prismaymedia/linkfy/commit/a138d3d72b97d49adf1e2be435cbe25811a0fabb))
+* **validation:** update schema message, tests, and jest-e2e config ([9b6850e](https://github.com/prismaymedia/linkfy/commit/9b6850ef6f045b0884dcdc57d18ce6ce064008b4))
+* **youtube:** fix YouTube URL detection regex patterns ([87c4d30](https://github.com/prismaymedia/linkfy/commit/87c4d3005d0e93abab1d483bb6e8dbc5e4a95d26))
+* **youtube:** handle album URLs safely and improve duplicate URL validation ([8986b5d](https://github.com/prismaymedia/linkfy/commit/8986b5dc7a2fda0c8b5f8c3863317ab0260157af))
+
+
+### Code Refactoring
+
+* **i18n:** centralize document direction handling and improve class readability ([bd09108](https://github.com/prismaymedia/linkfy/commit/bd09108fcd44193885db1f6d424fe550da9afaf8))
+
+
+### Documentation
+
+* add comprehensive Drizzle ORM integration documentation ([85c1613](https://github.com/prismaymedia/linkfy/commit/85c1613c49565815e76ab79b045a0d35c9b3a382))
+* add comprehensive implementation summary ([7b555e6](https://github.com/prismaymedia/linkfy/commit/7b555e6774caee6dc4a2af93bfcfecac39c24afd))
+* add deployment checklist and update contributing guide ([045c736](https://github.com/prismaymedia/linkfy/commit/045c7360af61c287441d2c9a4c5b4a39e678e8b2))
+* add Drizzle ORM quick start guide ([8a8aabc](https://github.com/prismaymedia/linkfy/commit/8a8aabcc651806742b99f771c4e17e6855b04cf9))
+* add quick start guide and deployment workflow diagram ([2d3eccd](https://github.com/prismaymedia/linkfy/commit/2d3eccdc03341d524906509bdf32b5531b5d22e2))
+
 ## [2.3.2](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.3.1...linkfy-v2.3.2) (2025-10-01)
 
 

@@ -1,0 +1,115 @@
+[
+  {
+    "id": 1,
+    "title": "Universal /api/convert endpoint - Multi-platform support",
+    "hours": 14,
+    "priority": 2,
+    "tier": "TIER 1: NOTION BACKLOG",
+    "tags": ["Q4-2025", "sprint-3-4", "feat", "api", "platform-integration", "effort-large"],
+    "description": "Implement universal /api/convert endpoint for multi-platform music URL conversion.\n\nSPRINT: Sprint 3-4 (Oct 28 - Nov 10)\nPRIORITY: TIER 1 - Notion Backlog Item\nEFFORT: 14 hours\nSCOPE: Backend/API\n\nDESCRIPTION:\nCreate a unified API endpoint that auto-detects the source platform and routes conversions to appropriate service handlers. This replaces platform-specific endpoints with a single, smart conversion point.\n\nACCEPTANCE CRITERIA:\n- Auto-detect source platform from URL (YouTube, Spotify, Apple Music, etc.)\n- Route to appropriate service handler based on detection\n- Zod validation for multiple platform URL formats\n- Support at least 3+ platform URL formats\n- Return consistent JSON response format\n- Handle edge cases and malformed URLs gracefully\n\nTECHNICAL NOTES:\n- File: server/src/controllers/convert.controller.ts\n- Create new unified endpoint: POST /api/convert\n- Use existing service modules\n- Add Zod schemas in shared/schema.ts",
+    "subtasks": [
+      "Auto-detect platform logic (6h)",
+      "Route to handler implementation (5h)",
+      "Zod validation schemas (3h)"
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Dynamic service icons - URL-based icon switching",
+    "hours": 8,
+    "priority": 2,
+    "tier": "TIER 1: NOTION BACKLOG",
+    "tags": ["Q4-2025", "sprint-3-4", "feat", "client", "ui", "user-experience", "effort-medium"],
+    "description": "Implement dynamic service icons that update based on detected music platform.\n\nSPRINT: Sprint 3-4 (Oct 28 - Nov 10)\nPRIORITY: TIER 1 - Notion Backlog Item\nEFFORT: 8 hours\nSCOPE: Frontend/Client\n\nDESCRIPTION:\nCreate dynamic icon system that detects the current service from input URL and updates display icon accordingly. Provides visual feedback to users about which platform they're converting to/from.\n\nACCEPTANCE CRITERIA:\n- Detect current service from URL in real-time\n- Update icon as user types/pastes URL\n- Support icons for: YouTube Music, Spotify, Apple Music, Deezer\n- Icons update within 100ms of input change\n- Smooth visual transitions between icons\n- Accessible icon labels\n\nTECHNICAL NOTES:\n- File: client/src/components/music-service-selector.tsx\n- Use existing icon library from shadcn/ui\n- Integrate with conversion-form component",
+    "subtasks": [
+      "Platform detection logic (3h)",
+      "Icon update mechanism (4h)",
+      "Testing & edge cases (1h)"
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Clean icon with hover actions - Input field controls",
+    "hours": 6,
+    "priority": 2,
+    "tier": "TIER 1: NOTION BACKLOG",
+    "tags": ["Q4-2025", "sprint-3-4", "feat", "client", "ui", "user-experience", "effort-medium"],
+    "description": "Implement clean icon with hover actions for clearing input field.\n\nSPRINT: Sprint 3-4 (Oct 28 - Nov 10)\nPRIORITY: TIER 1 - Notion Backlog Item\nEFFORT: 6 hours\nSCOPE: Frontend/UI\n\nDESCRIPTION:\nAdd a clean/clear button icon that appears on hover over the input field. Provides users with easy way to reset form without navigating away.\n\nACCEPTANCE CRITERIA:\n- Icon appears on hover (input field only)\n- Clear button resets form completely\n- Clear action confirmed (no accidental resets)\n- Smooth fade-in/out animation on hover\n- Mobile-friendly (tap to show, then tap to clear)\n- Visual feedback on hover and click\n\nTECHNICAL NOTES:\n- File: client/src/components/conversion-form.tsx\n- Use Lucide icon for clear/trash icon\n- Add Framer Motion for animations",
+    "subtasks": [
+      "Icon hover display (3h)",
+      "Clear functionality (2h)",
+      "Visual feedback & animations (1h)"
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Replace Get Started with Music Converter component",
+    "hours": 10,
+    "priority": 2,
+    "tier": "TIER 1: NOTION BACKLOG",
+    "tags": ["Q4-2025", "sprint-3-4", "refactor", "client", "ui", "effort-large"],
+    "description": "Refactor to extract and reuse Music Converter component throughout app.\n\nSPRINT: Sprint 3-4 (Oct 28 - Nov 10)\nPRIORITY: TIER 1 - Notion Backlog Item\nEFFORT: 10 hours\nSCOPE: Frontend/Refactor\n\nDESCRIPTION:\nExtract the conversion form into a reusable Music Converter component. Replace \"Get Started\" sections and hardcoded forms with this component for consistency and ease of use across multiple pages.\n\nACCEPTANCE CRITERIA:\n- Extract conversion form to new MusicConverterComponent\n- Component is reusable and composable\n- Replace at least 3 existing forms with component\n- Support different sizes (compact, full)\n- Works on dashboard, home, and other pages\n- Maintains all functionality (URL detection, conversion, results)\n\nTECHNICAL NOTES:\n- File: client/src/components/music-converter.tsx (new)\n- Extract from: client/src/components/conversion-form.tsx\n- Usage: client/src/pages/home.tsx, dashboard.tsx",
+    "subtasks": [
+      "Extract to component (6h)",
+      "Create flexible props system (3h)",
+      "Integration & testing (1h)"
+    ]
+  },
+  {
+    "id": 5,
+    "title": "User menu position review - Responsive positioning fix",
+    "hours": 6,
+    "priority": 2,
+    "tier": "TIER 1: NOTION BACKLOG",
+    "tags": ["Q4-2025", "sprint-3-4", "fix", "client", "ui", "mobile", "effort-medium"],
+    "description": "Review and adjust user menu positioning for better UX and mobile responsiveness.\n\nSPRINT: Sprint 3-4 (Oct 28 - Nov 10)\nPRIORITY: TIER 1 - Notion Backlog Item\nEFFORT: 6 hours\nSCOPE: Frontend/UI\n\nDESCRIPTION:\nAudit current user menu positioning, identify issues with alignment, overflow, and mobile responsiveness. Implement improvements for better accessibility and visual consistency.\n\nACCEPTANCE CRITERIA:\n- Review menu positioning on desktop and mobile\n- Fix alignment issues with dropdown\n- Prevent menu overflow on small screens\n- Ensure touch-friendly on mobile\n- Consistent padding and spacing\n- Menu closes appropriately on selection or outside click\n\nTECHNICAL NOTES:\n- File: client/src/components/header.tsx\n- Use Radix UI dropdown positioning\n- Test on mobile viewports (320px, 768px, 1024px)",
+    "subtasks": [
+      "Position audit & review (4h)",
+      "Mobile responsive fixes (2h)"
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Change /api/user-info category - API reorganization",
+    "hours": 8,
+    "priority": 2,
+    "tier": "TIER 1: NOTION BACKLOG",
+    "tags": ["Q4-2025", "sprint-3-4", "refactor", "api", "effort-medium"],
+    "description": "Reorganize /api/user-info endpoint category and structure for better API organization.\n\nSPRINT: Sprint 3-4 (Oct 28 - Nov 10)\nPRIORITY: TIER 1 - Notion Backlog Item\nEFFORT: 8 hours\nSCOPE: Backend/API\n\nDESCRIPTION:\nRestructure the /api/user-info endpoint to fit better into API organization hierarchy. Update endpoint path, documentation, and related client-side calls.\n\nACCEPTANCE CRITERIA:\n- Reorganize endpoint path structure\n- Update Swagger/OpenAPI documentation\n- Update all client-side API calls\n- Maintain backward compatibility if possible (or plan migration)\n- Add API versioning if needed\n- Update unit tests for endpoint\n\nTECHNICAL NOTES:\n- File: server/src/controllers/user.controller.ts\n- Update: client/src/lib/queryClient.ts\n- Review: API documentation (Swagger)",
+    "subtasks": [
+      "Reorganize endpoint structure (5h)",
+      "Update client calls (2h)",
+      "Tests & documentation (1h)"
+    ]
+  },
+  {
+    "id": 7,
+    "title": "Dark mode implementation - Theme system with persistence",
+    "hours": 14,
+    "priority": 2,
+    "tier": "TIER 2: ORIGINAL FEATURES",
+    "tags": ["Q4-2025", "sprint-3-4", "feat", "client", "ui", "user-experience", "effort-large"],
+    "description": "Implement dark mode for the entire application with theme system and persistence.\n\nSPRINT: Sprint 3-4 (Oct 28 - Nov 10)\nPRIORITY: TIER 2 - Original Features (PRESERVED)\nEFFORT: 14 hours\nSCOPE: Frontend/UI\n\nDESCRIPTION:\nCreate complete dark mode implementation using CSS variables, theme system, component updates, and localStorage persistence.\n\nACCEPTANCE CRITERIA:\n- CSS variables for theme colors\n- Dark mode toggle in settings\n- Apply dark theme to all components\n- Persist user preference in localStorage\n- System preference detection (prefers-color-scheme)\n- Smooth transitions between themes\n- No layout shifts or visual issues in dark mode\n\nTECHNICAL NOTES:\n- File: client/src/index.css (CSS variables)\n- File: client/src/components/ (component updates)\n- Use Tailwind dark: utilities\n- Test on all pages and components",
+    "subtasks": [
+      "CSS variables & theme system (5h)",
+      "Component dark mode updates (6h)",
+      "Persistence & detection (2h)",
+      "Testing across app (1h)"
+    ]
+  },
+  {
+    "id": 8,
+    "title": "Smart URL handling features - Copy detection & clipboard",
+    "hours": 14,
+    "priority": 2,
+    "tier": "TIER 2: ORIGINAL FEATURES",
+    "tags": ["Q4-2025", "sprint-3-4", "feat", "client", "user-experience", "effort-large"],
+    "description": "Implement smart URL handling with copy action detection and clipboard auto-detection.\n\nSPRINT: Sprint 3-4 (Oct 28 - Nov 10)\nPRIORITY: TIER 2 - Original Features (PRESERVED)\nEFFORT: 14 hours\nSCOPE: Frontend\n\nDESCRIPTION:\nCreate intelligent URL handling system that detects when users copy music service URLs and automatically pastes them, with real-time validation and progress indicators.\n\nACCEPTANCE CRITERIA:\n- Detect copy action (Ctrl+C, Cmd+C) on music service URLs\n- Auto-fill input field with copied URL\n- Real-time URL validation as user types/pastes\n- Show progress indicator during conversion\n- Handle multiple platforms (YouTube, Spotify, Apple Music)\n- Toast notifications for copy detection\n- Works on desktop and mobile\n\nTECHNICAL NOTES:\n- File: client/src/components/conversion-form.tsx\n- Use Clipboard API for modern browsers\n- Add keyboard event listeners\n- Toast notifications from existing hook",
+    "subtasks": [
+      "Copy action detection (4h)",
+      "Clipboard auto-detection (6h)",
+      "Real-time URL validation (3h)",
+      "Progress indicator UI (1h)"
+    ]
+  }
+]

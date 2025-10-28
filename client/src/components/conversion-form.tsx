@@ -24,8 +24,36 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { SiYoutubemusic } from 'react-icons/si';
 import { Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
-import ResultCard from './result-card';
+import ResultCard, { ResultCardSkeleton } from './result-card';
 import { useTranslation } from 'react-i18next';
+import { Skeleton } from '@/components/ui/skeleton';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const PreviewCardSkeleton = () => {
+  const { t } = useTranslation();
+  return (
+    <Card className="bg-white rounded-2xl shadow-lg mb-6">
+      <CardHeader className="pb-3">
+        <div className="flex items-center">
+          <SiYoutubemusic className="text-youtube text-xl mr-2" />
+          <h3 className="text-lg font-semibold text-gray-800">
+            {t('preview.youtubeTrack')}
+          </h3>
+        </div>
+      </CardHeader>
+      <CardContent className="pt-0">
+        <div className="flex items-center space-x-4">
+          <Skeleton className="w-16 h-16 rounded-lg" />
+          <div className="flex-1 space-y-2">
+            <Skeleton className="h-5 w-3/4" />
+            <Skeleton className="h-4 w-1/2" />
+            <Skeleton className="h-3 w-2/4" />
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
 
 export default function ConversionForm() {
   const [spotifyResult, setSpotifyResult] = useState<SpotifyTrackInfo | null>(
@@ -68,10 +96,19 @@ export default function ConversionForm() {
       });
     },
     onError: (error: any) => {
-      const errorMessage = t('conversion.errorDesc');
+      // Log the actual error for debugging purposes
+      console.error('Conversion error:', error);
+
+      // Attempt to localize backend error messages if possible
+      let message = t('conversion.errorDesc');
+      if (error?.message) {
+        message =
+          t(error.message) !== error.message ? t(error.message) : error.message;
+      }
+
       toast({
         title: t('conversion.errorTitle'),
-        description: errorMessage,
+        description: message,
         variant: 'destructive',
       });
     },
@@ -90,7 +127,6 @@ export default function ConversionForm() {
         convert: false, // only preview YouTube data
       });
       const json = await response.json();
-
       setYoutubePreview(json as YouTubeTrackInfo);
     } catch {
       setYoutubePreview(null);
@@ -111,7 +147,6 @@ export default function ConversionForm() {
         fetchYouTubePreview(watchedUrl);
       }
     }, 500);
-
     return () => clearTimeout(timeoutId);
   }, [watchedUrl, lastProcessedUrl]);
 
@@ -156,6 +191,9 @@ export default function ConversionForm() {
                           {...field}
                           type="url"
                           placeholder={t('form.youtubeUrlPlaceholder')}
+                          disabled={
+                            convertMutation.isPending || isLoadingPreview
+                          }
                           className={`w-full px-3 sm:px-4 py-3 sm:py-4 border rounded-lg focus:ring-2 focus:ring-spotify focus:border-spotify transition-colors duration-200 pr-10 text-sm sm:text-base ${
                             fieldState.error
                               ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
@@ -227,44 +265,85 @@ export default function ConversionForm() {
           </Form>
         </CardContent>
       </Card>
+            <AnimatePresence mode="wait">
+        {isLoadingPreview && (
+          <motion.div
+            key="preview-loading"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <PreviewCardSkeleton />
+          </motion.div>
+        )}
 
-      {youtubePreview && (
-        <Card className="bg-white rounded-2xl shadow-lg mb-4 sm:mb-6">
-          <CardHeader className="pb-3 p-4 sm:p-6">
-            <div className="flex items-center">
-              <SiYoutubemusic className="text-youtube text-lg sm:text-xl mr-2" />
-              <h3 className="text-base sm:text-lg font-semibold text-gray-800">
-                {t('preview.youtubeTrack')}
-              </h3>
-            </div>
-          </CardHeader>
-          <CardContent className="pt-0 p-4 sm:p-6">
-            <div className="flex items-center space-x-3 sm:space-x-4">
-              <img
-                src={youtubePreview.thumbnailUrl}
-                alt="YouTube thumbnail"
-                className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg object-cover shadow-md flex-shrink-0"
-              />
-              <div className="flex-1 min-w-0">
-                <h4 className="font-medium text-gray-900 truncate text-sm sm:text-base">
-                  {youtubePreview.trackName}
-                </h4>
-                <p className="text-xs sm:text-sm text-gray-600 truncate">
-                  {youtubePreview.artistName}
-                </p>
-                <p className="text-xs text-gray-500 truncate">
-                  {t('preview.original')}: {youtubePreview.originalTitle}
-                </p>
-              </div>
-              {isLoadingPreview && (
-                <Loader2 className="h-4 w-4 animate-spin text-gray-400 flex-shrink-0" />
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      )}
+        {!isLoadingPreview && youtubePreview && (
+          <motion.div
+            key="preview-card"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Card className="bg-white rounded-2xl shadow-lg mb-6">
+              <CardHeader className="pb-3">
+                <div className="flex items-center">
+                  <SiYoutubemusic className="text-youtube text-xl mr-2" />
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    {t('preview.youtubeTrack')}
+                  </h3>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="flex items-center space-x-4">
+                  <img
+                    src={youtubePreview.thumbnailUrl}
+                    alt="YouTube thumbnail"
+                    className="w-16 h-16 rounded-lg object-cover shadow-md"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-medium text-gray-900 truncate">
+                      {youtubePreview.trackName}
+                    </h4>
+                    <p className="text-sm text-gray-600 truncate">
+                      {youtubePreview.artistName}
+                    </p>
+                    <p className="text-xs text-gray-500 truncate">
+                      {t('preview.original')}: {youtubePreview.originalTitle}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {spotifyResult && <ResultCard result={spotifyResult} />}
+      <AnimatePresence mode="wait">
+        {convertMutation.isPending && (
+          <motion.div
+            key="result-loading"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <ResultCardSkeleton />
+          </motion.div>
+        )}
+        {spotifyResult && !convertMutation.isPending && (
+          <motion.div
+            key="result-card"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <ResultCard result={spotifyResult} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

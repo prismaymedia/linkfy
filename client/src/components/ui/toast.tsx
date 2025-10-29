@@ -20,7 +20,7 @@ const ToastViewport = React.forwardRef<
       className={cn(
         isMobile
           ? 'fixed top-20 left-4 right-4 flex flex-col items-start w-auto max-w-full p-0 z-50'
-          : 'fixed top-20 right-4 flex flex-col items-end w-full max-w-sm p-0 z-50',
+          : 'fixed bottom-4 right-4 flex flex-col items-end w-full max-w-sm p-0 z-50',
         className,
       )}
       {...props}

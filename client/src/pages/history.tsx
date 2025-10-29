@@ -314,7 +314,7 @@ export default function History() {
                           size="sm"
                           onClick={() => openUrl(record.youtubeUrl)}
                           title={t('history.openYoutube', 'Open YouTube')}
-                          className="p-2"
+                          className="touch-target-sm p-2"
                         >
                           <ExternalLink className="h-3 w-3 sm:h-4 sm:w-4" />
                         </Button>
@@ -326,7 +326,7 @@ export default function History() {
                               size="sm"
                               onClick={() => openUrl(record.spotifyUrl)}
                               title={t('history.openSpotify', 'Open Spotify')}
-                              className="p-2"
+                              className="touch-target-sm p-2"
                             >
                               <SiSpotify className="h-3 w-3 sm:h-4 sm:w-4" />
                             </Button>
@@ -341,7 +341,7 @@ export default function History() {
                                 'history.copySpotifyUrl',
                                 'Copy Spotify URL',
                               )}
-                              className="p-2"
+                              className="touch-target-sm p-2"
                             >
                               <Copy className="h-3 w-3 sm:h-4 sm:w-4" />
                             </Button>
@@ -353,7 +353,7 @@ export default function History() {
                           size="sm"
                           onClick={() => deleteRecord(record.id)}
                           title={t('history.delete', 'Delete')}
-                          className="text-red-500 hover:text-red-700 p-2"
+                          className="text-red-500 hover:text-red-700 touch-target-sm p-2"
                         >
                           <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
                         </Button>
@@ -370,14 +370,14 @@ export default function History() {
           <Button
             onClick={() => setLocation(ROUTES.DASHBOARD)}
             variant="outline"
-            className="text-sm sm:text-base"
+            className="touch-target text-sm sm:text-base"
           >
             {t('history.backToDashboard', 'Back to Dashboard')}
           </Button>
           <Button
             onClick={() => setLocation(ROUTES.SETTINGS)}
             variant="outline"
-            className="text-sm sm:text-base"
+            className="touch-target text-sm sm:text-base"
           >
             {t('history.settings', 'Settings')}
           </Button>

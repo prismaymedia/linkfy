@@ -32,21 +32,21 @@ import { motion, AnimatePresence } from 'framer-motion';
 const PreviewCardSkeleton = () => {
   const { t } = useTranslation();
   return (
-    <Card className="bg-white rounded-2xl shadow-lg mb-6">
-      <CardHeader className="pb-3">
+    <Card className="bg-white rounded-2xl shadow-lg mb-4 sm:mb-6">
+      <CardHeader className="pb-3 p-4 sm:p-6">
         <div className="flex items-center">
-          <SiYoutubemusic className="text-youtube text-xl mr-2" />
-          <h3 className="text-lg font-semibold text-gray-800">
+          <SiYoutubemusic className="text-youtube text-lg sm:text-xl mr-2" />
+          <h3 className="text-base sm:text-lg font-semibold text-gray-800">
             {t('preview.youtubeTrack')}
           </h3>
         </div>
       </CardHeader>
-      <CardContent className="pt-0">
-        <div className="flex items-center space-x-4">
-          <Skeleton className="w-16 h-16 rounded-lg" />
-          <div className="flex-1 space-y-2">
-            <Skeleton className="h-5 w-3/4" />
-            <Skeleton className="h-4 w-1/2" />
+      <CardContent className="pt-0 p-4 sm:p-6">
+        <div className="flex items-center space-x-3 sm:space-x-4">
+          <Skeleton className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg flex-shrink-0" />
+          <div className="flex-1 space-y-2 min-w-0">
+            <Skeleton className="h-4 sm:h-5 w-3/4" />
+            <Skeleton className="h-3 sm:h-4 w-1/2" />
             <Skeleton className="h-3 w-2/4" />
           </div>
         </div>
@@ -279,7 +279,7 @@ export default function ConversionForm() {
                   !isFormValid ||
                   !!cachedResultForWatchedUrl
                 }
-                className="w-full bg-spotify hover:bg-green-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                className="w-full bg-spotify hover:bg-green-600 text-white font-medium py-3 sm:py-4 px-4 sm:px-6 rounded-lg transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed touch-target text-sm sm:text-base"
               >
                 {convertMutation.isPending ? (
                   <>
@@ -317,27 +317,27 @@ export default function ConversionForm() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <Card className="bg-white rounded-2xl shadow-lg mb-6">
-              <CardHeader className="pb-3">
+            <Card className="bg-white rounded-2xl shadow-lg mb-4 sm:mb-6">
+              <CardHeader className="pb-3 p-4 sm:p-6">
                 <div className="flex items-center">
-                  <SiYoutubemusic className="text-youtube text-xl mr-2" />
-                  <h3 className="text-lg font-semibold text-gray-800">
+                  <SiYoutubemusic className="text-youtube text-lg sm:text-xl mr-2" />
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-800">
                     {t('preview.youtubeTrack')}
                   </h3>
                 </div>
               </CardHeader>
-              <CardContent className="pt-0">
-                <div className="flex items-center space-x-4">
+              <CardContent className="pt-0 p-4 sm:p-6">
+                <div className="flex items-center space-x-3 sm:space-x-4">
                   <img
                     src={youtubePreview.thumbnailUrl}
                     alt="YouTube thumbnail"
-                    className="w-16 h-16 rounded-lg object-cover shadow-md"
+                    className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg object-cover shadow-md flex-shrink-0"
                   />
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-gray-900 truncate">
+                    <h4 className="font-medium text-gray-900 truncate text-sm sm:text-base">
                       {youtubePreview.trackName}
                     </h4>
-                    <p className="text-sm text-gray-600 truncate">
+                    <p className="text-xs sm:text-sm text-gray-600 truncate">
                       {youtubePreview.artistName}
                     </p>
                     <p className="text-xs text-gray-500 truncate">

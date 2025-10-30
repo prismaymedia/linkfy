@@ -16,13 +16,12 @@ export const insertConversionSchema = createInsertSchema(conversions).pick({
   youtubeUrl: true,
 }) as unknown as z.ZodType<any, any, any>;
 
-
 export const convertUrlSchema = z.object({
-  youtubeUrl: z
+  url: z
     .string({
-      required_error: 'YouTube Music URL is required',
+      required_error: 'Music URL is required',
     })
-    .min(1, 'Please enter a YouTube Music URL')
+    .min(1, 'Please enter a valid music URL')
     .url('Please enter a valid URL format (starting with https://)')
     .refine(
       (url) => {
@@ -43,40 +42,31 @@ export const convertUrlSchema = z.object({
             return false;
           }
 
-          // Block YouTube channel URLs
           if (
-            (normalizedHostname.includes('youtube') ||
-              normalizedHostname.includes('youtu.be')) &&
+            normalizedHostname.includes('youtube') &&
             (pathname.startsWith('/@') || pathname.startsWith('/channel/'))
           ) {
             return false;
           }
 
-          // Normalize pathname by removing trailing slash if it exists
-          if (pathname.length > 1 && pathname.endsWith('/')) {
-            pathname = pathname.slice(0, -1);
-          }
-
-          // For YouTube URLs, check for valid patterns
-          if (normalizedHostname.includes('youtube') || normalizedHostname.includes('youtu.be')) {
-            // Video URLs: watch?v=, youtu.be/, embed/, shorts/
-            if (pathname === '/watch' && searchParams.has('v')) return true;
-            if (normalizedHostname === 'youtu.be' && pathname.length > 1 && pathname.match(/^\/[a-zA-Z0-9_-]+$/)) return true;
+          if (
+            normalizedHostname.includes('youtube.com') ||
+            normalizedHostname === 'youtu.be'
+          ) {
+            if (pathname === '/watch' && searchParams.has('v')) return true; // watch?v=
+            if (normalizedHostname === 'youtu.be' && /^\/[a-zA-Z0-9_-]+$/.test(pathname)) return true;
             if (pathname.startsWith('/embed/')) return true;
             if (pathname.startsWith('/shorts/')) return true;
-
-            // Playlist URLs
             if (pathname.startsWith('/playlist') && searchParams.has('list')) return true;
-
-            // Browse URLs (albums)
-            if (pathname.startsWith('/browse/')) return true;
-
             return false;
           }
 
-          // For Spotify URLs
           if (normalizedHostname === 'open.spotify.com') {
-            return pathname.match(/^\/(track|album|playlist)\/[a-zA-Z0-9]+$/) !== null;
+            return /^\/(track|album|playlist)\/[a-zA-Z0-9]+$/.test(pathname);
+          }
+
+          if (normalizedHostname === 'deezer.com') {
+            return /^\/(track|album|playlist)\/[0-9]+$/.test(pathname);
           }
 
           return false;
@@ -86,10 +76,34 @@ export const convertUrlSchema = z.object({
       },
       {
         message:
-          'URL must be a valid YouTube Music or Spotify track, album, or playlist link.',
+          'URL must be a valid YouTube, Spotify, or Deezer track, album, or playlist link.',
       },
     ),
+
+  targetPlatform: z.enum(['spotify', 'deezer', 'apple']),
 });
+
+export const detectPlatform = (
+  url: string,
+): 'youtube' | 'spotify' | 'deezer' | 'unknown' => {
+  try {
+    const u = new URL(url);
+    const host = u.hostname.toLowerCase().replace(/^www\./, '');
+
+    if (host.includes('youtube') || host === 'youtu.be') {
+      return 'youtube';
+    }
+    if (host.includes('spotify') || url.startsWith('spotify:')) {
+      return 'spotify';
+    }
+    if (host.includes('deezer')) {
+      return 'deezer';
+    }
+    return 'unknown';
+  } catch {
+    return 'unknown';
+  }
+};
 
 export type InsertConversion = z.infer<typeof insertConversionSchema>;
 export type Conversion = typeof conversions.$inferSelect;

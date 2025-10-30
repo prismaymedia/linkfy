@@ -1,6 +1,6 @@
 {
   "name": "linkfy",
-  "version": "2.3.2",
+  "version": "2.4.0",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -27,15 +27,15 @@
   ],
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
-    "@eslint/js": "^9.37.0",
+    "@eslint/js": "^9.38.0",
     "drizzle-zod": "^0.8.2",
-    "eslint": "^9.37.0",
+    "eslint": "^9.38.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.2.2",
     "globals": "^16.4.0",
     "prettier": "^3.4.2",
     "typescript": "5.9.3",
-    "typescript-eslint": "^8.46.1",
+    "typescript-eslint": "^8.46.2",
     "zod": "^3.22.2"
   }
 }

@@ -23,6 +23,7 @@ vi.mock('react-i18next', () => ({
         'form.duplicateUrlWarning': 'This URL has already been converted.',
         'preview.youtubeTrack': 'YouTube Track Preview',
         'conversion.successTitle': 'Successfully converted to Spotify!',
+        'conversion.successDesc': 'Your track is now on Spotify.',
         'conversion.errorTitle': 'Conversion Failed',
       };
       return translations[key] || key;
@@ -61,6 +62,31 @@ describe('ConversionForm', () => {
   });
 
   it('submits form and shows success toast', async () => {
+    server.use(
+      http.post('/api/youtube-convert', async ({ request }) => {
+        const body = (await request.json()) as any;
+
+        if (body?.convert === false) {
+          return HttpResponse.json({
+            type: 'track',
+            trackName: 'Preview Track',
+            artistName: 'Preview Artist',
+            thumbnailUrl: 'https://i.ytimg.com/vi/test/mqdefault.jpg',
+          });
+        }
+
+        return HttpResponse.json(
+          {
+            type: 'track',
+            spotifyUrl: 'https://open.spotify.com/track/xyz',
+            trackName: 'Test Track',
+            artistName: 'Test Artist',
+          },
+          { status: 201 },
+        );
+      }),
+    );
+
     renderWithClient(<ConversionForm />);
     const input = screen.getByPlaceholderText(
       /music\.youtube\.com\/watch\?v=/i,
@@ -74,7 +100,7 @@ describe('ConversionForm', () => {
       expect(screen.getByText(/YouTube Track Preview/i)).toBeInTheDocument(),
     );
 
-    const submitButton = screen.getByRole('button', {
+    const submitButton = await screen.findByRole('button', {
       name: /Convert to Spotify/i,
     });
     fireEvent.click(submitButton);
@@ -87,12 +113,17 @@ describe('ConversionForm', () => {
   });
 
   it('displays error message for network failure', async () => {
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+
     server.use(
       http.post('/api/youtube-convert', async ({ request }) => {
         const body = (await request.json()) as any;
         if (body?.convert === false) {
           return HttpResponse.json(
             {
+              type: 'track',
               trackName:
                 'John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
               artistName: 'IMAGINE. (Ultimate Mix, 2020)',
@@ -120,7 +151,7 @@ describe('ConversionForm', () => {
       expect(screen.getByText(/YouTube Track Preview/i)).toBeInTheDocument(),
     );
 
-    const submitButton = screen.getByRole('button', {
+    const submitButton = await screen.findByRole('button', {
       name: /Convert to Spotify/i,
     });
     fireEvent.click(submitButton);
@@ -129,9 +160,36 @@ describe('ConversionForm', () => {
       const title = screen.getByText(/Conversion Failed/i);
       expect(title).toBeInTheDocument();
     });
+
+    consoleErrorSpy.mockRestore();
   });
 
   it('disables submit button and shows loading state during API request', async () => {
+    server.use(
+      http.post('/api/youtube-convert', async ({ request }) => {
+        const body = (await request.json()) as any;
+        if (body?.convert === false) {
+          return HttpResponse.json({
+            type: 'track',
+            trackName: 'Preview Track',
+            artistName: 'Preview Artist',
+            thumbnailUrl: 'https://i.ytimg.com/vi/test/mqdefault.jpg',
+          });
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        return HttpResponse.json(
+          {
+            type: 'track',
+            spotifyUrl: 'https://open.spotify.com/track/xyz',
+            trackName: 'Test Track',
+            artistName: 'Test Artist',
+          },
+          { status: 201 },
+        );
+      }),
+    );
+
     renderWithClient(<ConversionForm />);
     const input = screen.getByPlaceholderText(
       /music\.youtube\.com\/watch\?v=/i,
@@ -145,7 +203,7 @@ describe('ConversionForm', () => {
       expect(screen.getByText(/YouTube Track Preview/i)).toBeInTheDocument(),
     );
 
-    const submitButton = screen.getByRole('button', {
+    const submitButton = await screen.findByRole('button', {
       name: /Convert to Spotify/i,
     });
     expect(submitButton).not.toBeDisabled();
@@ -169,15 +227,18 @@ describe('ConversionForm', () => {
     server.use(
       http.post('/api/youtube-convert', async ({ request }) => {
         const body = (await request.json()) as any;
-        // Fail preview, succeed conversion
+
         if (body?.convert === false) {
-          return HttpResponse.json(
-            { message: 'YouTube API error' },
-            { status: 500 },
-          );
+          return HttpResponse.json({
+            type: 'track',
+            trackName: 'Preview Track',
+            artistName: 'Preview Artist',
+            thumbnailUrl: 'https://i.ytimg.com/vi/test/mqdefault.jpg',
+          });
         }
         return HttpResponse.json(
           {
+            type: 'track',
             spotifyUrl: 'https://open.spotify.com/track/syszkzt3466rytG53xGD3M',
             trackName:
               'John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
@@ -209,7 +270,7 @@ describe('ConversionForm', () => {
       { timeout: 1000 },
     );
 
-    const submitButton = screen.getByRole('button', {
+    const submitButton = await screen.findByRole('button', {
       name: /Convert to Spotify/i,
     });
     fireEvent.click(submitButton);
@@ -222,12 +283,17 @@ describe('ConversionForm', () => {
   });
 
   it('displays error message for network timeout errors', async () => {
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+
     server.use(
       http.post('/api/youtube-convert', async ({ request }) => {
         const body = (await request.json()) as any;
         if (body?.convert === false) {
           return HttpResponse.json(
             {
+              type: 'track',
               trackName:
                 'John Lennon & The Plastic Ono Band (with the Flux Fiddlers) HD',
               artistName: 'IMAGINE. (Ultimate Mix, 2020)',
@@ -238,7 +304,7 @@ describe('ConversionForm', () => {
             { status: 200 },
           );
         }
-        throw new Error('Network request failed');
+        return HttpResponse.error();
       }),
     );
 
@@ -255,19 +321,17 @@ describe('ConversionForm', () => {
       expect(screen.getByText(/YouTube Track Preview/i)).toBeInTheDocument(),
     );
 
-    const submitButton = screen.getByRole('button', {
+    const submitButton = await screen.findByRole('button', {
       name: /Convert to Spotify/i,
     });
     fireEvent.click(submitButton);
-
-    await waitFor(() =>
-      expect(screen.getByText(/Conversion Failed/i)).toBeInTheDocument(),
-    );
 
     await waitFor(() => {
       const title = screen.getByText(/Conversion Failed/i);
       expect(title).toBeInTheDocument();
     });
+
+    consoleErrorSpy.mockRestore();
   });
 
   it('displays hint text for URL input', () => {

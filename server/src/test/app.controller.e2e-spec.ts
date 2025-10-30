@@ -24,7 +24,7 @@ describe('YouTube Convert Endpoint (e2e)', () => {
         thumbnailUrl: 'thumb',
         originalTitle: 'Original',
       }),
-      _parseUrl: jest.fn().mockReturnValue({
+      parseUrl: jest.fn().mockReturnValue({
         id: 'dQw4w9WgXcQ',
         type: YouTubeLinkType.VIDEO,
       }),

@@ -67,7 +67,7 @@ export const convertUrlSchema = z.object({
 
             // Playlist URLs
             if (pathname.startsWith('/playlist') && searchParams.has('list')) return true;
-            if (searchParams.has('list')) return true;
+            if (pathname === '/watch' && searchParams.has('v') && searchParams.has('list')) return true;
 
             // Browse URLs (albums)
             if (pathname.startsWith('/browse/')) return true;

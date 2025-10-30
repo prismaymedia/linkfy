@@ -120,7 +120,7 @@ export class AppController {
 
       const { youtubeUrl, convert } = RequestSchema.parse(body);
 
-      const parsed = this.youtubeService['_parseUrl'](youtubeUrl);
+      const parsed = this.youtubeService.parseUrl(youtubeUrl);
       const isPlaylist = parsed.type === YouTubeLinkType.PLAYLIST;
       const isAlbum = parsed.type === YouTubeLinkType.ALBUM;
 

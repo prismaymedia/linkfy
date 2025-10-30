@@ -27,7 +27,7 @@ export class YoutubeService {
     });
   }
 
-  private _normalizeYoutubeUrl(url: string): string {
+  public normalizeYoutubeUrl(url: string): string {
     try {
       const parsed = new URL(url);
       const paramsToRemove = ['si', 'feature', 'index', 't'];
@@ -51,11 +51,11 @@ export class YoutubeService {
   }
 
   async getYoutubeInfo(youtubeUrl: string): Promise<YouTubeTrackInfo> {
-    const normalizedUrl = this._normalizeYoutubeUrl(youtubeUrl);
+    const normalizedUrl = this.normalizeYoutubeUrl(youtubeUrl);
     this.logger.log(`➡️ Normalized YouTube URL: ${normalizedUrl}`);
 
     try {
-      const parsedLink = this._parseUrl(normalizedUrl);
+      const parsedLink = this.parseUrl(normalizedUrl);
 
       if (
         parsedLink.type === YouTubeLinkType.UNKNOWN ||
@@ -107,7 +107,7 @@ export class YoutubeService {
       this.logger.error('❌ Error in YouTube Data API call:', error);
     }
 
-    // Fallback con oEmbed
+    // Fallback with oEmbed
     try {
       const oembedUrl = `https://www.youtube.com/oembed?url=${encodeURIComponent(
         normalizedUrl,
@@ -129,7 +129,7 @@ export class YoutubeService {
 
         return {
           type: 'track',
-          videoId: this._parseUrl(normalizedUrl).id,
+          videoId: this.parseUrl(normalizedUrl).id,
           trackName,
           artistName,
           thumbnailUrl,
@@ -148,7 +148,7 @@ export class YoutubeService {
   async getPlaylistTracks(playlistUrl: string): Promise<PlaylistInfo> {
     this.logger.log(`📋 Getting playlist or album tracks for URL: ${playlistUrl}`);
 
-    const parsedLink = this._parseUrl(playlistUrl);
+    const parsedLink = this.parseUrl(playlistUrl);
 
     if (
       parsedLink.type !== YouTubeLinkType.PLAYLIST &&
@@ -246,9 +246,10 @@ export class YoutubeService {
     }
   }
 
-  _parseUrl(youtubeUrl: string): ParsedYouTubeLink {
+  public parseUrl(youtubeUrl: string): ParsedYouTubeLink {
     const url = new URL(youtubeUrl);
     const params = url.searchParams;
+
     // youtu.be short URLs
     if (url.hostname === 'youtu.be') {
       const videoId = url.pathname.slice(1);
@@ -267,7 +268,6 @@ export class YoutubeService {
       if (listId && listId.startsWith('OLAK5uy_')) {
         return { id: listId, type: YouTubeLinkType.ALBUM };
       }
-
 
       if (listId) {
         return { id: listId, type: YouTubeLinkType.PLAYLIST };

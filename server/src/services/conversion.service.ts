@@ -47,7 +47,9 @@ export class ConversionService {
 
     // 3️⃣ Get YouTube info
     const cleanUrl =
-      (this.youtubeService as any)._normalizeYoutubeUrl?.(youtubeUrl) || youtubeUrl;
+      this.youtubeService.normalizeYoutubeUrl
+        ? this.youtubeService.normalizeYoutubeUrl(youtubeUrl)
+        : youtubeUrl;
 
     this.logger.log(`🧹 Cleaned YouTube URL before fetching info: ${cleanUrl}`);
 

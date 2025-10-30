@@ -17,7 +17,7 @@ describe('AppController', () => {
     youtubeService = {
       getYoutubeInfo: jest.fn(),
       getPlaylistTracks: jest.fn(),
-      _parseUrl: jest.fn(),
+      parseUrl: jest.fn(),
     };
     conversionService = {
       getOrCreateConversion: jest.fn(),
@@ -54,7 +54,7 @@ describe('AppController', () => {
   }
 
   it('returns YouTube info with 200 when convert=false (preview)', async () => {
-    (youtubeService._parseUrl as jest.Mock).mockReturnValue({
+    (youtubeService.parseUrl as jest.Mock).mockReturnValue({
       id: 'abc',
       type: YouTubeLinkType.VIDEO,
     });
@@ -86,7 +86,7 @@ describe('AppController', () => {
   });
 
   it('returns merged info with 201 when convert=true', async () => {
-    (youtubeService._parseUrl as jest.Mock).mockReturnValue({
+    (youtubeService.parseUrl as jest.Mock).mockReturnValue({
       id: 'abc',
       type: YouTubeLinkType.VIDEO,
     });
@@ -137,7 +137,7 @@ describe('AppController', () => {
   });
 
   it('throws InternalServerErrorException if youtube service fails', async () => {
-    (youtubeService._parseUrl as jest.Mock).mockReturnValue({
+    (youtubeService.parseUrl as jest.Mock).mockReturnValue({
       id: 'abc',
       type: YouTubeLinkType.VIDEO,
     });

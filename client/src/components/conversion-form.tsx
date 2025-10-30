@@ -72,13 +72,17 @@ export default function ConversionForm() {
     resolver: zodResolver(convertUrlSchema),
     mode: 'onChange', // Enable real-time validation
     defaultValues: {
-      youtubeUrl: '',
+      url: '',
+      targetPlatform: 'spotify',
     },
   });
 
   const convertMutation = useMutation({
-    mutationFn: async (data: { youtubeUrl: string }) => {
-      const response = await apiRequest('POST', '/api/youtube-convert', data);
+    mutationFn: async (data: ConvertUrlRequest) => {
+      const response = await apiRequest('POST', '/api/convert', {
+        url: data.url,
+        targetPlatform: data.targetPlatform,
+      });
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Conversion failed');
@@ -87,7 +91,7 @@ export default function ConversionForm() {
     },
     onSuccess: (result) => {
       setSpotifyResult(result);
-      setLastProcessedUrl(form.getValues('youtubeUrl'));
+      setLastProcessedUrl(form.getValues('url'));
 
       toast({
         title: t('conversion.successTitle'),
@@ -115,17 +119,24 @@ export default function ConversionForm() {
   });
 
   const fetchYouTubePreview = async (url: string) => {
-    if (!url || !convertUrlSchema.safeParse({ youtubeUrl: url }).success) {
+    if (
+      !url ||
+      !convertUrlSchema.safeParse({ url, targetPlatform: 'spotify' }).success
+    ) {
       setYoutubePreview(null);
       return;
     }
 
     setIsLoadingPreview(true);
     try {
-      const response = await apiRequest('POST', '/api/youtube-convert', {
-        youtubeUrl: url,
+      const response = await apiRequest('POST', '/api/convert', {
+        url,
         convert: false, // only preview YouTube data
       });
+      if (!response.ok) {
+        setYoutubePreview(null);
+        return;
+      }
       const json = await response.json();
       setYoutubePreview(json as YouTubeTrackInfo);
     } catch {
@@ -135,7 +146,7 @@ export default function ConversionForm() {
     }
   };
 
-  const watchedUrl = form.watch('youtubeUrl');
+  const watchedUrl = form.watch('url');
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -162,9 +173,9 @@ export default function ConversionForm() {
     convertMutation.mutate(data);
   };
 
-  const isDuplicateUrl = lastProcessedUrl && watchedUrl === lastProcessedUrl;
+  const isDuplicateUrl = !!lastProcessedUrl && watchedUrl === lastProcessedUrl;
   const isFormValid = form.formState.isValid;
-  const fieldState = form.getFieldState('youtubeUrl');
+  const fieldState = form.getFieldState('url');
   const isFieldValid =
     !fieldState.error &&
     fieldState.isDirty &&
@@ -179,7 +190,7 @@ export default function ConversionForm() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
-                name="youtubeUrl"
+                name="url"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium text-gray-700">
@@ -203,9 +214,7 @@ export default function ConversionForm() {
                           }`}
                           aria-invalid={!!fieldState.error}
                           aria-describedby={
-                            fieldState.error
-                              ? 'youtubeUrl-error'
-                              : 'youtubeUrl-hint'
+                            fieldState.error ? 'url-error' : 'url-hint'
                           }
                         />
                         {isLoadingPreview ? (
@@ -231,7 +240,7 @@ export default function ConversionForm() {
                     >
                       {t('form.youtubeUrlHint')}
                     </FormDescription>
-                    <FormMessage id="youtubeUrl-error" role="alert" />
+                    <FormMessage id="url-error" role="alert" />
                   </FormItem>
                 )}
               />
@@ -247,7 +256,9 @@ export default function ConversionForm() {
 
               <Button
                 type="submit"
-                disabled={convertMutation.isPending || !isFormValid}
+                disabled={
+                  convertMutation.isPending || !isFormValid || isDuplicateUrl
+                }
                 className="w-full bg-spotify hover:bg-green-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
                 {convertMutation.isPending ? (

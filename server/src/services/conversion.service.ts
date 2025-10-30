@@ -33,9 +33,7 @@ export class ConversionService {
     }
 
     // 2️⃣ Check if conversion already exists in storage
-    const existing = await this.storageService.getConversionByYoutubeUrl(
-      youtubeUrl,
-    );
+    const existing = await this.storageService.getConversionByYoutubeUrl(youtubeUrl);
     if (existing?.spotifyUrl) {
       this.logger.log(`✅ Existing conversion found: ${existing.spotifyUrl}`);
       return {
@@ -48,7 +46,14 @@ export class ConversionService {
     }
 
     // 3️⃣ Get YouTube info
-    const youtubeInfo = await this.youtubeService.getYoutubeInfo(youtubeUrl);
+    const cleanUrl =
+      this.youtubeService.normalizeYoutubeUrl
+        ? this.youtubeService.normalizeYoutubeUrl(youtubeUrl)
+        : youtubeUrl;
+
+    this.logger.log(`🧹 Cleaned YouTube URL before fetching info: ${cleanUrl}`);
+
+    const youtubeInfo = await this.youtubeService.getYoutubeInfo(cleanUrl);
     if (!youtubeInfo) {
       throw new InternalServerErrorException({
         success: false,
@@ -59,10 +64,19 @@ export class ConversionService {
     }
 
     // 4️⃣ Search track on Spotify
+    if (youtubeInfo.type !== 'track') {
+      throw new BadRequestException({
+        success: false,
+        error: 'INVALID_URL_TYPE',
+        message: 'The provided URL is for a playlist or album, not a single track.',
+      });
+    }
+
     const spotifyInfo = await this.spotifyService.searchSpotifyTrack(
       youtubeInfo.trackName,
       youtubeInfo.artistName,
     );
+
     if (!spotifyInfo) {
       throw new BadRequestException({
         success: false,
@@ -71,7 +85,6 @@ export class ConversionService {
       });
     }
 
-    // 5️⃣ Save conversion
     const conversion = await this.storageService.createConversion({
       youtubeUrl,
       spotifyUrl: spotifyInfo.spotifyUrl,
@@ -87,7 +100,7 @@ export class ConversionService {
 
   private isValidYoutubeUrl(url: string): boolean {
     const regex =
-      /^(https?:\/\/)?(music\.)?(www\.)?(youtube\.com|youtu\.be|youtu\.be\/|music\.youtube\.com\/watch\?v=)([a-zA-Z0-9_-]{11})(&[a-zA-Z0-9_=&-]+)?$/;
+      /^(https?:\/\/)?(music\.)?(www\.)?(youtube\.com|youtu\.be|music\.youtube\.com)\/(watch\?v=|playlist\?list=|browse\/|[\w-]{11})/;
     return regex.test(url);
   }
 }

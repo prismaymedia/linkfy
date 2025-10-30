@@ -19,7 +19,7 @@ import {
   ApiInternalServerErrorResponse,
 } from '@nestjs/swagger';
 import { ConversionService } from '../services/conversion.service';
-import { YoutubeService } from '../services/youtube.service';
+import { YoutubeService, YouTubeLinkType } from '../services/youtube.service';
 import { ZodError, z } from 'zod';
 import { convertUrlSchema } from '../../../shared/schema';
 import * as Sentry from '@sentry/nestjs';
@@ -117,8 +117,81 @@ export class AppController {
         youtubeUrl: convertUrlSchema.shape.youtubeUrl,
         convert: z.coerce.boolean().default(true).optional(),
       });
+
       const { youtubeUrl, convert } = RequestSchema.parse(body);
 
+      const parsed = this.youtubeService.parseUrl(youtubeUrl);
+      const isPlaylist = parsed.type === YouTubeLinkType.PLAYLIST;
+      const isAlbum = parsed.type === YouTubeLinkType.ALBUM;
+
+      if (isPlaylist || isAlbum) {
+        this.logger.log(
+          isAlbum ? '💿 Detected album URL' : '🎵 Detected playlist URL',
+        );
+
+        const playlistData =
+          await this.youtubeService.getPlaylistTracks(youtubeUrl);
+
+        if (convert === false) {
+          res.status(HttpStatus.OK);
+          return {
+            type: isAlbum ? 'album' : 'playlist',
+            ...playlistData,
+          };
+        }
+
+        this.logger.log(
+          `🔄 Converting ${playlistData.tracks.length} ${isAlbum ? 'album' : 'playlist'
+          } tracks to Spotify...`,
+        );
+
+        const convertedTracks = [];
+        let convertedCount = 0;
+        let failedCount = 0;
+
+        for (const track of playlistData.tracks) {
+          try {
+            const videoUrl = `https://www.youtube.com/watch?v=${track.videoId}`;
+            const spotifyInfo =
+              await this.conversionService.getOrCreateConversion(videoUrl);
+
+            convertedTracks.push({
+              ...track,
+              spotifyUrl: spotifyInfo.spotifyUrl,
+              converted: true,
+            });
+            convertedCount++;
+          } catch (error) {
+            this.logger.warn(
+              `⚠️ Failed to convert track: ${track.trackName} - ${track.artistName}`,
+            );
+            convertedTracks.push({
+              ...track,
+              spotifyUrl: null,
+              converted: false,
+              error: 'Not found on Spotify',
+            });
+            failedCount++;
+          }
+        }
+
+        this.logger.log(
+          `✅ Conversion complete: ${convertedCount} successful, ${failedCount} failed`,
+        );
+
+        res.status(HttpStatus.CREATED);
+        return {
+          type: isAlbum ? 'album' : 'playlist',
+          playlistTitle: playlistData.playlistTitle,
+          playlistDescription: playlistData.playlistDescription,
+          totalTracks: playlistData.totalTracks,
+          convertedTracks: convertedCount,
+          failedTracks: failedCount,
+          tracks: convertedTracks,
+        };
+      }
+
+      this.logger.log('🎥 Detected single video URL');
       const youtubeInfo = await this.youtubeService.getYoutubeInfo(youtubeUrl);
 
       if (convert === false) {
@@ -133,7 +206,11 @@ export class AppController {
       return { ...youtubeInfo, spotifyUrl: spotifyInfo.spotifyUrl };
     } catch (error: any) {
       try {
-        if (user) Sentry.setUser({ id: user.id, username: user.email ? user.email.split('@')[0] : undefined });
+        if (user)
+          Sentry.setUser({
+            id: user.id,
+            username: user.email ? user.email.split('@')[0] : undefined,
+          });
         Sentry.setContext('request', { body, route: 'youtube-convert' });
       } catch (e) { }
 

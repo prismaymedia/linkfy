@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   convertUrlSchema,
   type ConvertUrlRequest,
@@ -67,6 +67,7 @@ export default function ConversionForm() {
 
   const { toast } = useToast();
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
 
   const form = useForm<ConvertUrlRequest>({
     resolver: zodResolver(convertUrlSchema),
@@ -92,6 +93,9 @@ export default function ConversionForm() {
     onSuccess: (result) => {
       setSpotifyResult(result);
       setLastProcessedUrl(form.getValues('url'));
+
+      // Cache the result for future requests
+      queryClient.setQueryData(['conversion', form.getValues('url')], result);
 
       toast({
         title: t('conversion.successTitle'),
@@ -162,18 +166,37 @@ export default function ConversionForm() {
   }, [watchedUrl, lastProcessedUrl]);
 
   const onSubmit = (data: ConvertUrlRequest) => {
-    // Check if this is a duplicate URL before submitting
-    if (isDuplicateUrl) {
+    const url = data.url;
+
+    // Check if cached result exists
+    const cachedResult = queryClient.getQueryData(['conversion', url]);
+    if (cachedResult) {
+      setSpotifyResult(cachedResult as SpotifyTrackInfo);
       toast({
-        title: t('form.duplicateUrlWarning'),
-        variant: 'warning',
+        title: t('conversion.successTitle'),
+        description: t('conversion.successDesc'),
+        variant: 'success',
       });
-      return; // Don't submit if it's a duplicate
+      return; // Don't submit if cached
     }
+
     convertMutation.mutate(data);
   };
 
-  const isDuplicateUrl = !!lastProcessedUrl && watchedUrl === lastProcessedUrl;
+  const [cacheTick, setCacheTick] = useState(0);
+  useEffect(() => {
+    const unsubscribe = queryClient.getQueryCache().subscribe(() => {
+      setCacheTick((tick) => tick + 1);
+    });
+    return unsubscribe;
+  }, [queryClient]);
+
+  const cachedResultForWatchedUrl = useMemo(() => {
+    if (!watchedUrl) return undefined;
+    return queryClient.getQueryData(['conversion', watchedUrl]);
+  }, [queryClient, watchedUrl, cacheTick]);
+
+  const isDuplicateUrl = lastProcessedUrl && watchedUrl === lastProcessedUrl;
   const isFormValid = form.formState.isValid;
   const fieldState = form.getFieldState('url');
   const isFieldValid =
@@ -245,7 +268,7 @@ export default function ConversionForm() {
                 )}
               />
 
-              {isDuplicateUrl && (
+              {!!cachedResultForWatchedUrl && (
                 <div className="flex items-center space-x-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
                   <AlertCircle className="h-4 w-4 text-amber-600" />
                   <span className="text-sm text-amber-700">
@@ -257,7 +280,9 @@ export default function ConversionForm() {
               <Button
                 type="submit"
                 disabled={
-                  convertMutation.isPending || !isFormValid || isDuplicateUrl
+                  convertMutation.isPending ||
+                  !isFormValid ||
+                  !!cachedResultForWatchedUrl
                 }
                 className="w-full bg-spotify hover:bg-green-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
@@ -266,7 +291,7 @@ export default function ConversionForm() {
                     {t('form.converting')}
                     <Loader2 className="ml-2 h-4 w-4 animate-spin" />
                   </>
-                ) : isDuplicateUrl ? (
+                ) : !!cachedResultForWatchedUrl ? (
                   t('form.urlAlreadyConverted')
                 ) : (
                   t('form.convertButton')

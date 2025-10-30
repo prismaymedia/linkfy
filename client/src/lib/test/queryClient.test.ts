@@ -99,6 +99,6 @@ describe('queryClient', () => {
     expect(queryClient).toBeInstanceOf(QueryClient);
     const defaults = queryClient.getDefaultOptions();
     expect(defaults.queries?.retry).toBe(false);
-    expect(defaults.queries?.staleTime).toBe(Infinity);
+    expect(defaults.queries?.staleTime).toBe(1 * 60 * 1000); // Expect 1 minute as configured
   });
 });

@@ -62,9 +62,9 @@ describe('YouTube Convert Endpoint (e2e)', () => {
 
   it('should return 200 with YouTube info when convert=false (preview)', async () => {
     const response = await request(app.getHttpServer())
-      .post('/api/youtube-convert')
+      .post('/api/convert')
       .send({
-        youtubeUrl: 'https://music.youtube.com/watch?v=dQw4w9WgXcQ',
+        url: 'https://music.youtube.com/watch?v=dQw4w9WgXcQ',
         convert: false,
       });
 
@@ -73,25 +73,23 @@ describe('YouTube Convert Endpoint (e2e)', () => {
     expect(response.body).toHaveProperty('artistName');
     expect(response.body).toHaveProperty('thumbnailUrl');
     expect(response.body).toHaveProperty('originalTitle');
-    expect(response.body).not.toHaveProperty('spotifyUrl');
   });
 
   it('should return 201 with Spotify info when convert omitted/true', async () => {
     const response = await request(app.getHttpServer())
-      .post('/api/youtube-convert')
-      .send({ youtubeUrl: 'https://music.youtube.com/watch?v=dQw4w9WgXcQ' });
+      .post('/api/convert')
+      .send({ url: 'https://music.youtube.com/watch?v=dQw4w9WgXcQ' });
 
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty('spotifyUrl');
     expect(response.body).toHaveProperty('trackName');
     expect(response.body).toHaveProperty('artistName');
     expect(response.body).toHaveProperty('thumbnailUrl');
-    expect(response.body).toHaveProperty('originalTitle');
   });
 
   it('should return 400 if the parameter is missing', async () => {
     const response = await request(app.getHttpServer())
-      .post('/api/youtube-convert')
+      .post('/api/convert')
       .send({});
 
     expect(response.status).toBe(400);

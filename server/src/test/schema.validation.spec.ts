@@ -2,12 +2,11 @@ import { convertUrlSchema } from '../../../shared/schema';
 
 describe('convertUrlSchema', () => {
     describe('youtubeUrl validation', () => {
-        const validUrls = [
+        const validYouTubeUrls = [
             //  Standard YouTube Music URLs
             'https://music.youtube.com/watch?v=6Ejga4kJUts',
             'https://music.youtube.com/watch?v=6Ejga4kJUts&si=abc123',
             'https://music.youtube.com/playlist?list=PLFgquLnL59alCl_2TQvOiD5Vgm1hCaGSI',
-            'https://music.youtube.com/browse/MPREb_UzYVnXn8q7N',
 
             //  Standard YouTube URLs
             'https://www.youtube.com/watch?v=6Ejga4kJUts',
@@ -27,8 +26,11 @@ describe('convertUrlSchema', () => {
             'https://music.youtube.com/watch?v=6Ejga4kJUts/', // Trailing slash
         ];
 
-        it.each(validUrls)('should validate a valid URL: %s', (url) => {
-            const result = convertUrlSchema.safeParse({ youtubeUrl: url });
+        it.each(validYouTubeUrls)('should validate a valid URL: %s', (url) => {
+            const result = convertUrlSchema.safeParse({
+                url: url,
+                targetPlatform: 'spotify',
+            });
             if (!result.success) {
                 console.error(`Validation failed for ${url}:`, result.error.issues);
             }
@@ -39,6 +41,7 @@ describe('convertUrlSchema', () => {
             // Invalid domain
             'https://vimeo.com/123456',
             'https://spotify.com/track/123456',
+            'https://music.youtube.com/browse/MPREb_UzYVnXn8q7N', // Browse URLs are not supported for conversion
 
             // Malformed URLs
             'not a url',
@@ -61,16 +64,22 @@ describe('convertUrlSchema', () => {
         ];
 
         it.each(invalidUrls)('should invalidate an invalid URL: %s', (url) => {
-            const result = convertUrlSchema.safeParse({ youtubeUrl: url });
+            const result = convertUrlSchema.safeParse({
+                url: url,
+                targetPlatform: 'spotify',
+            });
             expect(result.success).toBe(false);
         });
 
         it('should return a specific error message for channel URLs', () => {
             const url = 'https://www.youtube.com/channel/UC-9-kyTW8ZkZNDHQJ6FgpwQ';
-            const result = convertUrlSchema.safeParse({ youtubeUrl: url });
+            const result = convertUrlSchema.safeParse({
+                url: url,
+                targetPlatform: 'spotify',
+            });
             if (!result.success) {
                 expect(result.error.errors[0].message).toBe(
-                    'URL must be a valid YouTube Music or Spotify track, album, or playlist link.',
+                    'URL must be a valid YouTube, Spotify, or Deezer track, album, or playlist link.',
                 );
             } else {
                 // Fail the test if it unexpectedly succeeds
@@ -80,10 +89,13 @@ describe('convertUrlSchema', () => {
 
         it('should return a specific error message for non-YouTube URLs', () => {
             const url = 'https://www.google.com';
-            const result = convertUrlSchema.safeParse({ youtubeUrl: url });
+            const result = convertUrlSchema.safeParse({
+                url: url,
+                targetPlatform: 'spotify',
+            });
             if (!result.success) {
                 expect(result.error.errors[0].message).toBe(
-                    'URL must be a valid YouTube Music or Spotify track, album, or playlist link.',
+                    'URL must be a valid YouTube, Spotify, or Deezer track, album, or playlist link.',
                 );
             } else {
                 fail('Non-YouTube URL should have failed validation');
@@ -92,7 +104,10 @@ describe('convertUrlSchema', () => {
 
         it('should return a specific error message for invalid URL format', () => {
             const url = 'not-a-valid-url';
-            const result = convertUrlSchema.safeParse({ youtubeUrl: url });
+            const result = convertUrlSchema.safeParse({
+                url: url,
+                targetPlatform: 'spotify',
+            });
             if (!result.success) {
                 expect(result.error.errors[0].message).toBe(
                     'Please enter a valid URL format (starting with https://)',

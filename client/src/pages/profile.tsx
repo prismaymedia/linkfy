@@ -63,46 +63,50 @@ export default function Profile() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="email">{t('profile.email', 'Email')}</Label>
+                  <Label htmlFor="email" className="text-sm">
+                    {t('profile.email', 'Email')}
+                  </Label>
                   <div className="flex items-center gap-2 mt-1">
-                    <Mail className="h-4 w-4 text-gray-500" />
+                    <Mail className="h-4 w-4 text-gray-500 flex-shrink-0" />
                     <Input
                       id="email"
                       value={session?.user?.email || ''}
                       disabled
-                      className="bg-gray-50"
+                      className="bg-gray-50 min-w-0 text-xs xs:text-sm"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <Label htmlFor="created">
+                  <Label htmlFor="created" className="text-sm">
                     {t('profile.memberSince', 'Member Since')}
                   </Label>
                   <div className="flex items-center gap-2 mt-1">
-                    <Calendar className="h-4 w-4 text-gray-500" />
+                    <Calendar className="h-4 w-4 text-gray-500 flex-shrink-0" />
                     <Input
                       id="created"
                       value={
                         session?.user?.created_at
                           ? new Date(
-                              session.user.created_at,
-                            ).toLocaleDateString()
+                            session.user.created_at,
+                          ).toLocaleDateString()
                           : ''
                       }
                       disabled
-                      className="bg-gray-50"
+                      className="bg-gray-50 min-w-0 text-xs xs:text-sm"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <Label htmlFor="id">{t('profile.userId', 'User ID')}</Label>
+                  <Label htmlFor="id" className="text-sm">
+                    {t('profile.userId', 'User ID')}
+                  </Label>
                   <Input
                     id="id"
                     value={session?.user?.id || ''}
                     disabled
-                    className="bg-gray-50 font-mono text-sm"
+                    className="bg-gray-50 font-mono text-[10px] xs:text-xs min-w-0"
                   />
                 </div>
               </CardContent>

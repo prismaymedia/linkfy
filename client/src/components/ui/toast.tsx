@@ -19,8 +19,8 @@ const ToastViewport = React.forwardRef<
       ref={ref}
       className={cn(
         isMobile
-          ? 'absolute top-4 left-4 flex flex-col items-start w-auto max-w-md p-4 rounded-lg z-50'
-          : 'fixed bottom-4 right-4 flex flex-col items-end w-full max-w-xs p-4 rounded-lg z-50',
+          ? 'fixed top-20 left-4 right-4 flex flex-col items-start w-auto max-w-full p-0 z-50'
+          : 'fixed bottom-4 right-4 flex flex-col items-end w-full max-w-sm p-0 z-50',
         className,
       )}
       {...props}

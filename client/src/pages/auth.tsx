@@ -75,22 +75,35 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen bg-surface flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-semibold text-gray-800 mb-2">Linkfy</h1>
+        <div className="text-center mb-6 sm:mb-8">
+          <h1 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-2">Linkfy</h1>
+          <p className="text-sm sm:text-base text-gray-600">
+            {t('auth.subtitle', 'Sign in to start converting music links')}
+          </p>
         </div>
 
-        <div className="mt-4 flex justify-center space-x-3">
+        <div className="mt-4 flex justify-center">
           <button
             onClick={() => handleSocialLogin('google')}
-            className="bg-white border px-4 py-2 rounded flex items-center space-x-2"
+            className="bg-white border border-gray-300 px-4 sm:px-6 py-3 sm:py-4 rounded-lg flex items-center space-x-2 sm:space-x-3 hover:bg-gray-50 transition-colors touch-target w-full max-w-xs sm:max-w-none"
           >
-            <FcGoogle className="text-xl" />
-            <span className="text-gray-700">Google</span>
+            <FcGoogle className="text-lg sm:text-xl" />
+            <span className="text-gray-700 text-sm sm:text-base font-medium">
+              {t('auth.signInWithGoogle', 'Sign in with Google')}
+            </span>
           </button>
         </div>
 
-        {error && <p className="text-red-600 mt-3">{error}</p>}
-        {success && <p className="text-green-600 mt-3">{success}</p>}
+        {error && (
+          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-red-600 text-sm text-center">{error}</p>
+          </div>
+        )}
+        {success && (
+          <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+            <p className="text-green-600 text-sm text-center">{success}</p>
+          </div>
+        )}
       </div>
     </div>
   );

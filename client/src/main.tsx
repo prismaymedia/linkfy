@@ -16,7 +16,21 @@ try {
       dsn: sentryDsn,
       tracesSampleRate: 0.2,
       sendDefaultPii: false,
+      environment: import.meta.env.MODE,
     });
+
+    // Send a test error to Sentry only on first app load
+    // This helps verify Sentry is working correctly
+    if (!localStorage.getItem('sentry_test_error_sent')) {
+      localStorage.setItem('sentry_test_error_sent', 'true');
+      try {
+        throw new Error('Sentry initialization test - First app load');
+      } catch (testError) {
+        Sentry.captureException(testError, {
+          tags: { type: 'initialization_test' },
+        });
+      }
+    }
   }
 } catch (error) {
   // Silently fail - Sentry is optional

@@ -45,6 +45,7 @@ export default function Header({ className }: HeaderProps) {
               variant="default"
               size="sm"
               className="flex items-center space-x-1 touch-target-sm text-sm sm:text-base px-2 sm:px-4"
+              aria-label={t('header.login', 'Login')}
             >
               <LogIn className="h-3 w-3 sm:h-4 sm:w-4" />
               <span className="hidden xs:inline">{t('header.login', 'Login')}</span>

@@ -221,13 +221,12 @@ export default function ConversionForm() {
                           disabled={
                             convertMutation.isPending || isLoadingPreview
                           }
-                          className={`w-full px-3 sm:px-4 py-3 sm:py-4 border rounded-lg focus:ring-2 focus:ring-spotify focus:border-spotify transition-colors duration-200 pr-10 text-sm sm:text-base ${
-                            fieldState.error
+                          className={`w-full px-3 sm:px-4 py-3 sm:py-4 border rounded-lg focus:ring-2 focus:ring-spotify focus:border-spotify transition-colors duration-200 pr-10 text-sm sm:text-base ${fieldState.error
                               ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
                               : isFieldValid
                                 ? 'border-green-500 focus:ring-green-500 focus:border-green-500'
                                 : 'border-gray-300'
-                          }`}
+                            }`}
                           aria-invalid={!!fieldState.error}
                           aria-describedby={
                             fieldState.error
@@ -296,7 +295,7 @@ export default function ConversionForm() {
           </Form>
         </CardContent>
       </Card>
-            <AnimatePresence mode="wait">
+      <AnimatePresence mode="wait">
         {isLoadingPreview && (
           <motion.div
             key="preview-loading"

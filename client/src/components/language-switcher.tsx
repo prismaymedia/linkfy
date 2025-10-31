@@ -64,17 +64,24 @@ export default function LanguageSwitcher({ variant = 'header' }: LanguageSwitche
   const currentLang = LANGUAGES.find(l => l.code === i18n.language) || LANGUAGES[0];
 
   // Different styles based on variant
-  const containerClasses = variant === 'header' 
-    ? "relative inline-block text-left w-full sm:w-auto" 
-    : "relative inline-block text-left w-full max-w-xs";
+  const containerClasses = clsx(
+    "relative inline-block text-left w-full",
+    variant === "header" ? "sm:w-auto" : "max-w-xs"
+  );
 
-  const buttonClasses = variant === 'header'
-    ? "flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-gray-300 transition-colors touch-target-sm w-full sm:w-auto min-w-0"
-    : "flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-gray-300 transition-colors w-full justify-between";
+  const buttonClasses = clsx(
+    "flex items-center font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-gray-300 transition-colors w-full",
+    variant === "header"
+      ? "gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 text-xs sm:text-sm touch-target-sm sm:w-auto min-w-0"
+      : "gap-2 px-3 py-2 text-sm justify-between"
+  );
 
-  const dropdownClasses = variant === 'header'
-    ? "absolute right-0 sm:right-0 w-40 z-50 mt-1 bg-white border border-gray-200 rounded-md shadow-lg"
-    : "absolute left-0 w-full z-50 mt-1 bg-white border border-gray-200 rounded-md shadow-lg";
+  const dropdownClasses = clsx(
+    "absolute z-50 mt-1 bg-white border border-gray-200 rounded-md shadow-lg",
+    variant === "header"
+      ? "right-0 sm:right-0 w-40"
+      : "left-0 w-full"
+  );
 
   const showCode = variant === 'header';
 

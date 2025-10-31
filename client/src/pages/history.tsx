@@ -137,7 +137,10 @@ export default function History() {
       await navigator.clipboard.writeText(text);
       toast({
         title: t('history.copied', 'Copied!'),
-        description: t('history.copiedDesc', 'Spotify URL copied to clipboard.'),
+        description: t(
+          'history.copiedDesc',
+          'Spotify URL copied to clipboard.'
+        ),
         variant: 'success',
       });
     } catch (err) {
@@ -239,7 +242,7 @@ export default function History() {
                     {Math.round(
                       (history.filter((h) => h.status === 'success').length /
                         history.length) *
-                        100,
+                      100,
                     ) || 0}
                     %
                   </p>

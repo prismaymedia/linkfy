@@ -80,7 +80,7 @@
   }
 
   /* Mobile-first responsive utilities */
-  @media (max-width: 320px) {
+  @media (max-width: 319px) {
     .container {
       padding-left: 0.75rem;
       padding-right: 0.75rem;
@@ -115,67 +115,6 @@
   }
 
   .hover\:bg-green-600:hover {
-    background-color: #16a34a;
-  }
-
-  /* Enhanced Switch Styles */
-  .switch-enhanced {
-    position: relative;
-    display: inline-block;
-    width: 44px;
-    height: 24px;
-  }
-
-  .switch-enhanced input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-
-  .switch-slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #d1d5db;
-    transition: 0.3s;
-    border-radius: 24px;
-    border: 2px solid transparent;
-  }
-
-  .switch-slider:before {
-    position: absolute;
-    content: "";
-    height: 16px;
-    width: 16px;
-    left: 2px;
-    bottom: 2px;
-    background-color: white;
-    transition: 0.3s;
-    border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
-
-  .switch-enhanced input:checked + .switch-slider {
-    background-color: #1db954;
-    border-color: #1db954;
-  }
-
-  .switch-enhanced input:checked + .switch-slider:before {
-    transform: translateX(20px);
-  }
-
-  .switch-enhanced input:focus + .switch-slider {
-    box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.3);
-  }
-
-  .switch-enhanced:hover .switch-slider {
-    background-color: #9ca3af;
-  }
-
-  .switch-enhanced input:checked:hover + .switch-slider {
     background-color: #16a34a;
   }
 

@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.5.0](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.4.0...linkfy-v2.5.0) (2025-10-31)
+
+
+### Features
+
+* Complete Q4 2025 Reorganization for Sprint 3-4 ([137bdcc](https://github.com/prismaymedia/linkfy/commit/137bdcca56fdc15da508fded08f432205667ba9b))
+* **conversion-form:** enhance error handling, duplicate prevention, and user feedback ([56f072e](https://github.com/prismaymedia/linkfy/commit/56f072e07fca42f736105e3501d23733ad935020))
+* **conversion:** implement request deduplication and caching to improve performance ([758a069](https://github.com/prismaymedia/linkfy/commit/758a0692d619babb556ad7f88c14825c44146681))
+
+
+### Bug Fixes
+
+* **queryClient:** resolve failing test in queryClient.test.ts ([1ef9c2d](https://github.com/prismaymedia/linkfy/commit/1ef9c2d09db919d9dce0f98d671e3868e3608e6a))
+
+
+### Code Refactoring
+
+* **conversion:** improve deduplication logic and remove redundant logs ([0716653](https://github.com/prismaymedia/linkfy/commit/0716653f2e62df7074598820b398c56f645cc471))
+
 ## [2.4.0](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.3.2...linkfy-v2.4.0) (2025-10-22)
 
 

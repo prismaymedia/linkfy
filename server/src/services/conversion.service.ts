@@ -20,19 +20,18 @@ export class ConversionService {
   ) { }
 
   async getOrCreateConversion(
-    request: ConvertUrlRequest & { format?: string }, // 'url' is now generic
-    sourcePlatform: 'youtube' | 'spotify' | 'deezer' | 'unknown', // Add sourcePlatform
+    request: ConvertUrlRequest,
+    sourcePlatform: 'youtube' | 'spotify' | 'deezer' | 'unknown',
   ): Promise<SpotifyTrackInfo> {
     try {
-      const { url, targetPlatform, format } = request;
+      const { url, targetPlatform } = request;
 
       this.logger.log(
-        `🔄 Starting conversion for: ${url} from ${sourcePlatform} to ${targetPlatform} (format: ${format})`,
+        `🔄 Starting conversion for: ${url} from ${sourcePlatform} to ${targetPlatform}`,
       );
 
       if (sourcePlatform === 'youtube') {
         if (targetPlatform === 'spotify') {
-
           // 1️⃣ Validate YouTube URL
           if (!this.isValidYoutubeUrl(url)) {
             this.logger.warn(`❌ Invalid YouTube URL: ${url}`);
@@ -45,9 +44,8 @@ export class ConversionService {
 
           // 2️⃣ Check if conversion already exists in storage
           this.logger.log('🔍 Checking for existing conversion...');
-          const existing = await this.storageService.getConversionByYoutubeUrl(
-            url,
-          );
+          const existing = await this.storageService.getConversionByYoutubeUrl(url);
+
           if (existing?.spotifyUrl) {
             this.logger.log(`✅ Existing conversion found: ${existing.spotifyUrl}`);
             return {
@@ -58,11 +56,13 @@ export class ConversionService {
               thumbnailUrl: existing.thumbnailUrl ?? '',
             };
           }
+
           this.logger.log('🤔 No existing conversion found.');
 
           // 3️⃣ Get YouTube info
           this.logger.log('ℹ️ Getting YouTube info...');
           const youtubeInfo = await this.youtubeService.getYoutubeInfo(url);
+
           if (!youtubeInfo) {
             throw new InternalServerErrorException({
               success: false,
@@ -71,6 +71,7 @@ export class ConversionService {
                 'Could not retrieve YouTube information. The video might be private or unavailable.',
             });
           }
+
           this.logger.log(`📺 YouTube info found: ${youtubeInfo.originalTitle}`);
 
           // 4️⃣ Search track on Spotify
@@ -79,6 +80,7 @@ export class ConversionService {
             youtubeInfo.trackName,
             youtubeInfo.artistName,
           );
+
           if (!spotifyInfo) {
             throw new BadRequestException({
               success: false,
@@ -86,6 +88,7 @@ export class ConversionService {
               message: `Could not find the song on Spotify: "${youtubeInfo.trackName}" by "${youtubeInfo.artistName}"`,
             });
           }
+
           this.logger.log(`🎤 Spotify track found: ${spotifyInfo.spotifyUrl}`);
 
           // 5️⃣ Save conversion
@@ -122,7 +125,6 @@ export class ConversionService {
           message: `Conversion from 'spotify' to '${targetPlatform}' is not yet supported.`,
         });
       } else if (sourcePlatform === 'deezer') {
-
         this.logger.warn(
           `Conversion from Deezer to ${targetPlatform} is not yet supported.`,
         );
@@ -132,7 +134,6 @@ export class ConversionService {
           message: `Conversion from 'deezer' to '${targetPlatform}' is not yet supported.`,
         });
       } else if (sourcePlatform === 'unknown') {
-
         this.logger.warn(`Unknown source platform for URL: ${url}`);
         throw new BadRequestException({
           success: false,

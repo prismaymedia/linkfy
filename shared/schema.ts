@@ -29,7 +29,6 @@ export const convertUrlSchema = z.object({
           let { hostname, pathname, searchParams } = new URL(url);
           const normalizedHostname = hostname.toLowerCase().replace(/^www\./, '');
 
-          // Check if it's a supported domain
           if (
             ![
               'music.youtube.com',
@@ -53,7 +52,7 @@ export const convertUrlSchema = z.object({
             normalizedHostname.includes('youtube.com') ||
             normalizedHostname === 'youtu.be'
           ) {
-            if (pathname === '/watch' && searchParams.has('v')) return true; // watch?v=
+            if (pathname === '/watch' && searchParams.has('v')) return true;
             if (normalizedHostname === 'youtu.be' && /^\/[a-zA-Z0-9_-]+$/.test(pathname)) return true;
             if (pathname.startsWith('/embed/')) return true;
             if (pathname.startsWith('/shorts/')) return true;
@@ -65,7 +64,7 @@ export const convertUrlSchema = z.object({
             return /^\/(track|album|playlist)\/[a-zA-Z0-9]+$/.test(pathname);
           }
 
-          if (normalizedHostname === 'deezer.com') {
+          if (normalizedHostname.includes('deezer ')) {
             return /^\/(track|album|playlist)\/[0-9]+$/.test(pathname);
           }
 
@@ -79,8 +78,7 @@ export const convertUrlSchema = z.object({
           'URL must be a valid YouTube, Spotify, or Deezer track, album, or playlist link.',
       },
     ),
-
-  targetPlatform: z.enum(['spotify', 'deezer', 'apple']),
+  targetPlatform: z.enum(['spotify', 'deezer', 'apple']).default('spotify'),
 });
 
 export const detectPlatform = (

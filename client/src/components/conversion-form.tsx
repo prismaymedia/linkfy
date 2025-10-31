@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   convertUrlSchema,
@@ -69,7 +70,7 @@ export default function ConversionForm() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
 
-  const form = useForm<ConvertUrlRequest>({
+  const form = useForm<z.input<typeof convertUrlSchema>>({
     resolver: zodResolver(convertUrlSchema),
     mode: 'onChange', // Enable real-time validation
     defaultValues: {
@@ -83,6 +84,7 @@ export default function ConversionForm() {
       const response = await apiRequest('POST', '/api/convert', {
         url: data.url,
         targetPlatform: data.targetPlatform,
+        convert: true,
       });
       if (!response.ok) {
         const errorData = await response.json();
@@ -210,7 +212,7 @@ export default function ConversionForm() {
       <Card className="bg-white rounded-2xl shadow-lg mb-6 transition-all">
         <CardContent className="p-6">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit as any)} className="space-y-6">
               <FormField
                 control={form.control}
                 name="url"

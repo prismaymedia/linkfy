@@ -99,7 +99,6 @@ export class AppController {
         thumbnailUrl: 'https://i.ytimg.com/vi/YkgkThdzX-8/mqdefault.jpg',
         spotifyUrl: 'https://open.spotify.com/track/12345',
         format: 'mp3',
-        fileUrl: 'https://cdn.example.com/audio/imagine.mp3',
       },
     },
   })
@@ -141,13 +140,6 @@ export class AppController {
             ...ytInfo,
           };
         } else {
-
-          if (typeof (this.conversionService as any).getPreviewFromUrl === 'function') {
-            const preview = await (this.conversionService as any).getPreviewFromUrl(url);
-            res.status(HttpStatus.OK);
-            return { success: true, sourcePlatform, ...preview };
-          }
-
           res.status(HttpStatus.OK);
           return {
             success: true,
@@ -160,7 +152,6 @@ export class AppController {
       const conversionResult = await this.conversionService.getOrCreateConversion({
         url,
         targetPlatform: targetPlatform ?? 'spotify',
-        format,
       }, sourcePlatform);
 
       res.status(HttpStatus.CREATED);

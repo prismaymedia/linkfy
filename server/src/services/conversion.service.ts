@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { YoutubeService } from './youtube.service';
 import { SpotifyService } from './spotify.service';
-import { SpotifyTrackInfo } from '../../../shared/schema';
+import { ConvertUrlRequest, SpotifyTrackInfo } from '../../../shared/schema';
 import { StorageService } from './storage.service';
 
 @Injectable()
@@ -19,75 +19,143 @@ export class ConversionService {
     private readonly storageService: StorageService,
   ) { }
 
-  async getOrCreateConversion(youtubeUrl: string): Promise<SpotifyTrackInfo> {
-    this.logger.log(`🔄 Starting conversion for: ${youtubeUrl}`);
+  async getOrCreateConversion(
+    request: ConvertUrlRequest,
+    sourcePlatform: 'youtube' | 'spotify' | 'deezer' | 'unknown',
+  ): Promise<SpotifyTrackInfo> {
+    try {
+      const { url, targetPlatform } = request;
 
-    // 1️⃣ Validate YouTube URL
-    if (!this.isValidYoutubeUrl(youtubeUrl)) {
-      this.logger.warn(`❌ Invalid YouTube URL: ${youtubeUrl}`);
+      this.logger.log(
+        `🔄 Starting conversion for: ${url} from ${sourcePlatform} to ${targetPlatform}`,
+      );
+
+      if (sourcePlatform === 'youtube') {
+        if (targetPlatform === 'spotify') {
+          // 1️⃣ Validate YouTube URL
+          if (!this.isValidYoutubeUrl(url)) {
+            this.logger.warn(`❌ Invalid YouTube URL: ${url}`);
+            throw new BadRequestException({
+              success: false,
+              error: 'CONVERSION_FAILED',
+              message: 'The YouTube URL is not valid',
+            });
+          }
+
+          // 2️⃣ Check if conversion already exists in storage
+          this.logger.log('🔍 Checking for existing conversion...');
+          const existing = await this.storageService.getConversionByYoutubeUrl(url);
+
+          if (existing?.spotifyUrl) {
+            this.logger.log(`✅ Existing conversion found: ${existing.spotifyUrl}`);
+            return {
+              spotifyUrl: existing.spotifyUrl ?? '',
+              trackName: existing.trackName ?? '',
+              artistName: existing.artistName ?? '',
+              albumName: existing.albumName ?? '',
+              thumbnailUrl: existing.thumbnailUrl ?? '',
+            };
+          }
+
+          this.logger.log('🤔 No existing conversion found.');
+
+          // 3️⃣ Get YouTube info
+          this.logger.log('ℹ️ Getting YouTube info...');
+          const youtubeInfo = await this.youtubeService.getYoutubeInfo(url);
+
+          if (!youtubeInfo) {
+            throw new InternalServerErrorException({
+              success: false,
+              error: 'YOUTUBE_INFO_FAILED',
+              message:
+                'Could not retrieve YouTube information. The video might be private or unavailable.',
+            });
+          }
+
+          this.logger.log(`📺 YouTube info found: ${youtubeInfo.originalTitle}`);
+
+          // 4️⃣ Search track on Spotify
+          this.logger.log('🎶 Searching track on Spotify...');
+          const spotifyInfo = await this.spotifyService.searchSpotifyTrack(
+            youtubeInfo.trackName,
+            youtubeInfo.artistName,
+          );
+
+          if (!spotifyInfo) {
+            throw new BadRequestException({
+              success: false,
+              error: 'SPOTIFY_SEARCH_FAILED',
+              message: `Could not find the song on Spotify: "${youtubeInfo.trackName}" by "${youtubeInfo.artistName}"`,
+            });
+          }
+
+          this.logger.log(`🎤 Spotify track found: ${spotifyInfo.spotifyUrl}`);
+
+          // 5️⃣ Save conversion
+          this.logger.log('💾 Saving conversion...');
+          const conversion = await this.storageService.createConversion({
+            youtubeUrl: url,
+            spotifyUrl: spotifyInfo.spotifyUrl,
+            trackName: spotifyInfo.trackName,
+            artistName: spotifyInfo.artistName,
+            albumName: spotifyInfo.albumName,
+            thumbnailUrl: spotifyInfo.thumbnailUrl,
+          });
+
+          this.logger.log(`💾 Conversion saved: ${conversion.spotifyUrl}`);
+          return spotifyInfo;
+        } else {
+          // YouTube to other platforms (Deezer, Apple) - Not yet supported
+          this.logger.warn(
+            `Conversion from YouTube to ${targetPlatform} is not yet supported.`,
+          );
+          throw new BadRequestException({
+            success: false,
+            error: 'UNSUPPORTED_CONVERSION',
+            message: `Conversion from 'youtube' to '${targetPlatform}' is not yet supported.`,
+          });
+        }
+      } else if (sourcePlatform === 'spotify') {
+        this.logger.warn(
+          `Conversion from Spotify to ${targetPlatform} is not yet supported.`,
+        );
+        throw new BadRequestException({
+          success: false,
+          error: 'UNSUPPORTED_CONVERSION',
+          message: `Conversion from 'spotify' to '${targetPlatform}' is not yet supported.`,
+        });
+      } else if (sourcePlatform === 'deezer') {
+        this.logger.warn(
+          `Conversion from Deezer to ${targetPlatform} is not yet supported.`,
+        );
+        throw new BadRequestException({
+          success: false,
+          error: 'UNSUPPORTED_CONVERSION',
+          message: `Conversion from 'deezer' to '${targetPlatform}' is not yet supported.`,
+        });
+      } else if (sourcePlatform === 'unknown') {
+        this.logger.warn(`Unknown source platform for URL: ${url}`);
+        throw new BadRequestException({
+          success: false,
+          error: 'UNKNOWN_SOURCE_PLATFORM',
+          message: 'Could not detect source platform from the provided URL.',
+        });
+      }
+
       throw new BadRequestException({
         success: false,
-        error: 'CONVERSION_FAILED',
-        message: 'The YouTube URL is not valid',
+        error: 'UNSUPPORTED_CONVERSION',
+        message: `Conversion from ${sourcePlatform} to ${targetPlatform} is not yet supported.`,
       });
+    } catch (error) {
+      this.logger.error('🔥 UNHANDLED ERROR IN CONVERSION:', error);
+      throw error;
     }
-
-    // 2️⃣ Check if conversion already exists in storage
-    const existing = await this.storageService.getConversionByYoutubeUrl(
-      youtubeUrl,
-    );
-    if (existing?.spotifyUrl) {
-      this.logger.log(`✅ Existing conversion found: ${existing.spotifyUrl}`);
-      return {
-        spotifyUrl: existing.spotifyUrl ?? '',
-        trackName: existing.trackName ?? '',
-        artistName: existing.artistName ?? '',
-        albumName: existing.albumName ?? '',
-        thumbnailUrl: existing.thumbnailUrl ?? '',
-      };
-    }
-
-    // 3️⃣ Get YouTube info
-    const youtubeInfo = await this.youtubeService.getYoutubeInfo(youtubeUrl);
-    if (!youtubeInfo) {
-      throw new InternalServerErrorException({
-        success: false,
-        error: 'YOUTUBE_INFO_FAILED',
-        message:
-          'Could not retrieve YouTube information. The video might be private or unavailable.',
-      });
-    }
-
-    // 4️⃣ Search track on Spotify
-    const spotifyInfo = await this.spotifyService.searchSpotifyTrack(
-      youtubeInfo.trackName,
-      youtubeInfo.artistName,
-    );
-    if (!spotifyInfo) {
-      throw new BadRequestException({
-        success: false,
-        error: 'SPOTIFY_SEARCH_FAILED',
-        message: `Could not find the song on Spotify: "${youtubeInfo.trackName}" by "${youtubeInfo.artistName}"`,
-      });
-    }
-
-    // 5️⃣ Save conversion
-    const conversion = await this.storageService.createConversion({
-      youtubeUrl,
-      spotifyUrl: spotifyInfo.spotifyUrl,
-      trackName: spotifyInfo.trackName,
-      artistName: spotifyInfo.artistName,
-      albumName: spotifyInfo.albumName,
-      thumbnailUrl: spotifyInfo.thumbnailUrl,
-    });
-
-    this.logger.log(`💾 Conversion saved: ${conversion.spotifyUrl}`);
-    return spotifyInfo;
   }
 
   private isValidYoutubeUrl(url: string): boolean {
     const regex =
-      /^(https?:\/\/)?(music\.)?(www\.)?(youtube\.com|youtu\.be|youtu\.be\/|music\.youtube\.com\/watch\?v=)([a-zA-Z0-9_-]{11})(&[a-zA-Z0-9_=&-]+)?$/;
+      /^https?:\/\/((m|music|www)\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11}).*$/;
     return regex.test(url);
   }
 }

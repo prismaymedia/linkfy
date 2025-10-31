@@ -3,7 +3,7 @@ import { http, HttpResponse } from 'msw';
 type YoutubeBody = { youtubeUrl: string; convert?: boolean };
 
 export const handlers = [
-  http.post('/api/youtube-convert', async ({ request }) => {
+  http.post('/api/convert', async ({ request }) => {
     const { youtubeUrl, convert } = (await request.json()) as YoutubeBody;
 
     if (!youtubeUrl || !youtubeUrl.includes('music.youtube.com')) {

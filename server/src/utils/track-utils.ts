@@ -26,6 +26,8 @@ export function parseTrackInfo(title: string, channelTitle: string) {
     .replace(/\s*\[Lyric.*?\]/gi, '')
     .replace(/\s*\(HD\)/gi, '')
     .replace(/\s*\[HD\]/gi, '')
+    .replace(/\s*\(4K.*?\)/gi, '')
+    .replace(/\s*\[4K.*?\]/gi, '')
     .trim();
 
   return { trackName, artistName };

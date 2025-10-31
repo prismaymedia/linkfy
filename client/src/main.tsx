@@ -6,11 +6,22 @@ import './i18n';
 import { Router } from 'wouter';
 import * as Sentry from '@sentry/react';
 
-Sentry.init({
-  dsn: 'https://002a8e60e60a3ccf12fc65778c1bf56b@o4509986795356160.ingest.us.sentry.io/4509986800533504',
-  tracesSampleRate: 0.2,
-  sendDefaultPii: false,
-});
+// Initialize Sentry with error handling
+// If Sentry DSN is not configured or fails to initialize, the app will continue to run
+try {
+  const sentryDsn = import.meta.env.VITE_SENTRY_DSN;
+  
+  if (sentryDsn) {
+    Sentry.init({
+      dsn: sentryDsn,
+      tracesSampleRate: 0.2,
+      sendDefaultPii: false,
+    });
+  }
+} catch (error) {
+  // Silently fail - Sentry is optional
+  console.warn('Failed to initialize Sentry:', error);
+}
 
 createRoot(document.getElementById('root')!).render(
   <Router base="/">

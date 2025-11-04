@@ -5,6 +5,7 @@ import './i18n';
 
 import { Router } from 'wouter';
 import * as Sentry from '@sentry/react';
+import { browserTracingIntegration } from '@sentry/react';
 
 // Initialize Sentry with error handling
 // If Sentry DSN is not configured or fails to initialize, the app will continue to run
@@ -17,6 +18,13 @@ try {
       tracesSampleRate: 0.2,
       sendDefaultPii: false,
       environment: import.meta.env.MODE,
+      integrations: [browserTracingIntegration()],
+      tracePropagationTargets: [
+        'localhost',
+        /^\//,
+        // Match your backend API URL
+        new RegExp(`^${import.meta.env.VITE_API_URL}`),
+      ],
     });
 
     // Send a test error to Sentry only on first app load

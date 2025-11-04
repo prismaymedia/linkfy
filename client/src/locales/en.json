@@ -51,11 +51,15 @@
     "invalidUrl": "Invalid URL",
     "duplicateUrlWarning": "This URL has already been converted. Enter a different YouTube Music URL to convert.",
     "converting": "Converting...",
+    "converted": "Converted",
+    "convertSingle": "Convert",
     "urlAlreadyConverted": "URL Already Converted",
     "convertButton": "Convert to Spotify"
   },
   "preview": {
-    "youtubeTrack": "YouTube Track Preview",
+    "youtubeTrack": "YouTube Preview",
+    "youtubePlaylist": "YouTube Preview",
+    "youtubeAlbum": "YouTube Preview",
     "original": "Original"
   },
   "demo": {

@@ -23,7 +23,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { SiYoutubemusic } from 'react-icons/si';
-import { Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Loader2, AlertCircle, CheckCircle2, Trash2 } from 'lucide-react';
 import ResultCard, { ResultCardSkeleton } from './result-card';
 import { useTranslation } from 'react-i18next';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -64,6 +64,7 @@ export default function ConversionForm() {
   );
   const [isLoadingPreview, setIsLoadingPreview] = useState(false);
   const [lastProcessedUrl, setLastProcessedUrl] = useState<string>('');
+  const [isInputHovered, setIsInputHovered] = useState(false);
 
   const { toast } = useToast();
   const { t } = useTranslation();
@@ -176,6 +177,19 @@ export default function ConversionForm() {
     convertMutation.mutate(data);
   };
 
+  const clearForm = () => {
+    form.reset();
+    setSpotifyResult(null);
+    setYoutubePreview(null);
+    setIsLoadingPreview(false);
+    setLastProcessedUrl('');
+    toast({
+      title: t('form.inputCleared'),
+      description: '',
+      variant: 'info',
+    });
+  };
+
   const [cacheTick, setCacheTick] = useState(0);
   useEffect(() => {
     const unsubscribe = queryClient.getQueryCache().subscribe(() => {
@@ -213,7 +227,18 @@ export default function ConversionForm() {
                       {t('form.youtubeUrlLabel')}
                     </FormLabel>
                     <FormControl>
-                      <div className="relative">
+                      <div 
+                        className="relative"
+                        onMouseEnter={() => setIsInputHovered(true)}
+                        onMouseLeave={() => setIsInputHovered(false)}
+                        onTouchStart={() => setIsInputHovered(true)}
+                        onTouchEnd={(e) => {
+                          const target = e.target as HTMLElement;
+                          if (!target.closest('button[type="button"]')) {
+                            setTimeout(() => setIsInputHovered(false), 100);
+                          }
+                        }}
+                      >
                         <Input
                           {...field}
                           type="url"
@@ -221,12 +246,14 @@ export default function ConversionForm() {
                           disabled={
                             convertMutation.isPending || isLoadingPreview
                           }
-                          className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-spotify focus:border-spotify transition-colors duration-200 pr-10 ${
+                          className={`w-full px-4 py-3 border rounded-lg focus:ring-spotify focus:border-spotify transition-colors duration-200 ${
                             fieldState.error
-                              ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                              ? 'border-red-500 focus:ring-red-500 focus:border-red-500 pr-10'
                               : isFieldValid
-                                ? 'border-green-500 focus:ring-green-500 focus:border-green-500'
-                                : 'border-gray-300'
+                                ? 'border-green-500 focus:ring-green-500 focus:border-green-500 pr-10'
+                                : isInputHovered && fieldState.isDirty
+                                  ? 'border-gray-300 pr-[52px]'
+                                  : 'border-gray-300 pr-10'
                           }`}
                           aria-invalid={!!fieldState.error}
                           aria-describedby={
@@ -235,19 +262,44 @@ export default function ConversionForm() {
                               : 'youtubeUrl-hint'
                           }
                         />
-                        {isLoadingPreview ? (
+                        {!isLoadingPreview && isInputHovered && fieldState.isDirty && (
+                          <AnimatePresence>
+                            <motion.button
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                clearForm();
+                              }}
+                              onMouseDown={(e) => e.preventDefault()}
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              exit={{ opacity: 0, scale: 0.8 }}
+                              transition={{ duration: 0.2 }}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 active:text-gray-800 transition-colors duration-200 focus:outline-none focus-visible:outline-none focus:ring-2 min-w-[40px] min-h-[40px] touch-manipulation select-none"
+                              aria-label={t('form.clearInput')}
+                              title={t('form.clearInput')}
+                              tabIndex={-1}
+                            >
+                              <Trash2 className="h-5 w-5" />
+                            </motion.button>
+                          </AnimatePresence>
+                        )}
+                        {isLoadingPreview && (
                           <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 animate-spin text-gray-400" />
-                        ) : isFieldValid ? (
+                        )}
+                        {!isLoadingPreview && !isInputHovered && isFieldValid && (
                           <CheckCircle2
                             className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-green-500"
                             aria-label={t('form.validUrl')}
                           />
-                        ) : fieldState.error && fieldState.isDirty ? (
+                        )}
+                        {!isLoadingPreview && !isInputHovered && fieldState.error && fieldState.isDirty && (
                           <AlertCircle
                             className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500"
                             aria-label={t('form.invalidUrl')}
                           />
-                        ) : (
+                        )}
+                        {!isLoadingPreview && !isInputHovered && !fieldState.isDirty && (
                           <SiYoutubemusic className="absolute right-3 top-1/2 -translate-y-1/2 text-youtube opacity-50" />
                         )}
                       </div>

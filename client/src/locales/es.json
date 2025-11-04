@@ -52,7 +52,9 @@
     "duplicateUrlWarning": "Esta URL ya fue convertida. Ingresa una URL diferente de YouTube Music para convertir.",
     "converting": "Convirtiendo...",
     "urlAlreadyConverted": "URL ya convertida",
-    "convertButton": "Convertir a Spotify"
+    "convertButton": "Convertir a Spotify",
+    "clearInput": "Limpiar campo",
+    "inputCleared": "Campo borrado"
   },
   "preview": {
     "youtubeTrack": "Vista previa de la pista de YouTube",

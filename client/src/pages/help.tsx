@@ -81,19 +81,19 @@ export default function Help() {
                   <div className="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-sm">
                     1
                   </div>
-                  <div>
+                  <div className="flex-1 min-w-0">
                     <h3 className="font-medium">
                       {t('help.step1.title', 'Copy YouTube Music URL')}
                     </h3>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 mt-1">
                       {t(
                         'help.step1.desc',
                         'Go to YouTube Music and copy the URL of the song you want to convert',
                       )}
                     </p>
                     <div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
-                      <SiYoutubemusic className="h-4 w-4 text-youtube" />
-                      <code className="bg-gray-100 px-2 py-1 rounded text-xs">
+                      <SiYoutubemusic className="h-4 w-4 text-youtube flex-shrink-0" />
+                      <code className="bg-gray-100 px-2 py-1 rounded text-xs break-all">
                         https://music.youtube.com/watch?v=...
                       </code>
                     </div>
@@ -104,11 +104,11 @@ export default function Help() {
                   <div className="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-sm">
                     2
                   </div>
-                  <div>
+                  <div className="flex-1 min-w-0">
                     <h3 className="font-medium">
                       {t('help.step2.title', 'Paste and Convert')}
                     </h3>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 mt-1">
                       {t(
                         'help.step2.desc',
                         'Paste the URL in Linkfy and click "Convert to Spotify"',
@@ -121,19 +121,19 @@ export default function Help() {
                   <div className="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-sm">
                     3
                   </div>
-                  <div>
+                  <div className="flex-1 min-w-0">
                     <h3 className="font-medium">
                       {t('help.step3.title', 'Get Spotify Link')}
                     </h3>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 mt-1">
                       {t(
                         'help.step3.desc',
                         'Copy the generated Spotify URL and enjoy your music',
                       )}
                     </p>
                     <div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
-                      <SiSpotify className="h-4 w-4 text-spotify" />
-                      <code className="bg-gray-100 px-2 py-1 rounded text-xs">
+                      <SiSpotify className="h-4 w-4 text-spotify flex-shrink-0" />
+                      <code className="bg-gray-100 px-2 py-1 rounded text-xs break-all">
                         https://open.spotify.com/track/...
                       </code>
                     </div>
@@ -161,9 +161,8 @@ export default function Help() {
                     >
                       <span className="font-medium">{faq.question}</span>
                       <ChevronDown
-                        className={`h-4 w-4 transition-transform ${
-                          openFaq === index ? 'rotate-180' : ''
-                        }`}
+                        className={`h-4 w-4 transition-transform ${openFaq === index ? 'rotate-180' : ''
+                          }`}
                       />
                     </button>
                     {openFaq === index && (

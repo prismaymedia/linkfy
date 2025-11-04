@@ -29,44 +29,44 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 overflow-x-hidden">
       <Header />
       
-      <main className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
+      <main className="container mx-auto px-4 py-8 sm:py-12 sm:px-6 lg:px-8">
         {/* Hero Section */}
-        <div className="text-center mb-16 pt-8">
-          <div className="flex items-center justify-center mb-6">
-            <SiYoutubemusic className="text-youtube text-5xl mr-3" />
-            <ArrowRight className="text-gray-400 mx-3" size={32} />
-            <SiSpotify className="text-spotify text-5xl ml-3" />
+        <div className="text-center mb-12 sm:mb-16 pt-4 sm:pt-8">
+          <div className="flex items-center justify-center mb-4 sm:mb-6">
+            <SiYoutubemusic className="text-youtube text-3xl sm:text-4xl md:text-5xl mr-2 sm:mr-3" />
+            <ArrowRight className="text-gray-400 mx-2 sm:mx-3" size={24} />
+            <SiSpotify className="text-spotify text-3xl sm:text-4xl md:text-5xl ml-2 sm:ml-3" />
           </div>
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 px-2">
             {t('home.title', 'Convert Music Links Instantly')}
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto px-4">
             {t('home.subtitle', 'Convert YouTube Music links to Spotify seamlessly. Fast, accurate, and free.')}
           </p>
           <Button
             onClick={handleGetStarted}
             size="lg"
-            className="text-lg px-8 py-6"
+            className="text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 touch-target"
           >
             {t('home.getStarted', 'Get Started')}
           </Button>
         </div>
 
         {/* Features Section */}
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-12 sm:mb-16">
           <Card>
-            <CardContent className="pt-6">
+            <CardContent className="pt-4 sm:pt-6 p-4 sm:p-6">
               <div className="flex flex-col items-center text-center">
-                <div className="mb-4 p-3 bg-blue-100 rounded-full">
-                  <Zap className="h-8 w-8 text-blue-600" />
+                <div className="mb-3 sm:mb-4 p-2 sm:p-3 bg-blue-100 rounded-full">
+                  <Zap className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">
+                <h3 className="text-lg sm:text-xl font-semibold mb-2">
                   {t('home.feature1.title', 'Lightning Fast')}
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-sm sm:text-base text-gray-600">
                   {t('home.feature1.desc', 'Convert your music links in seconds with our optimized conversion engine.')}
                 </p>
               </div>
@@ -74,31 +74,31 @@ export default function Home() {
           </Card>
 
           <Card>
-            <CardContent className="pt-6">
+            <CardContent className="pt-4 sm:pt-6 p-4 sm:p-6">
               <div className="flex flex-col items-center text-center">
-                <div className="mb-4 p-3 bg-green-100 rounded-full">
-                  <Music className="h-8 w-8 text-green-600" />
+                <div className="mb-3 sm:mb-4 p-2 sm:p-3 bg-green-100 rounded-full">
+                  <Music className="h-6 w-6 sm:h-8 sm:w-8 text-green-600" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">
+                <h3 className="text-lg sm:text-xl font-semibold mb-2">
                   {t('home.feature2.title', 'High Accuracy')}
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-sm sm:text-base text-gray-600">
                   {t('home.feature2.desc', 'Advanced matching algorithms ensure you get the right track every time.')}
                 </p>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardContent className="pt-6">
+          <Card className="sm:col-span-2 lg:col-span-1">
+            <CardContent className="pt-4 sm:pt-6 p-4 sm:p-6">
               <div className="flex flex-col items-center text-center">
-                <div className="mb-4 p-3 bg-purple-100 rounded-full">
-                  <Shield className="h-8 w-8 text-purple-600" />
+                <div className="mb-3 sm:mb-4 p-2 sm:p-3 bg-purple-100 rounded-full">
+                  <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-purple-600" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">
+                <h3 className="text-lg sm:text-xl font-semibold mb-2">
                   {t('home.feature3.title', 'Privacy Focused')}
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-sm sm:text-base text-gray-600">
                   {t('home.feature3.desc', 'We don\'t store your URLs or personal data. Your privacy is our priority.')}
                 </p>
               </div>
@@ -107,48 +107,48 @@ export default function Home() {
         </div>
 
         {/* How It Works Section */}
-        <div className="max-w-4xl mx-auto mb-16">
-          <h2 className="text-3xl font-bold text-center mb-12">
+        <div className="max-w-4xl mx-auto mb-12 sm:mb-16">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12 px-4">
             {t('home.howItWorks', 'How It Works')}
           </h2>
-          <div className="space-y-8">
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
+          <div className="space-y-6 sm:space-y-8 px-4">
+            <div className="flex items-start gap-3 sm:gap-4">
+              <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm sm:text-base">
                 1
               </div>
               <div>
-                <h3 className="text-xl font-semibold mb-2">
+                <h3 className="text-lg sm:text-xl font-semibold mb-2">
                   {t('home.step1.title', 'Copy YouTube Music URL')}
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-sm sm:text-base text-gray-600">
                   {t('home.step1.desc', 'Find the song on YouTube Music and copy its URL from your browser.')}
                 </p>
               </div>
             </div>
 
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
+            <div className="flex items-start gap-3 sm:gap-4">
+              <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm sm:text-base">
                 2
               </div>
               <div>
-                <h3 className="text-xl font-semibold mb-2">
+                <h3 className="text-lg sm:text-xl font-semibold mb-2">
                   {t('home.step2.title', 'Paste and Convert')}
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-sm sm:text-base text-gray-600">
                   {t('home.step2.desc', 'Paste the URL into Linkfy and click the convert button.')}
                 </p>
               </div>
             </div>
 
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
+            <div className="flex items-start gap-3 sm:gap-4">
+              <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm sm:text-base">
                 3
               </div>
               <div>
-                <h3 className="text-xl font-semibold mb-2">
+                <h3 className="text-lg sm:text-xl font-semibold mb-2">
                   {t('home.step3.title', 'Get Spotify Link')}
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-sm sm:text-base text-gray-600">
                   {t('home.step3.desc', 'Copy the generated Spotify URL and enjoy your music on Spotify.')}
                 </p>
               </div>
@@ -157,18 +157,18 @@ export default function Home() {
         </div>
 
         {/* CTA Section */}
-        <div className="text-center py-12 bg-blue-600 rounded-lg text-white">
-          <h2 className="text-3xl font-bold mb-4">
+        <div className="text-center py-8 sm:py-12 bg-blue-600 rounded-lg text-white mx-4 sm:mx-0">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4 px-4">
             {t('home.cta.title', 'Ready to Convert Your Music?')}
           </h2>
-          <p className="text-xl mb-6">
+          <p className="text-base sm:text-lg md:text-xl mb-4 sm:mb-6 px-4">
             {t('home.cta.subtitle', 'Join thousands of users converting music links every day.')}
           </p>
           <Button
             onClick={handleGetStarted}
             size="lg"
             variant="secondary"
-            className="text-lg px-8 py-6"
+            className="text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 touch-target"
           >
             {t('home.getStarted', 'Get Started')}
           </Button>

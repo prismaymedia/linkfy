@@ -15,7 +15,8 @@ try {
   if (sentryDsn) {
     Sentry.init({
       dsn: sentryDsn,
-      tracesSampleRate: 0.2,
+      // Use 1.0 for development to capture all transactions, reduce for production
+      tracesSampleRate: import.meta.env.MODE === 'production' ? 0.2 : 1.0,
       sendDefaultPii: false,
       environment: import.meta.env.MODE,
       integrations: [browserTracingIntegration()],

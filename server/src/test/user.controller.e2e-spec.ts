@@ -39,8 +39,8 @@ describe('User endpoints (e2e)', () => {
         await app.close();
     });
 
-    it('GET /api/v1/users/info should return current user info (200)', async () => {
-        const res = await request(app.getHttpServer()).get('/api/v1/users/info');
+    it('GET /api/users/info should return current user info (200)', async () => {
+        const res = await request(app.getHttpServer()).get('/api/users/info');
 
         expect(res.status).toBe(200);
         expect(res.body).toMatchObject({

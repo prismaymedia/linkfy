@@ -5,7 +5,7 @@ import { CurrentUser } from '../../auth/user.decorator';
 import { User } from '@supabase/supabase-js';
 
 @ApiTags('Users')
-@Controller('api/v1/users')
+@Controller('api/users')
 @UseGuards(SupabaseAuthGuard)
 export class UserController {
     @Get('info')

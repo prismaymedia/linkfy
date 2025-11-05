@@ -54,7 +54,9 @@
     "converted": "Converted",
     "convertSingle": "Convert",
     "urlAlreadyConverted": "URL Already Converted",
-    "convertButton": "Convert to Spotify"
+    "convertButton": "Convert to Spotify",
+    "clearInput": "Clear input",
+    "inputCleared": "Input cleared"
   },
   "preview": {
     "youtubeTrack": "YouTube Preview",

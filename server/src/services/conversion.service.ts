@@ -166,7 +166,7 @@ export class ConversionService {
 
   private isValidYoutubeUrl(url: string): boolean {
     const regex =
-      /^(https?:\/\/)?(music\.)?(www\.)?(youtube\.com|youtu\.be|music\.youtube\.com)\/(watch\?v=|playlist\?list=|browse\/|[\w-]{11})/;
+      /^(https?:\/\/)?(m\.)?(music\.)?(www\.)?(youtube\.com|youtu\.be|music\.youtube\.com)\/(watch\?v=|playlist\?list=|browse\/|[\w-]{11})/;
     return regex.test(url);
   }
 }

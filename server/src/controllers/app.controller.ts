@@ -130,8 +130,20 @@ export class AppController {
       this.logger.log(`Detected source platform: ${sourcePlatform} for url: ${url}`);
 
       if (convert === false) {
-
         if (sourcePlatform === 'youtube') {
+          const parsedUrl = this.youtubeService.parseUrl(url);
+
+          if (parsedUrl.type === YouTubeLinkType.PLAYLIST) {
+            const playlistInfo = await this.youtubeService.getPlaylistTracks(url);
+            res.status(HttpStatus.OK);
+            return {
+              success: true,
+              sourcePlatform,
+              type: 'playlist',
+              ...playlistInfo,
+            };
+          }
+
           const ytInfo = await this.youtubeService.getYoutubeInfo(url);
           res.status(HttpStatus.OK);
           return {

@@ -329,10 +329,9 @@ export default function ConversionForm() {
                               animate={{ opacity: 1, scale: 1 }}
                               exit={{ opacity: 0, scale: 0.8 }}
                               transition={{ duration: 0.2 }}
-                              className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 active:text-gray-800 transition-colors duration-200 focus:outline-none focus-visible:outline-none focus:ring-2 min-w-[40px] min-h-[40px] touch-manipulation select-none"
+                              className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 active:text-gray-800 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus:ring-gray-500 min-w-[40px] min-h-[40px] touch-manipulation select-none"
                               aria-label={t('form.clearInput')}
                               title={t('form.clearInput')}
-                              tabIndex={-1}
                             >
                               <Trash2 className="h-5 w-5" />
                             </motion.button>

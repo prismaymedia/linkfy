@@ -191,7 +191,7 @@ export class SpotifyService {
 
       const similarity =
         commonWords.length / Math.max(youtubeWords.length, spotifyWords.length);
-      return similarity >= 0.8;
+      return similarity >= 0.6;
     }
 
     const commonWords = filteredYoutubeWords.filter((word) =>
@@ -203,7 +203,7 @@ export class SpotifyService {
     const similarity =
       commonWords.length /
       Math.max(filteredYoutubeWords.length, filteredSpotifyWords.length);
-    return similarity >= 0.8;
+    return similarity >= 0.6;
   }
 
   private calculateArtistNameSimilarity(

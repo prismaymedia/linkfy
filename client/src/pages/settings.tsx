@@ -77,46 +77,52 @@ export default function Settings() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="auto-convert" className="text-sm font-medium">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1">
+                  <Label htmlFor="auto-convert" className="text-sm font-medium text-gray-900">
                     {t('settings.autoConvert', 'Auto Convert')}
                   </Label>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-500 mt-1">
                     {t(
                       'settings.autoConvertDesc',
                       'Automatically convert URLs when pasted',
                     )}
                   </p>
                 </div>
-                <Switch
-                  id="auto-convert"
-                  checked={settings.autoConvert}
-                  onCheckedChange={(checked) =>
-                    handleSettingChange('autoConvert', checked)
-                  }
-                />
+                <div className="flex-shrink-0">
+                  <Switch
+                    id="auto-convert"
+                    checked={settings.autoConvert}
+                    onCheckedChange={(checked) =>
+                      handleSettingChange('autoConvert', checked)
+                    }
+                    className="scale-110"
+                  />
+                </div>
               </div>
 
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="save-history" className="text-sm font-medium">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1">
+                  <Label htmlFor="save-history" className="text-sm font-medium text-gray-900">
                     {t('settings.saveHistory', 'Save History')}
                   </Label>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-500 mt-1">
                     {t(
                       'settings.saveHistoryDesc',
                       'Keep a record of your conversions',
                     )}
                   </p>
                 </div>
-                <Switch
-                  id="save-history"
-                  checked={settings.saveHistory}
-                  onCheckedChange={(checked) =>
-                    handleSettingChange('saveHistory', checked)
-                  }
-                />
+                <div className="flex-shrink-0">
+                  <Switch
+                    id="save-history"
+                    checked={settings.saveHistory}
+                    onCheckedChange={(checked) =>
+                      handleSettingChange('saveHistory', checked)
+                    }
+                    className="scale-110"
+                  />
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -130,23 +136,26 @@ export default function Settings() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="dark-mode" className="text-sm font-medium">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1">
+                  <Label htmlFor="dark-mode" className="text-sm font-medium text-gray-900">
                     {t('settings.darkMode', 'Dark Mode')}
                   </Label>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-500 mt-1">
                     {t('settings.darkModeDesc', 'Use dark theme (coming soon)')}
                   </p>
                 </div>
-                <Switch
-                  id="dark-mode"
-                  checked={settings.darkMode}
-                  onCheckedChange={(checked) =>
-                    handleSettingChange('darkMode', checked)
-                  }
-                  disabled
-                />
+                <div className="flex-shrink-0">
+                  <Switch
+                    id="dark-mode"
+                    checked={settings.darkMode}
+                    onCheckedChange={(checked) =>
+                      handleSettingChange('darkMode', checked)
+                    }
+                    disabled
+                    className="scale-110"
+                  />
+                </div>
               </div>
 
               <div>
@@ -192,7 +201,7 @@ export default function Settings() {
                 <Label className="text-sm font-medium mb-2 block">
                   {t('settings.selectLanguage', 'Select Language')}
                 </Label>
-                <LanguageSwitcher />
+                <LanguageSwitcher variant="settings" />
                 <p className="text-sm text-gray-500 mt-2">
                   {t(
                     'settings.languageDesc',
@@ -212,28 +221,31 @@ export default function Settings() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1">
                   <Label
                     htmlFor="notifications"
-                    className="text-sm font-medium"
+                    className="text-sm font-medium text-gray-900"
                   >
                     {t('settings.enableNotifications', 'Enable Notifications')}
                   </Label>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-500 mt-1">
                     {t(
                       'settings.notificationsDesc',
                       'Get notified about conversion results',
                     )}
                   </p>
                 </div>
-                <Switch
-                  id="notifications"
-                  checked={settings.notifications}
-                  onCheckedChange={(checked) =>
-                    handleSettingChange('notifications', checked)
-                  }
-                />
+                <div className="flex-shrink-0">
+                  <Switch
+                    id="notifications"
+                    checked={settings.notifications}
+                    onCheckedChange={(checked) =>
+                      handleSettingChange('notifications', checked)
+                    }
+                    className="scale-110"
+                  />
+                </div>
               </div>
             </CardContent>
           </Card>

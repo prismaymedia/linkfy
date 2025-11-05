@@ -10,6 +10,7 @@ import { StorageService } from './services/storage.service';
 import { DatabaseModule } from './database/database.module';
 import { PrometheusModule } from './prometheus/prometheus.module';
 import { MetricsInterceptor } from './prometheus/metrics.interceptor';
+import { UserModule } from './user/user.module';
 import grafanaConfig from './config/grafana.config';
 
 @Module({
@@ -21,6 +22,7 @@ import grafanaConfig from './config/grafana.config';
     DatabaseModule,
     SentryModule.forRoot(),
     PrometheusModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [

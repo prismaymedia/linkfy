@@ -51,13 +51,17 @@
     "invalidUrl": "URL inválida",
     "duplicateUrlWarning": "Esta URL ya fue convertida. Ingresa una URL diferente de YouTube Music para convertir.",
     "converting": "Convirtiendo...",
+    "converted": "Convertido",
+    "convertSingle": "Convertir",
     "urlAlreadyConverted": "URL ya convertida",
     "convertButton": "Convertir a Spotify",
     "clearInput": "Limpiar campo",
     "inputCleared": "Campo borrado"
   },
   "preview": {
-    "youtubeTrack": "Vista previa de la pista de YouTube",
+    "youtubeTrack": "Vista previa de YouTube",
+    "youtubePlaylist": "Vista previa de YouTube",
+    "youtubeAlbum": "Vista previa de YouTube",
     "original": "Original"
   },
   "demo": {

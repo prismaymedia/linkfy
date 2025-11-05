@@ -15,7 +15,11 @@ const LANGUAGES: Language[] = [
   { code: 'es', label: 'Español', flag: 'es', dir: 'ltr' },
 ];
 
-export default function LanguageSwitcher() {
+interface LanguageSwitcherProps {
+  variant?: 'header' | 'settings';
+}
+
+export default function LanguageSwitcher({ variant = 'header' }: LanguageSwitcherProps) {
   const { i18n } = useTranslation();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -59,22 +63,55 @@ export default function LanguageSwitcher() {
 
   const currentLang = LANGUAGES.find(l => l.code === i18n.language) || LANGUAGES[0];
 
+  // Different styles based on variant
+  const containerClasses = clsx(
+    "relative inline-block text-left w-full",
+    variant === "header" ? "sm:w-auto" : "max-w-xs"
+  );
+
+  const buttonClasses = clsx(
+    "flex items-center font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-gray-300 transition-colors w-full",
+    variant === "header"
+      ? "gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 text-xs sm:text-sm touch-target-sm sm:w-auto min-w-0"
+      : "gap-2 px-3 py-2 text-sm justify-between"
+  );
+
+  const dropdownClasses = clsx(
+    "absolute z-50 mt-1 bg-white border border-gray-200 rounded-md shadow-lg",
+    variant === "header"
+      ? "right-0 sm:right-0 w-40"
+      : "left-0 w-full"
+  );
+
+  const showCode = variant === 'header';
+
   return (
-    <div className="relative inline-block text-left" ref={dropdownRef}>
+    <div className={containerClasses} ref={dropdownRef}>
       <button
         onClick={() => setOpen(prev => !prev)}
         onKeyDown={handleKeyDown}
-        className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-gray-300 transition-colors"
+        className={buttonClasses}
         aria-haspopup="true"
         aria-expanded={open}
       >
-        <span className={clsx('fi', `fi-${currentLang.flag}`, 'text-base')}></span>
-        <span className="uppercase text-xs">{currentLang.code}</span>
+        <div className="flex items-center gap-2">
+          <span className={clsx('fi', `fi-${currentLang.flag}`, 'text-sm sm:text-base flex-shrink-0')}></span>
+          {showCode ? (
+            <span className="text-xs uppercase">{currentLang.code}</span>
+          ) : (
+            <span className="text-sm">{currentLang.label}</span>
+          )}
+        </div>
+        {variant === 'settings' && (
+          <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        )}
       </button>
 
       {open && (
         <ul
-          className="absolute right-0 z-10 mt-1 w-40 bg-white border border-gray-200 rounded-md shadow-lg"
+          className={dropdownClasses}
           role="menu"
         >
           {LANGUAGES.map((lang) => (
@@ -82,13 +119,13 @@ export default function LanguageSwitcher() {
               <button
                 onClick={() => handleLanguageChange(lang)}
                 className={clsx(
-                  'w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center gap-2',
+                  'w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center gap-2 touch-target-sm',
                   i18n.language === lang.code && 'bg-gray-50 font-semibold'
                 )}
                 role="menuitem"
               >
-                <span className={clsx('fi', `fi-${lang.flag}`, 'text-base')}></span>
-                <span>{lang.label}</span>
+                <span className={clsx('fi', `fi-${lang.flag}`, 'text-sm flex-shrink-0')}></span>
+                <span className="truncate">{lang.label}</span>
               </button>
             </li>
           ))}

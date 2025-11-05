@@ -21,7 +21,7 @@ import {
 import { ConversionService } from '../services/conversion.service';
 import { YoutubeService, YouTubeLinkType } from '../services/youtube.service';
 import { ZodError, z } from 'zod';
-import { convertUrlSchema } from '../../../shared/schema';
+import { convertUrlSchema, detectPlatform } from '../../../shared/schema';
 import * as Sentry from '@sentry/nestjs';
 import { Response } from 'express';
 import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
@@ -39,33 +39,47 @@ export class AppController {
     private readonly youtubeService: YoutubeService,
   ) { }
 
-  @Post('youtube-convert')
+  @Post('convert')
   @ApiOperation({
-    summary: 'Get information from YouTube and convert it to Spotify',
+    summary: 'Universal convert endpoint: detect source platform and convert metadata/audio',
   })
   @ApiBody({
     schema: {
       type: 'object',
       properties: {
-        youtubeUrl: {
+        url: {
           type: 'string',
           example: 'https://music.youtube.com/watch?v=YkgkThdzX-8',
-          description: 'YouTube Music URL to process',
+          description: 'Music URL (YouTube, Spotify, Deezer, etc.) to process',
+        },
+        targetPlatform: {
+          type: 'string',
+          enum: ['spotify', 'deezer', 'apple'],
+          description: 'Target platform for conversion / lookup (default: spotify)',
+          default: 'spotify',
         },
         convert: {
           type: 'boolean',
           description:
-            'If true (default), also convert to Spotify. If false, only return YouTube info.',
+            'If true (default), perform conversion (create or return converted resource). If false, only return preview info.',
           default: true,
         },
+        format: {
+          type: 'string',
+          enum: ['mp3', 'wav', 'flac'],
+          description: 'Desired audio output format (if audio conversion is supported).',
+          default: 'mp3',
+        },
       },
-      required: ['youtubeUrl'],
+      required: ['url'],
     },
   })
   @ApiOkResponse({
-    description: 'YouTube info retrieved (preview mode, convert=false)',
+    description: 'Preview info retrieved (convert=false)',
     schema: {
       example: {
+        success: true,
+        sourcePlatform: 'youtube',
         trackName: 'Imagine',
         artistName: 'John Lennon',
         thumbnailUrl: 'https://i.ytimg.com/vi/YkgkThdzX-8/mqdefault.jpg',
@@ -74,136 +88,92 @@ export class AppController {
     },
   })
   @ApiCreatedResponse({
-    description: 'Conversion completed successfully (convert=true or omitted)',
+    description: 'Conversion completed successfully (convert=true)',
     schema: {
       example: {
+        success: true,
+        sourcePlatform: 'youtube',
+        targetPlatform: 'spotify',
         trackName: 'Imagine',
         artistName: 'John Lennon',
         thumbnailUrl: 'https://i.ytimg.com/vi/YkgkThdzX-8/mqdefault.jpg',
-        originalTitle: 'John Lennon - Imagine (Remastered)',
         spotifyUrl: 'https://open.spotify.com/track/12345',
+        format: 'mp3',
       },
     },
   })
   @ApiBadRequestResponse({
-    description: 'Invalid YouTube Music URL',
-    schema: {
-      example: {
-        message: 'Please enter a valid YouTube Music URL',
-      },
-    },
+    description: 'Invalid URL or unsupported format/platform',
   })
   @ApiInternalServerErrorResponse({
     description: 'An error occurred during processing',
-    content: {
-      'application/json': {
-        example: {
-          message: 'Failed to process the request',
-        },
-      },
-    },
   })
-  async youtubeConvert(
+  async convert(
     @Body() body: any,
     @Res({ passthrough: true }) res: Response,
     @CurrentUser() user: User,
   ) {
     try {
-      // Log user information for debugging
-      this.logger.log(`Processing conversion request for user: ${user.email}`);
+      this.logger.log(`Processing conversion request for user: ${user?.email ?? 'anonymous'}`);
 
-      // Validate and coerce input with Zod schema for consistent error messaging
       const RequestSchema = z.object({
-        youtubeUrl: convertUrlSchema.shape.youtubeUrl,
+        url: convertUrlSchema.shape.url,
+        targetPlatform: convertUrlSchema.shape.targetPlatform.optional(),
         convert: z.coerce.boolean().default(true).optional(),
+        format: z.enum(['mp3', 'wav', 'flac']).default('mp3'),
       });
 
-      const { youtubeUrl, convert } = RequestSchema.parse(body);
+      const { url, targetPlatform, convert, format } = RequestSchema.parse(body);
 
-      const parsed = this.youtubeService.parseUrl(youtubeUrl);
-      const isPlaylist = parsed.type === YouTubeLinkType.PLAYLIST;
-      const isAlbum = parsed.type === YouTubeLinkType.ALBUM;
+      const sourcePlatform = detectPlatform(url);
 
-      if (isPlaylist || isAlbum) {
-        this.logger.log(
-          isAlbum ? '💿 Detected album URL' : '🎵 Detected playlist URL',
-        );
-
-        const playlistData =
-          await this.youtubeService.getPlaylistTracks(youtubeUrl);
-
-        if (convert === false) {
-          res.status(HttpStatus.OK);
-          return {
-            type: isAlbum ? 'album' : 'playlist',
-            ...playlistData,
-          };
-        }
-
-        this.logger.log(
-          `🔄 Converting ${playlistData.tracks.length} ${isAlbum ? 'album' : 'playlist'
-          } tracks to Spotify...`,
-        );
-
-        const convertedTracks = [];
-        let convertedCount = 0;
-        let failedCount = 0;
-
-        for (const track of playlistData.tracks) {
-          try {
-            const videoUrl = `https://www.youtube.com/watch?v=${track.videoId}`;
-            const spotifyInfo =
-              await this.conversionService.getOrCreateConversion(videoUrl);
-
-            convertedTracks.push({
-              ...track,
-              spotifyUrl: spotifyInfo.spotifyUrl,
-              converted: true,
-            });
-            convertedCount++;
-          } catch (error) {
-            this.logger.warn(
-              `⚠️ Failed to convert track: ${track.trackName} - ${track.artistName}`,
-            );
-            convertedTracks.push({
-              ...track,
-              spotifyUrl: null,
-              converted: false,
-              error: 'Not found on Spotify',
-            });
-            failedCount++;
-          }
-        }
-
-        this.logger.log(
-          `✅ Conversion complete: ${convertedCount} successful, ${failedCount} failed`,
-        );
-
-        res.status(HttpStatus.CREATED);
-        return {
-          type: isAlbum ? 'album' : 'playlist',
-          playlistTitle: playlistData.playlistTitle,
-          playlistDescription: playlistData.playlistDescription,
-          totalTracks: playlistData.totalTracks,
-          convertedTracks: convertedCount,
-          failedTracks: failedCount,
-          tracks: convertedTracks,
-        };
-      }
-
-      this.logger.log('🎥 Detected single video URL');
-      const youtubeInfo = await this.youtubeService.getYoutubeInfo(youtubeUrl);
+      this.logger.log(`Detected source platform: ${sourcePlatform} for url: ${url}`);
 
       if (convert === false) {
-        res.status(HttpStatus.OK);
-        return youtubeInfo;
+        if (sourcePlatform === 'youtube') {
+          const parsedUrl = this.youtubeService.parseUrl(url);
+
+          if (parsedUrl.type === YouTubeLinkType.PLAYLIST) {
+            const playlistInfo = await this.youtubeService.getPlaylistTracks(url);
+            res.status(HttpStatus.OK);
+            return {
+              success: true,
+              sourcePlatform,
+              type: 'playlist',
+              ...playlistInfo,
+            };
+          }
+
+          const ytInfo = await this.youtubeService.getYoutubeInfo(url);
+          res.status(HttpStatus.OK);
+          return {
+            success: true,
+            sourcePlatform,
+            ...ytInfo,
+          };
+        } else {
+          res.status(HttpStatus.OK);
+          return {
+            success: true,
+            sourcePlatform,
+            url,
+          };
+        }
       }
 
-      const spotifyInfo =
-        await this.conversionService.getOrCreateConversion(youtubeUrl);
+      const conversionResult = await this.conversionService.getOrCreateConversion({
+        url,
+        targetPlatform: targetPlatform ?? 'spotify',
+      }, sourcePlatform);
 
       res.status(HttpStatus.CREATED);
-      return { ...youtubeInfo, spotifyUrl: spotifyInfo.spotifyUrl };
+      return {
+        success: true,
+        sourcePlatform,
+        targetPlatform: targetPlatform ?? 'spotify',
+        format,
+        ...conversionResult,
+      };
     } catch (error: any) {
       try {
         if (user)
@@ -211,25 +181,20 @@ export class AppController {
             id: user.id,
             username: user.email ? user.email.split('@')[0] : undefined,
           });
-        Sentry.setContext('request', { body, route: 'youtube-convert' });
+        Sentry.setContext('request', { body, route: 'convert' });
       } catch (e) { }
 
       Sentry.captureException(error);
 
-      try {
-        if (error?.response?.error) Sentry.captureMessage(`Conversion error: ${error.response.error}`, 'error');
-      } catch (e) { }
-
-      // Validation error (invalid YouTube URL)
       if (error instanceof ZodError) {
         throw new BadRequestException({
           success: false,
-          error: 'CONVERSION_FAILED',
-          message: 'The provided URL is not a valid YouTube link.',
+          error: 'INVALID_INPUT',
+          message: 'Invalid input. Please check `url`, `targetPlatform` and `format`.',
+          details: error.flatten?.() ?? undefined,
         });
       }
 
-      // Errors from ConversionService
       if (error.response?.error === 'YOUTUBE_INFO_FAILED') {
         throw new InternalServerErrorException({
           success: false,
@@ -246,7 +211,7 @@ export class AppController {
         });
       }
 
-      // Default fallback for unexpected errors
+      // Fallback
       throw new InternalServerErrorException({
         success: false,
         error: 'CONVERSION_FAILED',

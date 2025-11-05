@@ -7,7 +7,7 @@ import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
 describe('Authentication (e2e)', () => {
   let app: INestApplication;
 
-  const PROTECTED_ROUTE = '/api/youtube-convert';
+  const PROTECTED_ROUTE = '/api/convert';
 
   describe('when not authenticated', () => {
     beforeAll(async () => {

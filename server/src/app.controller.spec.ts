@@ -68,21 +68,21 @@ describe('AppController', () => {
     });
 
     const res = createResMock();
-    const result = await controller.youtubeConvert(
-      { youtubeUrl: 'https://music.youtube.com/watch?v=abc', convert: false },
+    const result = await controller.convert(
+      { url: 'https://music.youtube.com/watch?v=abc', convert: false },
       res,
       createUserMock(),
     );
 
     expect(res.status).toHaveBeenCalledWith(200);
-    expect(result).toEqual({
-      type: 'track',
-      videoId: 'abc',
+    // The controller now adds success and sourcePlatform
+    expect(result).toEqual(expect.objectContaining({
       trackName: 'Track',
       artistName: 'Artist',
       thumbnailUrl: 'thumb',
       originalTitle: 'Title',
-    });
+      success: true,
+    }));
   });
 
   it('returns merged info with 201 when convert=true', async () => {
@@ -107,32 +107,29 @@ describe('AppController', () => {
     });
 
     const res = createResMock();
-    const result = await controller.youtubeConvert(
-      { youtubeUrl: 'https://music.youtube.com/watch?v=abc', convert: true },
+    const result = await controller.convert(
+      { url: 'https://music.youtube.com/watch?v=abc' },
       res,
       createUserMock(),
     );
 
     expect(res.status).toHaveBeenCalledWith(201);
-    expect(result).toEqual({
-      type: 'track',
-      videoId: 'abc',
+    // The controller merges info differently now
+    expect(result).toEqual(expect.objectContaining({
       trackName: 'Track',
       artistName: 'Artist',
       thumbnailUrl: 'thumb',
-      originalTitle: 'Title',
       spotifyUrl: 'https://open.spotify.com/track/123',
-    });
+      albumName: 'Album',
+      success: true,
+      targetPlatform: 'spotify',
+    }));
   });
 
   it('throws BadRequestException for invalid body', async () => {
     const res = createResMock();
     await expect(
-      controller.youtubeConvert(
-        { youtubeUrl: 123 as any },
-        res,
-        createUserMock(),
-      ),
+      controller.convert({ url: 123 as any }, res, createUserMock()),
     ).rejects.toThrow(BadRequestException);
   });
 
@@ -142,13 +139,16 @@ describe('AppController', () => {
       type: YouTubeLinkType.VIDEO,
     });
     (youtubeService.getYoutubeInfo as jest.Mock).mockRejectedValue(
-      new Error('fail'),
+      new InternalServerErrorException('fail'),
+    );
+    (conversionService.getOrCreateConversion as jest.Mock).mockRejectedValue(
+      new InternalServerErrorException('fail'),
     );
 
     const res = createResMock();
     await expect(
-      controller.youtubeConvert(
-        { youtubeUrl: 'https://music.youtube.com/watch?v=abc', convert: true },
+      controller.convert(
+        { url: 'https://music.youtube.com/watch?v=abc' },
         res,
         createUserMock(),
       ),

@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   convertUrlSchema,
@@ -74,16 +75,16 @@ export default function ConversionForm() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
 
-  const form = useForm<ConvertUrlRequest>({
+  const form = useForm<z.input<typeof convertUrlSchema>>({
     resolver: zodResolver(convertUrlSchema),
     mode: 'onChange',
-    defaultValues: { youtubeUrl: '' },
+    defaultValues: { url: '' },
   });
 
   const convertMutation = useMutation({
     mutationKey: ['conversion'],
-    mutationFn: async (data: { youtubeUrl: string }) => {
-      const response = await apiRequest('POST', '/api/youtube-convert', data);
+    mutationFn: async (data: ConvertUrlRequest) => {
+      const response = await apiRequest('POST', '/api/convert', data);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Conversion failed');
@@ -92,13 +93,10 @@ export default function ConversionForm() {
     },
     onSuccess: (result) => {
       setSpotifyResult(result);
-      setLastProcessedUrl(form.getValues('youtubeUrl'));
+      setLastProcessedUrl(form.getValues('url'));
 
       // Cache the result for future requests
-      queryClient.setQueryData(
-        ['conversion', form.getValues('youtubeUrl')],
-        result,
-      );
+      queryClient.setQueryData(['conversion', form.getValues('url')], result);
 
       toast({
         title: t('conversion.successTitle'),
@@ -126,17 +124,25 @@ export default function ConversionForm() {
   });
 
   const fetchYouTubePreview = async (url: string) => {
-    if (!url || !convertUrlSchema.safeParse({ youtubeUrl: url }).success) {
+    if (
+      !url ||
+      !convertUrlSchema.safeParse({ url, targetPlatform: 'spotify' }).success
+    ) {
       setYoutubePreview(null);
       return;
     }
 
     setIsLoadingPreview(true);
     try {
-      const response = await apiRequest('POST', '/api/youtube-convert', {
-        youtubeUrl: url,
+      const response = await apiRequest('POST', '/api/convert', {
+        url,
+        targetPlatform: 'spotify',
         convert: false, // only preview YouTube data
       });
+      if (!response.ok) {
+        setYoutubePreview(null);
+        return;
+      }
       const json = await response.json();
       setYoutubePreview(json as YouTubeTrackInfo);
     } catch {
@@ -146,7 +152,7 @@ export default function ConversionForm() {
     }
   };
 
-  const watchedUrl = form.watch('youtubeUrl');
+  const watchedUrl = form.watch('url');
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -178,18 +184,19 @@ export default function ConversionForm() {
   }, [queryClient, watchedUrl, cacheTick]);
 
   const isFormValid = form.formState.isValid;
-  const fieldState = form.getFieldState('youtubeUrl');
+  const fieldState = form.getFieldState('url');
   const isFieldValid =
     !fieldState.error &&
     fieldState.isDirty &&
     watchedUrl &&
     watchedUrl.trim() !== '';
 
-  const onSubmit = (data: ConvertUrlRequest) => {
-    const youtubeUrl = data.youtubeUrl;
+  const onSubmit = (data: z.input<typeof convertUrlSchema>) => {
+    const parsedData = convertUrlSchema.parse(data);
+    const url = parsedData.url;
 
     // Check if cached result exists
-    const cachedResult = queryClient.getQueryData(['conversion', youtubeUrl]);
+    const cachedResult = queryClient.getQueryData(['conversion', url]);
     if (cachedResult) {
       setSpotifyResult(cachedResult as SpotifyTrackInfo);
       toast({
@@ -200,16 +207,16 @@ export default function ConversionForm() {
       return; // Don't submit if cached
     }
 
-    convertMutation.mutate(data);
+    convertMutation.mutate(parsedData);
   };
 
   const handleSingleTrackConversion = async (track: PlaylistTrack) => {
-    const youtubeUrl = `https://music.youtube.com/watch?v=${track.videoId}`;
+    const url = `https://music.youtube.com/watch?v=${track.videoId}`;
 
     if (convertingTracks.includes(track.videoId)) return;
 
     // Check cache first
-    const cachedResult = queryClient.getQueryData(['conversion', youtubeUrl]);
+    const cachedResult = queryClient.getQueryData(['conversion', url]);
     if (cachedResult) {
       setSingleTrackResult(cachedResult as SpotifyTrackInfo);
       setConvertedTracks((prev) => [...prev, track.videoId]);
@@ -224,11 +231,14 @@ export default function ConversionForm() {
     setConvertingTracks((prev) => [...prev, track.videoId]);
 
     try {
-      const result = await convertMutation.mutateAsync({ youtubeUrl });
+      const result = await convertMutation.mutateAsync({
+        url,
+        targetPlatform: 'spotify',
+      });
       setSingleTrackResult(result);
 
       // Cache the result
-      queryClient.setQueryData(['conversion', youtubeUrl], result);
+      queryClient.setQueryData(['conversion', url], result);
 
       toast({
         title: t('conversion.successTitle'),
@@ -248,10 +258,13 @@ export default function ConversionForm() {
       <Card className="bg-white rounded-2xl shadow-lg mb-4 sm:mb-6">
         <CardContent className="p-4 sm:p-6">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4 sm:space-y-6"
+            >
               <FormField
                 control={form.control}
-                name="youtubeUrl"
+                name="url"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium text-gray-700">
@@ -262,13 +275,14 @@ export default function ConversionForm() {
                         <Input
                           {...field}
                           aria-invalid={!!fieldState.error}
-                          aria-describedby="youtubeUrl-hint youtubeUrl-error"
+                          aria-describedby="url-hint url-error"
                           type="url"
                           placeholder={t('form.youtubeUrlPlaceholder')}
                           disabled={
                             convertMutation.isPending || isLoadingPreview
                           }
-                          className={`w-full px-3 sm:px-4 py-3 sm:py-4 border rounded-lg focus:ring-2 focus:ring-spotify focus:border-spotify transition-colors duration-200 pr-10 text-sm sm:text-base ${fieldState.error
+                          className={`w-full px-3 sm:px-4 py-3 sm:py-4 border rounded-lg focus:ring-2 focus:ring-spotify focus:border-spotify transition-colors duration-200 pr-10 text-sm sm:text-base ${
+                            fieldState.error
                               ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
                               : isFieldValid
                                 ? 'border-green-500 focus:ring-green-500 focus:border-green-500'
@@ -293,7 +307,7 @@ export default function ConversionForm() {
                       </div>
                     </FormControl>
                     <FormDescription
-                      id="youtubeUrl-hint"
+                      id="url-hint"
                       className="text-xs text-gray-500"
                     >
                       {t('form.youtubeUrlHint')}

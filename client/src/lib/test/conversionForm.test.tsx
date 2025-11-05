@@ -63,7 +63,7 @@ describe('ConversionForm', () => {
 
   it('submits form and shows success toast', async () => {
     server.use(
-      http.post('/api/youtube-convert', async ({ request }) => {
+      http.post('/api/convert', async ({ request }) => {
         const body = (await request.json()) as any;
 
         if (body?.convert === false) {
@@ -118,7 +118,7 @@ describe('ConversionForm', () => {
       .mockImplementation(() => {});
 
     server.use(
-      http.post('/api/youtube-convert', async ({ request }) => {
+      http.post('/api/convert', async ({ request }) => {
         const body = (await request.json()) as any;
         if (body?.convert === false) {
           return HttpResponse.json(
@@ -166,7 +166,7 @@ describe('ConversionForm', () => {
 
   it('disables submit button and shows loading state during API request', async () => {
     server.use(
-      http.post('/api/youtube-convert', async ({ request }) => {
+      http.post('/api/convert', async ({ request }) => {
         const body = (await request.json()) as any;
         if (body?.convert === false) {
           return HttpResponse.json({
@@ -225,7 +225,7 @@ describe('ConversionForm', () => {
 
   it('handles YouTube preview API errors gracefully', async () => {
     server.use(
-      http.post('/api/youtube-convert', async ({ request }) => {
+      http.post('/api/convert', async ({ request }) => {
         const body = (await request.json()) as any;
 
         if (body?.convert === false) {
@@ -288,7 +288,7 @@ describe('ConversionForm', () => {
       .mockImplementation(() => {});
 
     server.use(
-      http.post('/api/youtube-convert', async ({ request }) => {
+      http.post('/api/convert', async ({ request }) => {
         const body = (await request.json()) as any;
         if (body?.convert === false) {
           return HttpResponse.json(
@@ -342,6 +342,31 @@ describe('ConversionForm', () => {
   });
 
   it('shows success indicator icon when URL is valid', async () => {
+    server.use(
+      http.post('/api/convert', async ({ request }) => {
+        const body = (await request.json()) as any;
+
+        if (body?.convert === false) {
+          return HttpResponse.json({
+            type: 'track',
+            trackName: 'Preview Track',
+            artistName: 'Preview Artist',
+            thumbnailUrl: 'https://i.ytimg.com/vi/test/mqdefault.jpg',
+          });
+        }
+
+        return HttpResponse.json(
+          {
+            type: 'track',
+            spotifyUrl: 'https://open.spotify.com/track/xyz',
+            trackName: 'Test Track',
+            artistName: 'Test Artist',
+          },
+          { status: 201 },
+        );
+      }),
+    );
+
     renderWithClient(<ConversionForm />);
     const input = screen.getByPlaceholderText(
       /music\.youtube\.com\/watch\?v=/i,

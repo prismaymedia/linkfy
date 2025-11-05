@@ -115,9 +115,44 @@ export interface SpotifyTrackInfo {
   thumbnailUrl: string;
 }
 
-export interface YouTubeTrackInfo {
+type YouTubeTrack = Omit<PlaylistTrack, 'position'>;
+
+export type YouTubeTrackInfo =
+  | ({ type: 'track' } & YouTubeTrack)
+  | ({
+    type: 'playlist' | 'album';
+    playlistTitle: string;
+    tracks: PlaylistTrack[];
+  });
+
+export interface PlaylistTrack {
+  videoId: string;
   trackName: string;
   artistName: string;
   thumbnailUrl: string;
   originalTitle: string;
+  position: number;
+}
+
+export interface PlaylistTrackConverted extends PlaylistTrack {
+  spotifyUrl: string | null;
+  converted: boolean;
+  error?: string;
+}
+
+export interface PlaylistInfo {
+  playlistTitle: string;
+  playlistDescription: string;
+  tracks: PlaylistTrack[];
+  totalTracks: number;
+}
+
+export interface PlaylistConversionResult {
+  type: 'playlist';
+  playlistTitle: string;
+  playlistDescription: string;
+  totalTracks: number;
+  convertedTracks: number;
+  failedTracks: number;
+  tracks: PlaylistTrackConverted[];
 }

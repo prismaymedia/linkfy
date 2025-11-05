@@ -72,6 +72,17 @@ export class ConversionService {
             });
           }
 
+          if (youtubeInfo.type !== 'track') {
+            this.logger.warn(
+              'Playlist and album conversions are not yet supported.',
+            );
+            throw new BadRequestException({
+              success: false,
+              error: 'UNSUPPORTED_CONVERSION',
+              message: 'Playlist and album conversions are not yet supported.',
+            });
+          }
+
           this.logger.log(`📺 YouTube info found: ${youtubeInfo.originalTitle}`);
 
           // 4️⃣ Search track on Spotify
@@ -155,7 +166,7 @@ export class ConversionService {
 
   private isValidYoutubeUrl(url: string): boolean {
     const regex =
-      /^https?:\/\/((m|music|www)\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11}).*$/;
+      /^(https?:\/\/)?(music\.)?(www\.)?(youtube\.com|youtu\.be|music\.youtube\.com)\/(watch\?v=|playlist\?list=|browse\/|[\w-]{11})/;
     return regex.test(url);
   }
 }

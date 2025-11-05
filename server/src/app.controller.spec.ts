@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from '../src/controllers/app.controller';
-import { YoutubeService } from '../src/services/youtube.service';
+import { YoutubeService, YouTubeLinkType } from '../src/services/youtube.service';
 import { ConversionService } from '../src/services/conversion.service';
 import {
   BadRequestException,
@@ -16,6 +16,8 @@ describe('AppController', () => {
   beforeEach(async () => {
     youtubeService = {
       getYoutubeInfo: jest.fn(),
+      getPlaylistTracks: jest.fn(),
+      parseUrl: jest.fn(),
     };
     conversionService = {
       getOrCreateConversion: jest.fn(),
@@ -38,6 +40,7 @@ describe('AppController', () => {
   function createResMock() {
     return {
       status: jest.fn().mockReturnThis(),
+      json: jest.fn().mockReturnThis(),
     } as any;
   }
 
@@ -51,7 +54,13 @@ describe('AppController', () => {
   }
 
   it('returns YouTube info with 200 when convert=false (preview)', async () => {
+    (youtubeService.parseUrl as jest.Mock).mockReturnValue({
+      id: 'abc',
+      type: YouTubeLinkType.VIDEO,
+    });
     (youtubeService.getYoutubeInfo as jest.Mock).mockResolvedValue({
+      type: 'track',
+      videoId: 'abc',
       trackName: 'Track',
       artistName: 'Artist',
       thumbnailUrl: 'thumb',
@@ -76,8 +85,14 @@ describe('AppController', () => {
     }));
   });
 
-  it('returns merged info with 201 when convert omitted/true', async () => {
+  it('returns merged info with 201 when convert=true', async () => {
+    (youtubeService.parseUrl as jest.Mock).mockReturnValue({
+      id: 'abc',
+      type: YouTubeLinkType.VIDEO,
+    });
     (youtubeService.getYoutubeInfo as jest.Mock).mockResolvedValue({
+      type: 'track',
+      videoId: 'abc',
       trackName: 'Track',
       artistName: 'Artist',
       thumbnailUrl: 'thumb',
@@ -119,6 +134,10 @@ describe('AppController', () => {
   });
 
   it('throws InternalServerErrorException if youtube service fails', async () => {
+    (youtubeService.parseUrl as jest.Mock).mockReturnValue({
+      id: 'abc',
+      type: YouTubeLinkType.VIDEO,
+    });
     (youtubeService.getYoutubeInfo as jest.Mock).mockRejectedValue(
       new InternalServerErrorException('fail'),
     );

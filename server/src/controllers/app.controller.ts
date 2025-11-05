@@ -19,7 +19,7 @@ import {
   ApiInternalServerErrorResponse,
 } from '@nestjs/swagger';
 import { ConversionService } from '../services/conversion.service';
-import { YoutubeService } from '../services/youtube.service';
+import { YoutubeService, YouTubeLinkType } from '../services/youtube.service';
 import { ZodError, z } from 'zod';
 import { convertUrlSchema, detectPlatform } from '../../../shared/schema';
 import * as Sentry from '@sentry/nestjs';

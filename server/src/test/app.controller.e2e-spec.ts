@@ -2,7 +2,7 @@ import request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { AppModule } from '../app.module';
-import { YoutubeService } from '../services/youtube.service';
+import { YoutubeService, YouTubeLinkType } from '../services/youtube.service';
 import { ConversionService } from '../services/conversion.service';
 import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
 
@@ -17,10 +17,16 @@ describe('YouTube Convert Endpoint (e2e)', () => {
 
     const mockYoutubeService: Partial<YoutubeService> = {
       getYoutubeInfo: jest.fn().mockResolvedValue({
+        type: 'track',
+        videoId: 'dQw4w9WgXcQ',
         trackName: 'Track',
         artistName: 'Artist',
         thumbnailUrl: 'thumb',
         originalTitle: 'Original',
+      }),
+      parseUrl: jest.fn().mockReturnValue({
+        id: 'dQw4w9WgXcQ',
+        type: YouTubeLinkType.VIDEO,
       }),
     };
 

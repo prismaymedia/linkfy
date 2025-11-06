@@ -7,7 +7,7 @@ import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
 describe('Authentication (e2e)', () => {
   let app: INestApplication;
 
-  const PROTECTED_ROUTE = '/api/convert';
+  const PROTECTED_ROUTE = '/api/users/info';
 
   describe('when not authenticated', () => {
     beforeAll(async () => {
@@ -34,8 +34,7 @@ describe('Authentication (e2e)', () => {
 
     it('should return 401 Unauthorized when accessing a protected route', () => {
       return request(app.getHttpServer())
-        .post(PROTECTED_ROUTE)
-        .send({ youtubeUrl: 'any-url' })
+        .get(PROTECTED_ROUTE)
         .expect(401);
     });
   });
@@ -68,11 +67,12 @@ describe('Authentication (e2e)', () => {
 
     it('should allow access to a protected route and not return 401', async () => {
       const response = await request(app.getHttpServer())
-        .post(PROTECTED_ROUTE)
-        .send({});
+        .get(PROTECTED_ROUTE);
 
       expect(response.status).not.toBe(401);
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty('id', 'mock-user-id');
+      expect(response.body).toHaveProperty('email', 'test@example.com');
     });
   });
 });

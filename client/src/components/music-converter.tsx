@@ -57,7 +57,11 @@ const PreviewCardSkeleton = () => {
   );
 };
 
-export default function ConversionForm() {
+interface MusicConverterProps {
+  size?: 'compact' | 'full';
+}
+
+export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
   const [spotifyResult, setSpotifyResult] = useState<SpotifyTrackInfo | null>(
     null,
   );
@@ -267,14 +271,18 @@ export default function ConversionForm() {
     }
   };
 
+  const isCompact = size === 'compact';
+
   return (
     <>
-      <Card className="bg-white rounded-2xl shadow-lg mb-4 sm:mb-6">
-        <CardContent className="p-4 sm:p-6">
+      <Card
+        className={`bg-white rounded-2xl shadow-lg ${isCompact ? 'mb-4' : 'mb-4 sm:mb-6'}`}
+      >
+        <CardContent className={isCompact ? 'p-4' : 'p-4 sm:p-6'}>
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-4 sm:space-y-6"
+              className={isCompact ? 'space-y-4' : 'space-y-4 sm:space-y-6'}
             >
               <FormField
                 control={form.control}
@@ -285,7 +293,7 @@ export default function ConversionForm() {
                       {t('form.youtubeUrlLabel')}
                     </FormLabel>
                     <FormControl>
-                      <div 
+                      <div
                         className="relative"
                         onMouseEnter={() => setIsInputHovered(true)}
                         onMouseLeave={() => setIsInputHovered(false)}
@@ -316,7 +324,9 @@ export default function ConversionForm() {
                                   : 'border-gray-300 pr-10'
                           }`}
                         />
-                        {!isLoadingPreview && isInputHovered && fieldState.isDirty ? (
+                        {!isLoadingPreview &&
+                        isInputHovered &&
+                        fieldState.isDirty ? (
                           <AnimatePresence>
                             <motion.button
                               type="button"
@@ -355,7 +365,7 @@ export default function ConversionForm() {
                     </FormControl>
                     <FormDescription
                       id="url-hint"
-                      className="text-xs text-gray-500"
+                      className={`text-xs text-gray-500 ${isCompact ? 'sr-only' : ''}`}
                     >
                       {t('form.youtubeUrlHint')}
                     </FormDescription>
@@ -423,8 +433,12 @@ export default function ConversionForm() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <Card className="bg-white rounded-2xl shadow-lg mb-4 sm:mb-6">
-              <CardHeader className="pb-3 p-4 sm:p-6">
+            <Card
+              className={`bg-white rounded-2xl shadow-lg ${isCompact ? 'mb-4' : 'mb-4 sm:mb-6'}`}
+            >
+              <CardHeader
+                className={`pb-3 ${isCompact ? 'p-4' : 'p-4 sm:p-6'}`}
+              >
                 <div className="flex items-center">
                   <SiYoutubemusic className="text-youtube text-xl mr-2" />
                   <h3 className="text-lg font-semibold text-gray-800">

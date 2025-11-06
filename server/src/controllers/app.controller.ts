@@ -24,13 +24,11 @@ import { ZodError, z } from 'zod';
 import { convertUrlSchema, detectPlatform } from '../../../shared/schema';
 import * as Sentry from '@sentry/nestjs';
 import { Response } from 'express';
-import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
 import { CurrentUser } from '../auth/user.decorator';
 import { User } from '@supabase/supabase-js';
 
 @ApiTags('Conversion')
 @Controller('api')
-@UseGuards(SupabaseAuthGuard)
 export class AppController {
   private readonly logger = new Logger(AppController.name);
 

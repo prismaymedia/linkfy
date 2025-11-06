@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
 import { getSession } from '@/lib/supabaseClient';
-import ConversionForm from '@/components/conversion-form';
+import MusicConverter from '@/components/music-converter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowRight, History, Settings, User } from 'lucide-react';
 import { SiYoutubemusic, SiSpotify } from 'react-icons/si';
@@ -115,7 +115,7 @@ export default function Dashboard() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-4 sm:p-6 pt-0">
-                <ConversionForm />
+                <MusicConverter />
               </CardContent>
             </Card>
           </div>
@@ -182,7 +182,9 @@ export default function Dashboard() {
             {/* Stats Card */}
             <Card>
               <CardHeader className="p-4 sm:p-6">
-                <CardTitle className="text-base sm:text-lg">{t('dashboard.stats', 'Your Stats')}</CardTitle>
+                <CardTitle className="text-base sm:text-lg">
+                  {t('dashboard.stats', 'Your Stats')}
+                </CardTitle>
               </CardHeader>
               <CardContent className="p-4 sm:p-6 pt-0">
                 <div className="space-y-3">

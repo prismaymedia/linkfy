@@ -5,6 +5,7 @@ import Header from '@/components/header';
 import { ArrowRight, Music, Zap, Shield } from 'lucide-react';
 import { SiYoutubemusic, SiSpotify } from 'react-icons/si';
 import { useTranslation } from 'react-i18next';
+import MusicConverter from '@/components/music-converter';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ROUTES } from '@/lib/routes';
@@ -31,7 +32,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 overflow-x-hidden">
       <Header />
-      
+
       <main className="container mx-auto px-4 py-8 sm:py-12 sm:px-6 lg:px-8">
         {/* Hero Section */}
         <div className="text-center mb-12 sm:mb-16 pt-4 sm:pt-8">
@@ -44,15 +45,14 @@ export default function Home() {
             {t('home.title', 'Convert Music Links Instantly')}
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto px-4">
-            {t('home.subtitle', 'Convert YouTube Music links to Spotify seamlessly. Fast, accurate, and free.')}
+            {t(
+              'home.subtitle',
+              'Convert YouTube Music links to Spotify seamlessly. Fast, accurate, and free.',
+            )}
           </p>
-          <Button
-            onClick={handleGetStarted}
-            size="lg"
-            className="text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 touch-target"
-          >
-            {t('home.getStarted', 'Get Started')}
-          </Button>
+          <div className="max-w-3xl mx-auto">
+            <MusicConverter size="full" />
+          </div>
         </div>
 
         {/* Features Section */}
@@ -67,7 +67,10 @@ export default function Home() {
                   {t('home.feature1.title', 'Lightning Fast')}
                 </h3>
                 <p className="text-sm sm:text-base text-gray-600">
-                  {t('home.feature1.desc', 'Convert your music links in seconds with our optimized conversion engine.')}
+                  {t(
+                    'home.feature1.desc',
+                    'Convert your music links in seconds with our optimized conversion engine.',
+                  )}
                 </p>
               </div>
             </CardContent>
@@ -83,7 +86,10 @@ export default function Home() {
                   {t('home.feature2.title', 'High Accuracy')}
                 </h3>
                 <p className="text-sm sm:text-base text-gray-600">
-                  {t('home.feature2.desc', 'Advanced matching algorithms ensure you get the right track every time.')}
+                  {t(
+                    'home.feature2.desc',
+                    'Advanced matching algorithms ensure you get the right track every time.',
+                  )}
                 </p>
               </div>
             </CardContent>
@@ -99,7 +105,10 @@ export default function Home() {
                   {t('home.feature3.title', 'Privacy Focused')}
                 </h3>
                 <p className="text-sm sm:text-base text-gray-600">
-                  {t('home.feature3.desc', 'We don\'t store your URLs or personal data. Your privacy is our priority.')}
+                  {t(
+                    'home.feature3.desc',
+                    "We don't store your URLs or personal data. Your privacy is our priority.",
+                  )}
                 </p>
               </div>
             </CardContent>
@@ -121,7 +130,10 @@ export default function Home() {
                   {t('home.step1.title', 'Copy YouTube Music URL')}
                 </h3>
                 <p className="text-sm sm:text-base text-gray-600">
-                  {t('home.step1.desc', 'Find the song on YouTube Music and copy its URL from your browser.')}
+                  {t(
+                    'home.step1.desc',
+                    'Find the song on YouTube Music and copy its URL from your browser.',
+                  )}
                 </p>
               </div>
             </div>
@@ -135,7 +147,10 @@ export default function Home() {
                   {t('home.step2.title', 'Paste and Convert')}
                 </h3>
                 <p className="text-sm sm:text-base text-gray-600">
-                  {t('home.step2.desc', 'Paste the URL into Linkfy and click the convert button.')}
+                  {t(
+                    'home.step2.desc',
+                    'Paste the URL into Linkfy and click the convert button.',
+                  )}
                 </p>
               </div>
             </div>
@@ -149,29 +164,34 @@ export default function Home() {
                   {t('home.step3.title', 'Get Spotify Link')}
                 </h3>
                 <p className="text-sm sm:text-base text-gray-600">
-                  {t('home.step3.desc', 'Copy the generated Spotify URL and enjoy your music on Spotify.')}
+                  {t(
+                    'home.step3.desc',
+                    'Copy the generated Spotify URL and enjoy your music on Spotify.',
+                  )}
                 </p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* CTA Section */}
-        <div className="text-center py-8 sm:py-12 bg-blue-600 rounded-lg text-white mx-4 sm:mx-0">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4 px-4">
-            {t('home.cta.title', 'Ready to Convert Your Music?')}
-          </h2>
-          <p className="text-base sm:text-lg md:text-xl mb-4 sm:mb-6 px-4">
-            {t('home.cta.subtitle', 'Join thousands of users converting music links every day.')}
-          </p>
-          <Button
-            onClick={handleGetStarted}
-            size="lg"
-            variant="secondary"
-            className="text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 touch-target"
-          >
-            {t('home.getStarted', 'Get Started')}
-          </Button>
+        {/* CTA Section with Compact Converter */}
+        <div className="py-8 sm:py-12 bg-blue-600 rounded-lg text-white mx-4 sm:mx-0">
+          <div className="text-center mb-6 sm:mb-8">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4 px-4">
+              {t('home.cta.title', 'Ready to Convert Your Music?')}
+            </h2>
+            <p className="text-base sm:text-lg md:text-xl mb-4 px-4">
+              {t(
+                'home.cta.subtitle',
+                'Join thousands of users converting music links every day.',
+              )}
+            </p>
+          </div>
+
+          {/* Quick Converter - Compact */}
+          <div className="max-w-2xl mx-auto px-4">
+            <MusicConverter size="compact" />
+          </div>
         </div>
       </main>
     </div>

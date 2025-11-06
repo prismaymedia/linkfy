@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import ConversionForm from '@/components/conversion-form';
+import MusicConverter from '@/components/music-converter';
 import { vi } from 'vitest';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
@@ -55,7 +55,7 @@ describe('ConversionForm', () => {
   });
 
   it('renders input field with correct placeholder', () => {
-    renderWithClient(<ConversionForm />);
+    renderWithClient(<MusicConverter />);
     expect(
       screen.getByPlaceholderText(/music\.youtube\.com\/watch\?v=/i),
     ).toBeInTheDocument();
@@ -87,7 +87,7 @@ describe('ConversionForm', () => {
       }),
     );
 
-    renderWithClient(<ConversionForm />);
+    renderWithClient(<MusicConverter />);
     const input = screen.getByPlaceholderText(
       /music\.youtube\.com\/watch\?v=/i,
     );
@@ -138,7 +138,7 @@ describe('ConversionForm', () => {
       }),
     );
 
-    renderWithClient(<ConversionForm />);
+    renderWithClient(<MusicConverter />);
     const input = screen.getByPlaceholderText(
       /music\.youtube\.com\/watch\?v=/i,
     );
@@ -190,7 +190,7 @@ describe('ConversionForm', () => {
       }),
     );
 
-    renderWithClient(<ConversionForm />);
+    renderWithClient(<MusicConverter />);
     const input = screen.getByPlaceholderText(
       /music\.youtube\.com\/watch\?v=/i,
     );
@@ -253,7 +253,7 @@ describe('ConversionForm', () => {
       }),
     );
 
-    renderWithClient(<ConversionForm />);
+    renderWithClient(<MusicConverter />);
     const input = screen.getByPlaceholderText(
       /music\.youtube\.com\/watch\?v=/i,
     );
@@ -308,7 +308,7 @@ describe('ConversionForm', () => {
       }),
     );
 
-    renderWithClient(<ConversionForm />);
+    renderWithClient(<MusicConverter />);
     const input = screen.getByPlaceholderText(
       /music\.youtube\.com\/watch\?v=/i,
     );
@@ -335,7 +335,7 @@ describe('ConversionForm', () => {
   });
 
   it('displays hint text for URL input', () => {
-    renderWithClient(<ConversionForm />);
+    renderWithClient(<MusicConverter />);
     expect(
       screen.getByText(/Paste a track or playlist URL from YouTube Music/i),
     ).toBeInTheDocument();
@@ -367,7 +367,7 @@ describe('ConversionForm', () => {
       }),
     );
 
-    renderWithClient(<ConversionForm />);
+    renderWithClient(<MusicConverter />);
     const input = screen.getByPlaceholderText(
       /music\.youtube\.com\/watch\?v=/i,
     );
@@ -387,7 +387,7 @@ describe('ConversionForm', () => {
   });
 
   it('shows error indicator icon when URL is invalid', async () => {
-    renderWithClient(<ConversionForm />);
+    renderWithClient(<MusicConverter />);
     const input = screen.getByPlaceholderText(
       /music\.youtube\.com\/watch\?v=/i,
     );
@@ -402,7 +402,7 @@ describe('ConversionForm', () => {
   });
 
   it('has proper ARIA attributes for accessibility', () => {
-    renderWithClient(<ConversionForm />);
+    renderWithClient(<MusicConverter />);
     const input = screen.getByPlaceholderText(
       /music\.youtube\.com\/watch\?v=/i,
     );
@@ -412,7 +412,7 @@ describe('ConversionForm', () => {
   });
 
   it('announces errors to screen readers with role=alert', async () => {
-    renderWithClient(<ConversionForm />);
+    renderWithClient(<MusicConverter />);
     const input = screen.getByPlaceholderText(
       /music\.youtube\.com\/watch\?v=/i,
     );

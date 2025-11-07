@@ -44,8 +44,8 @@
     "errorDesc": "Ocurrió un error durante la conversión. Por favor, inténtalo de nuevo."
   },
   "form": {
-    "youtubeUrlLabel": "URL de YouTube Music",
-    "youtubeUrlPlaceholder": "https://music.youtube.com/watch?v=...",
+    "youtubeUrlLabel": "URL de YouTube Music, Spotify, Apple Music o Deezer",
+    "youtubeUrlPlaceholder": "Pega una URL de YouTube, Spotify, Apple Music o Deezer...",
     "youtubeUrlHint": "Pega una URL de pista o lista de reproducción de YouTube o YouTube Music.",
     "validUrl": "URL válida",
     "invalidUrl": "URL inválida",
@@ -56,12 +56,31 @@
     "urlAlreadyConverted": "URL ya convertida",
     "convertButton": "Convertir a Spotify",
     "clearInput": "Limpiar campo",
-    "inputCleared": "Campo borrado"
+    "inputCleared": "Campo borrado",
+    "serviceIcon": {
+      "youtube": "Icono de YouTube Music",
+      "spotify": "Icono de Spotify",
+      "apple": "Icono de Apple Music",
+      "deezer": "Icono de Deezer",
+      "unknown": "Icono de servicio de música"
+    }
   },
   "preview": {
     "youtubeTrack": "Vista previa de YouTube",
     "youtubePlaylist": "Vista previa de YouTube",
     "youtubeAlbum": "Vista previa de YouTube",
+    "spotifyTrack": "Vista previa de Spotify",
+    "spotifyPlaylist": "Vista previa de Spotify",
+    "spotifyAlbum": "Vista previa de Spotify",
+    "appleTrack": "Vista previa de Apple Music",
+    "applePlaylist": "Vista previa de Apple Music",
+    "appleAlbum": "Vista previa de Apple Music",
+    "deezerTrack": "Vista previa de Deezer",
+    "deezerPlaylist": "Vista previa de Deezer",
+    "deezerAlbum": "Vista previa de Deezer",
+    "unknownTrack": "Vista previa de música",
+    "unknownPlaylist": "Vista previa de música",
+    "unknownAlbum": "Vista previa de música",
     "original": "Original"
   },
   "demo": {

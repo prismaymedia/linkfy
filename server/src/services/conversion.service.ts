@@ -21,7 +21,7 @@ export class ConversionService {
 
   async getOrCreateConversion(
     request: ConvertUrlRequest,
-    sourcePlatform: 'youtube' | 'spotify' | 'deezer' | 'unknown',
+    sourcePlatform: 'youtube' | 'spotify' | 'deezer' | 'apple' | 'unknown',
   ): Promise<SpotifyTrackInfo> {
     try {
       const { url, targetPlatform } = request;

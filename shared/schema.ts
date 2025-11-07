@@ -6,6 +6,8 @@ export const conversions = pgTable('conversions', {
   id: serial('id').primaryKey(),
   youtubeUrl: varchar('youtube_url', { length: 500 }).notNull(),
   spotifyUrl: varchar('spotify_url', { length: 500 }).notNull(),
+  deezerUrl: varchar('deezer_url', { length: 500 }).notNull(),
+  appleUrl: varchar('apple_url', { length: 500 }).notNull(),
   trackName: varchar('track_name', { length: 200 }),
   artistName: varchar('artist_name', { length: 200 }),
   albumName: varchar('album_name', { length: 200 }),
@@ -14,6 +16,9 @@ export const conversions = pgTable('conversions', {
 
 export const insertConversionSchema = createInsertSchema(conversions).pick({
   youtubeUrl: true,
+  spotifyUrl: true,
+  deezerUrl: true,
+  appleUrl: true,
 }) as unknown as z.ZodType<any, any, any>;
 
 export const convertUrlSchema = z.object({
@@ -36,6 +41,10 @@ export const convertUrlSchema = z.object({
               'youtu.be',
               'm.youtube.com',
               'open.spotify.com',
+              'deezer.com',
+              'link.deezer.com',
+              'music.apple.com',
+              'itunes.apple.com',
             ].includes(normalizedHostname)
           ) {
             return false;
@@ -64,8 +73,15 @@ export const convertUrlSchema = z.object({
             return /^\/(track|album|playlist)\/[a-zA-Z0-9]+$/.test(pathname);
           }
 
-          if (normalizedHostname.includes('deezer ')) {
-            return /^\/(track|album|playlist)\/[0-9]+$/.test(pathname);
+          if (normalizedHostname.includes('deezer.com')) {
+            if (normalizedHostname === 'link.deezer.com') {
+              return /^\/s\/[a-zA-Z0-9]+$/.test(pathname);
+            }
+            return /^\/(track|album|playlist|artist)\/[0-9]+/.test(pathname);
+          }
+
+          if (normalizedHostname.includes('music.apple.com') || normalizedHostname.includes('itunes.apple.com')) {
+            return /^\/([a-z]{2}\/)?(album|song|playlist)\//.test(pathname);
           }
 
           return false;
@@ -83,7 +99,7 @@ export const convertUrlSchema = z.object({
 
 export const detectPlatform = (
   url: string,
-): 'youtube' | 'spotify' | 'deezer' | 'unknown' => {
+): 'youtube' | 'spotify' | 'deezer' | 'apple' | 'unknown' => {
   try {
     const u = new URL(url);
     const host = u.hostname.toLowerCase().replace(/^www\./, '');
@@ -96,6 +112,9 @@ export const detectPlatform = (
     }
     if (host.includes('deezer')) {
       return 'deezer';
+    }
+    if (host.includes('apple') || host.includes('itunes')) {
+      return 'apple';
     }
     return 'unknown';
   } catch {

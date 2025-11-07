@@ -51,6 +51,8 @@ export class StorageService implements IStorage {
       .values({
         youtubeUrl: payload['youtubeUrl'] as string,
         spotifyUrl: (payload['spotifyUrl'] as string | undefined) ?? '',
+        deezerUrl: (payload['deezerUrl'] as string | undefined) ?? '',
+        appleUrl: (payload['appleUrl'] as string | undefined) ?? '',
         trackName: (payload['trackName'] as string | null | undefined) ?? null,
         artistName:
           (payload['artistName'] as string | null | undefined) ?? null,

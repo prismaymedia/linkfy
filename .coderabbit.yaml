@@ -1,0 +1,50 @@
+# CodeRabbit Configuration
+# Documentation: https://docs.coderabbit.ai/guides/configure-coderabbit
+
+# Language and tone settings
+language: en-US
+early_access: false
+tone_instructions: ""
+
+# Review settings
+reviews:
+  # Enable reviews for all branches, not just the default branch
+  auto_review:
+    enabled: true
+    # Enable reviews on release-please branches
+    drafts: false
+    # Allow reviews on all base/target branches (not just default)
+    base_branches:
+      - "*"
+  
+  # Request changes workflow configuration
+  request_changes_workflow: false
+  
+  # High level summary
+  high_level_summary: true
+  
+  # Poem generation
+  poem: false
+  
+  # Review status
+  review_status: true
+  
+  # Collapse walkthrough
+  collapse_walkthrough: false
+  
+  # Auto-reply configuration
+  auto_reply: true
+  
+  # Path filters - Review all paths
+  path_filters: []
+  
+  # Path instructions
+  path_instructions: []
+
+# Chat settings
+chat:
+  auto_reply: true
+
+# Commit message conventions
+conventional_commits:
+  enabled: true

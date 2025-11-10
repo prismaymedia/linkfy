@@ -2,7 +2,7 @@ import React from 'react';
 import {
   SiYoutubemusic,
   SiSpotify,
-  SiApplemusic 
+  SiApplemusic
 } from 'react-icons/si';
 
 import { FaDeezer } from "react-icons/fa";
@@ -17,8 +17,8 @@ export interface ServiceIconInfo {
 }
 
 /**
- * Detecta el servicio de música a partir de una URL
- * Optimizado para actualizaciones rápidas (< 100ms)
+ * Detects the music service from a URL
+ *  Optimized for fast updates (< 100ms)
  */
 export function detectMusicService(url: string): MusicService {
   if (!url || url.trim() === '') {
@@ -26,11 +26,11 @@ export function detectMusicService(url: string): MusicService {
   }
 
   try {
-    // Intentar parsear la URL
+    // Attempt to parse the URL
     const u = new URL(url);
     const host = u.hostname.toLowerCase().replace(/^www\./, '');
 
-    // Detección rápida por hostname
+    // Fast detection by hostname
     if (host.includes('youtube') || host === 'youtu.be') {
       return 'youtube';
     }
@@ -46,7 +46,7 @@ export function detectMusicService(url: string): MusicService {
 
     return 'unknown';
   } catch {
-    // Si no es una URL válida, intentar detectar por patrones simples
+    // If not a valid URL, attempt to detect by simple patterns
     if (url.includes('youtube') || url.includes('youtu.be')) {
       return 'youtube';
     }
@@ -65,7 +65,7 @@ export function detectMusicService(url: string): MusicService {
 }
 
 /**
- * Obtiene la información del icono para un servicio de música
+ *  Gets the icon information for a music service
  */
 export function getServiceIconInfo(service: MusicService): ServiceIconInfo {
   const serviceMap: Record<MusicService, Omit<ServiceIconInfo, 'service'>> = {

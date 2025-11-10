@@ -77,7 +77,7 @@ export const convertUrlSchema = z.object({
             if (normalizedHostname === 'link.deezer.com') {
               return /^\/s\/[a-zA-Z0-9]+$/.test(pathname);
             }
-            return /^\/(track|album|playlist|artist)\/[0-9]+/.test(pathname);
+            return /^\/(track|album|playlist|artist)\/[0-9]+$/.test(pathname);
           }
 
           if (normalizedHostname.includes('music.apple.com') || normalizedHostname.includes('itunes.apple.com')) {

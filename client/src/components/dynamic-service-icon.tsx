@@ -13,16 +13,16 @@ export default function DynamicServiceIcon({
   className = '',
 }: DynamicServiceIconProps) {
   const { t } = useTranslation();
-  
+
   // Optimized service detection
   const service = React.useMemo(() => detectMusicService(url), [url]);
   const iconInfo = React.useMemo(() => getServiceIconInfo(service), [service]);
-  
+
   const { Icon, color, label } = iconInfo;
 
   // Translated accessible label
-  const ariaLabel = t(`form.serviceIcon.${service}`, { 
-    defaultValue: label 
+  const ariaLabel = t(`form.serviceIcon.${service}`, {
+    defaultValue: label
   });
 
   return (
@@ -32,7 +32,7 @@ export default function DynamicServiceIcon({
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.8 }}
-        transition={{ 
+        transition={{
           duration: 0.08,
           ease: [0.4, 0, 0.2, 1] // easeOut cubic bezier for smooth transition
         }}
@@ -41,7 +41,6 @@ export default function DynamicServiceIcon({
         <Icon
           className={`${color} ${className}`}
           aria-label={ariaLabel}
-          aria-hidden="false"
         />
       </motion.div>
     </AnimatePresence>

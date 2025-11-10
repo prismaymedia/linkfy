@@ -47,10 +47,15 @@ In the era of multiple music streaming platforms, sharing music between friends 
 
 [![Launch App](https://img.shields.io/badge/🚀_Launch-App-1DB954?style=for-the-badge&logo=spotify)](https://prismaymedia.github.io/linkfy/)
 [![Self Hosting](https://img.shields.io/badge/🚀_Self_Hosting-Deploy_Guide-FF6B35?style=for-the-badge&logo=docker)](https://github.com/prismaymedia/linkfy/wiki/Self-Hosting-Guide)
+[![Open in GitHub Codespaces](https://img.shields.io/badge/☁️_Open_in-Codespaces-181717?style=for-the-badge&logo=github)](https://codespaces.new/prismaymedia/linkfy)
 
 **New to Linkfy?** [📖 Check out our complete guide](https://github.com/prismaymedia/linkfy/wiki) in the wiki!
 
 </div>
+
+### ☁️ Develop in the Cloud
+
+Get started instantly with GitHub Codespaces - no local setup required! Click the badge above or [read the Codespaces guide](./.devcontainer/README.md) to learn more.
 
 ---
 

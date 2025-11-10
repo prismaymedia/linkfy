@@ -46,15 +46,15 @@
   "form": {
     "youtubeUrlLabel": "URL de YouTube Music, Spotify, Apple Music o Deezer",
     "youtubeUrlPlaceholder": "Pega una URL de YouTube, Spotify, Apple Music o Deezer...",
-    "youtubeUrlHint": "Pega una URL de pista o lista de reproducción de YouTube o YouTube Music.",
+    "youtubeUrlHint": "Pega la URL de una pista o lista de reproducción de YouTube Music, Spotify, Apple Music o Deezer.",
     "validUrl": "URL válida",
     "invalidUrl": "URL inválida",
-    "duplicateUrlWarning": "Esta URL ya fue convertida. Ingresa una URL diferente de YouTube Music para convertir.",
+    "duplicateUrlWarning": "Esta URL ya ha sido convertida. Ingresa una URL de un servicio de música diferente para convertir.",
     "converting": "Convirtiendo...",
     "converted": "Convertido",
     "convertSingle": "Convertir",
     "urlAlreadyConverted": "URL ya convertida",
-    "convertButton": "Convertir a Spotify",
+    "convertButton": "Convertir",
     "clearInput": "Limpiar campo",
     "inputCleared": "Campo borrado",
     "serviceIcon": {

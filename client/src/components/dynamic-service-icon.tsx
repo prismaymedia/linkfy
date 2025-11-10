@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getServiceIconInfo, detectMusicService, type MusicService } from '@/components/music-service-detector';
+import { getServiceIconInfo, detectMusicService } from '@/components/music-service-detector';
 import { useTranslation } from 'react-i18next';
 
 interface DynamicServiceIconProps {

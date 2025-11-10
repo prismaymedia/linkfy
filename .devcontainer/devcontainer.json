@@ -4,7 +4,11 @@
   
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
-    "ghcr.io/devcontainers/features/github-cli:1": {}
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.12",
+      "installTools": true
+    }
   },
   
   "customizations": {
@@ -17,7 +21,16 @@
           "source.fixAll.eslint": "explicit"
         },
         "typescript.tsdk": "node_modules/typescript/lib",
-        "typescript.enablePromptUseWorkspaceTsdk": true
+        "typescript.enablePromptUseWorkspaceTsdk": true,
+        "[python]": {
+          "editor.defaultFormatter": "charliermarsh.ruff",
+          "editor.formatOnSave": true,
+          "editor.codeActionsOnSave": {
+            "source.fixAll": "explicit",
+            "source.organizeImports": "explicit"
+          }
+        },
+        "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python"
       },
       "extensions": [
         "dbaeumer.vscode-eslint",
@@ -29,7 +42,10 @@
         "GitHub.copilot-chat",
         "dsznajder.es7-react-js-snippets",
         "christian-kohler.npm-intellisense",
-        "eamodio.gitlens"
+        "eamodio.gitlens",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "charliermarsh.ruff"
       ]
     }
   },

@@ -5,17 +5,19 @@ This directory contains the configuration for GitHub Codespaces, enabling cloud-
 ## What's Included
 
 - **Node.js 22**: Latest LTS version with TypeScript support
+- **Python 3.12**: With uv (fast Python package manager)
 - **Yarn**: Package manager for monorepo workspace management
 - **Git & GitHub CLI**: Version control and GitHub integration
-- **VS Code Extensions**: Pre-configured extensions for React, NestJS, TypeScript, Tailwind CSS, and more
+- **VS Code Extensions**: Pre-configured extensions for React, NestJS, TypeScript, Tailwind CSS, Python, and more
 
 ## Automatic Setup
 
 When you open this repository in GitHub Codespaces, the following happens automatically:
 
-1. **Dependencies Installation**: `yarn install` runs to install all workspace dependencies
-2. **Environment Files**: `.env.example` files are copied to `.env` in both client and server directories
-3. **Port Forwarding**: Ports 3000 (backend) and 5173 (frontend) are automatically forwarded
+1. **Python Setup**: `uv` (fast Python package manager) is installed
+2. **Dependencies Installation**: `yarn install` runs to install all workspace dependencies
+3. **Environment Files**: `.env.example` files are copied to `.env` in both client and server directories
+4. **Port Forwarding**: Ports 3000 (backend) and 5173 (frontend) are automatically forwarded
 
 ## Getting Started
 
@@ -83,16 +85,33 @@ yarn dev:client
 - `yarn lint` - Lint all workspaces
 - `yarn prettier:format` - Format code with Prettier
 
+### Python (with uv)
+- `uv venv` - Create a virtual environment
+- `uv pip install <package>` - Install Python packages (much faster than pip)
+- `uv pip compile requirements.in -o requirements.txt` - Compile dependencies
+- `python --version` - Check Python version
+
 ## Pre-configured VS Code Extensions
 
 The following extensions are automatically installed:
 
+**JavaScript/TypeScript:**
 - **ESLint**: JavaScript/TypeScript linting
 - **Prettier**: Code formatting
+- **TypeScript**: Enhanced TypeScript support
+
+**Python:**
+- **Python**: Official Python extension
+- **Pylance**: Fast, feature-rich Python language server
+- **Ruff**: Fast Python linter and formatter
+
+**Frameworks & Tools:**
 - **Tailwind CSS IntelliSense**: Tailwind class name completion
 - **ES7+ React Snippets**: React code snippets
-- **GitLens**: Enhanced Git integration
 - **Prisma**: Database schema support
+
+**Productivity:**
+- **GitLens**: Enhanced Git integration
 - **GitHub Copilot**: AI-powered code completion (if you have access)
 
 ## Troubleshooting

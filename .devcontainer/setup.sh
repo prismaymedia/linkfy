@@ -3,6 +3,12 @@ set -e
 
 echo "🚀 Setting up Linkfy development environment..."
 
+# Install uv (fast Python package manager)
+echo "🐍 Installing uv (Python package manager)..."
+curl -LsSf https://astral.sh/uv/install.sh | sh
+export PATH="$HOME/.cargo/bin:$PATH"
+echo "✅ uv installed successfully"
+
 # Install dependencies
 echo "📦 Installing dependencies..."
 yarn install

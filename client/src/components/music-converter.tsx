@@ -24,22 +24,26 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { SiYoutubemusic } from 'react-icons/si';
 import { Loader2, AlertCircle, CheckCircle2, Trash2 } from 'lucide-react';
+import DynamicServiceIcon from './dynamic-service-icon';
 import ResultCard, { ResultCardSkeleton } from './result-card';
 import { useTranslation } from 'react-i18next';
 import { Skeleton } from '@/components/ui/skeleton';
 import { motion, AnimatePresence } from 'framer-motion';
+import { detectMusicService } from '@/components/music-service-detector';
 
-const PreviewCardSkeleton = () => {
+const PreviewCardSkeleton = ({ url, getPreviewTranslationKey }: { url?: string; getPreviewTranslationKey: (url: string, contentType?: 'track' | 'playlist' | 'album') => string }) => {
   const { t } = useTranslation();
   return (
     <Card className="bg-white rounded-2xl shadow-lg mb-4 sm:mb-6">
       <CardHeader className="pb-3 p-4 sm:p-6">
         <div className="flex items-center">
-          <SiYoutubemusic className="text-youtube text-lg sm:text-xl mr-2" />
+          <DynamicServiceIcon
+            url={url || ''}
+            className="text-lg sm:text-xl mr-2"
+          />
           <h3 className="text-base sm:text-lg font-semibold text-gray-800">
-            {t('preview.youtubeTrack')}
+            {t(getPreviewTranslationKey(url || '', 'track'), { defaultValue: t('preview.unknownTrack') })}
           </h3>
         </div>
       </CardHeader>
@@ -79,6 +83,13 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
   const { toast } = useToast();
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+
+  // Helper function to get the preview translation key
+  const getPreviewTranslationKey = (url: string, contentType: 'track' | 'playlist' | 'album' = 'track') => {
+    const service = detectMusicService(url);
+    const contentTypeCapitalized = contentType.charAt(0).toUpperCase() + contentType.slice(1);
+    return `preview.${service}${contentTypeCapitalized}`;
+  };
 
   const form = useForm<z.input<typeof convertUrlSchema>>({
     resolver: zodResolver(convertUrlSchema),
@@ -314,19 +325,18 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                           disabled={
                             convertMutation.isPending || isLoadingPreview
                           }
-                          className={`w-full px-3 sm:px-4 py-3 sm:py-4 border rounded-lg focus:ring-2 focus:ring-spotify focus:border-spotify transition-colors duration-200 pr-10 text-sm sm:text-base ${
-                            fieldState.error
-                              ? 'border-red-500 focus:ring-red-500 focus:border-red-500 pr-10'
-                              : isFieldValid
-                                ? 'border-green-500 focus:ring-green-500 focus:border-green-500 pr-10'
-                                : isInputHovered && fieldState.isDirty
-                                  ? 'border-gray-300 pr-[52px]'
-                                  : 'border-gray-300 pr-10'
-                          }`}
+                          className={`w-full px-3 sm:px-4 py-3 sm:py-4 border rounded-lg focus:ring-2 focus:ring-spotify focus:border-spotify transition-colors duration-200 pr-10 text-sm sm:text-base ${fieldState.error
+                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500 pr-10'
+                            : isFieldValid
+                              ? 'border-green-500 focus:ring-green-500 focus:border-green-500 pr-10'
+                              : isInputHovered && fieldState.isDirty
+                                ? 'border-gray-300 pr-[52px]'
+                                : 'border-gray-300 pr-10'
+                            }`}
                         />
                         {!isLoadingPreview &&
-                        isInputHovered &&
-                        fieldState.isDirty ? (
+                          isInputHovered &&
+                          fieldState.isDirty ? (
                           <AnimatePresence>
                             <motion.button
                               type="button"
@@ -359,7 +369,11 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                             aria-label={t('form.invalidUrl')}
                           />
                         ) : (
-                          <SiYoutubemusic className="absolute right-3 top-1/2 transform -translate-y-1/2 text-youtube opacity-50 h-4 w-4 sm:h-5 sm:w-5" />
+                          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 opacity-50">
+                            <DynamicServiceIcon
+                              url={field.value || ''}
+                              className="w-4 sm:w-5 h-4 sm:h-5" />
+                          </div>
                         )}
                       </div>
                     </FormControl>
@@ -421,7 +435,7 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <PreviewCardSkeleton />
+            <PreviewCardSkeleton url={watchedUrl} getPreviewTranslationKey={getPreviewTranslationKey} />
           </motion.div>
         )}
 
@@ -440,7 +454,9 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                 className={`pb-3 ${isCompact ? 'p-4' : 'p-4 sm:p-6'}`}
               >
                 <div className="flex items-center">
-                  <SiYoutubemusic className="text-youtube text-xl mr-2" />
+                  <DynamicServiceIcon
+                    url={watchedUrl || ''}
+                    className="text-xl mr-2" />
                   <h3 className="text-lg font-semibold text-gray-800">
                     {t('preview.youtubeTrack', {
                       defaultValue: 'YouTube Preview',
@@ -457,7 +473,7 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
 
               <CardContent className="pt-0">
                 {youtubePreview.type === 'playlist' ||
-                youtubePreview.type === 'album' ? (
+                  youtubePreview.type === 'album' ? (
                   <div className="max-h-[400px] overflow-y-auto space-y-3 pr-2 custom-scrollbar">
                     {youtubePreview.tracks.map((track) => (
                       <div
@@ -487,23 +503,22 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                             convertedTracks.includes(track.videoId)
                           }
                           size="sm"
-                          className={`text-white font-medium py-1 px-3 rounded-md transition-colors duration-200 ${
-                            convertedTracks.includes(track.videoId)
-                              ? 'bg-gray-400 opacity-70 cursor-not-allowed'
-                              : convertingTracks.includes(track.videoId)
-                                ? 'bg-spotify/80 cursor-wait'
-                                : 'bg-spotify hover:bg-green-600'
-                          }`}
+                          className={`text-white font-medium py-1 px-3 rounded-md transition-colors duration-200 ${convertedTracks.includes(track.videoId)
+                            ? 'bg-gray-400 opacity-70 cursor-not-allowed'
+                            : convertingTracks.includes(track.videoId)
+                              ? 'bg-spotify/80 cursor-wait'
+                              : 'bg-spotify hover:bg-green-600'
+                            }`}
                         >
                           {convertedTracks.includes(track.videoId)
                             ? t('form.converted', { defaultValue: 'Converted' })
                             : convertingTracks.includes(track.videoId)
                               ? t('form.converting', {
-                                  defaultValue: 'Converting...',
-                                })
+                                defaultValue: 'Converting...',
+                              })
                               : t('form.convertSingle', {
-                                  defaultValue: 'Convert',
-                                })}
+                                defaultValue: 'Convert',
+                              })}
                         </Button>
                       </div>
                     ))}

@@ -1,5 +1,42 @@
 # Changelog
 
+## [2.5.0](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.4.0...linkfy-v2.5.0) (2025-11-11)
+
+
+### Features
+
+* **api:** implement universal /api/convert endpoint with platform auto-routing ([6787ce6](https://github.com/prismaymedia/linkfy/commit/6787ce6a4746ac49907f69872b2de40f30cfcfd6))
+* **client:** add mocks and update conversion form for universal API support ([c164cc7](https://github.com/prismaymedia/linkfy/commit/c164cc78ce19d1f095278e4057275a14c2973173))
+* Complete Q4 2025 Reorganization for Sprint 3-4 ([137bdcc](https://github.com/prismaymedia/linkfy/commit/137bdcca56fdc15da508fded08f432205667ba9b))
+* **config:** add GitHub Codespaces development environment ([f959a7d](https://github.com/prismaymedia/linkfy/commit/f959a7d5aa98514dfc8b0195ac02f750af4d3054))
+* **config:** add GitHub Codespaces development environment with Python/uv support ([2a898cc](https://github.com/prismaymedia/linkfy/commit/2a898cc86f37b308391bdbe5a9a49ad67555bac4))
+* **config:** add Python 3.12 and uv package manager support to devcontainer ([cfaf491](https://github.com/prismaymedia/linkfy/commit/cfaf491c3ab0a73020dda696bcadf031b7078fac))
+* **conversion-form:** enhance error handling, duplicate prevention, and user feedback ([56f072e](https://github.com/prismaymedia/linkfy/commit/56f072e07fca42f736105e3501d23733ad935020))
+* **conversion:** implement request deduplication and caching to improve performance ([758a069](https://github.com/prismaymedia/linkfy/commit/758a0692d619babb556ad7f88c14825c44146681))
+* **dynamic-service-icons:** implement URL-based icon switching for music platforms ([f37d052](https://github.com/prismaymedia/linkfy/commit/f37d052162836ea7044d1dc628ecd352c8eca808))
+* improve responsive UI and touch targets across components ([663defe](https://github.com/prismaymedia/linkfy/commit/663defe64a40e4eff4a4e8c0d6084985c3b3477e))
+* **ui:** add trash icon with hover actions ([3a630be](https://github.com/prismaymedia/linkfy/commit/3a630be8325adeb154c0f8a1a2af82875f8685a1))
+
+
+### Bug Fixes
+
+* **conversion-form:** apply Copilot suggestions for accessibility and focus styles ([11f650c](https://github.com/prismaymedia/linkfy/commit/11f650c1c3c47395a7ad8799e1bed980d39bf429))
+* **conversion:** apply Copilot suggestions and fix failing tests ([3913eca](https://github.com/prismaymedia/linkfy/commit/3913eca7e1e2b55a1770e4eef7803e8e6eaa4c90))
+* **conversion:** resolve debounce and preview issues in conversion form ([aef562d](https://github.com/prismaymedia/linkfy/commit/aef562dfc6b250b78c82e54e2b5e726e8ab0345e))
+* **dynamic-service-icon:** remove unused import and update translation strings ([c2767a5](https://github.com/prismaymedia/linkfy/commit/c2767a523687c329c1b27af628b3af6c14aef593))
+* improve mobile layout, navigation and form accessibility ([1370016](https://github.com/prismaymedia/linkfy/commit/13700165963766a69143f7912f9a2bc6502978e8))
+* **queryClient:** resolve failing test in queryClient.test.ts ([1ef9c2d](https://github.com/prismaymedia/linkfy/commit/1ef9c2d09db919d9dce0f98d671e3868e3608e6a))
+
+
+### Code Refactoring
+
+* **api:** reorganize /api/user-info endpoint structure and module organization ([dc6e7f8](https://github.com/prismaymedia/linkfy/commit/dc6e7f8dc651aecfd67ce428c5b336f27829ff49))
+* **conversion:** improve deduplication logic and remove redundant logs ([0716653](https://github.com/prismaymedia/linkfy/commit/0716653f2e62df7074598820b398c56f645cc471))
+* **conversion:** unify logic and shared schema for multi-platform detection ([94e9258](https://github.com/prismaymedia/linkfy/commit/94e92585954f0e044d6576efeeb39388b0c02c1f))
+* **music-converter:** replace Get Started with Music Converter component ([cc44067](https://github.com/prismaymedia/linkfy/commit/cc440678a0805ab70c1511ecc5bc126c5fdf0537))
+* **ui:** apply Copilot code review suggestions for class handling and layout improvements ([e480304](https://github.com/prismaymedia/linkfy/commit/e480304d29b29e0c3b14a74cf13edbc75f5772f9))
+* **user:** align user controller route with API versioning convention ([4c9ca13](https://github.com/prismaymedia/linkfy/commit/4c9ca13b6baaf068bc493d3ce818e0230f49947d))
+
 ## [2.4.0](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.3.2...linkfy-v2.4.0) (2025-10-22)
 
 

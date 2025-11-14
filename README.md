@@ -1,4 +1,4 @@
-<div align="c[🚀 App](https://prismaymedia.github.io/linkfy/) • [📖 Documentation](https://github.com/prismaymedia/linkfy/wiki) • [🗺️ Roadmap](./ROADMAP.md) • [📅 Q4 Sprint Plan](./docs/Q4_2025_SPRINT_PLAN.md) • [💬 Report Bug](https://github.com/prismaymedia/linkfy/issues) • [✨ Request Feature](https://github.com/prismaymedia/linkfy/issues)nter">
+<div align="center">
 
 # 🎵 Linkfy
 
@@ -11,7 +11,7 @@
 [![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)](https://reactjs.org/)
 [![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white)](https://nestjs.com/)
 
-[🚀 App](https://prismaymedia.github.io/linkfy/) • [📖 Documentation](https://github.com/prismaymedia/linkfy/wiki) • [�️ Roadmap](./ROADMAP.md) • [�💬 Report Bug](https://github.com/prismaymedia/linkfy/issues) • [✨ Request Feature](https://github.com/prismaymedia/linkfy/issues)
+[🚀 App](https://prismaymedia.github.io/linkfy/) • [📖 Documentation](https://github.com/prismaymedia/linkfy/wiki) • [🗺️ Roadmap](./ROADMAP.md) • [📅 Q4 Sprint Plan](./docs/Q4_2025_SPRINT_PLAN.md) • [💬 Report Bug](https://github.com/prismaymedia/linkfy/issues) • [✨ Request Feature](https://github.com/prismaymedia/linkfy/issues)
 
 ![Linkfy Demo](./assets/demo.gif)
 

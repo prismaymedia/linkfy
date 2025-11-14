@@ -13,34 +13,13 @@ import {
   ExceptionFilter,
   Logger,
 } from '@nestjs/common';
-import cors from 'cors';
+import { corsConfig } from './config/cors.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = new Logger('Bootstrap');
 
-  app.use(
-    cors({
-      origin: process.env.ALLOWED_ORIGINS
-        ? process.env.ALLOWED_ORIGINS.split(',')
-        : [
-          'http://localhost:5173',
-          'https://prismaymedia.github.io',
-          'https://linkfy-app.vercel.app',
-          'chrome-extension://mefdblccfmhfhhcgeckmcicgfnfgolpf',
-        ],
-      credentials: true,
-      allowedHeaders: [
-        'Content-Type',
-        'Authorization',
-        'Accept',
-        'sentry-trace',
-        'baggage',
-      ],
-      exposedHeaders: ['Authorization'],
-      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    }),
-  );
+  app.enableCors(corsConfig);
 
   app.use(json());
   app.use(urlencoded({ extended: false }));

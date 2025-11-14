@@ -119,12 +119,103 @@ docs: update [section] documentation
 refactor(auth): simplify [component]
 ```
 
+## ClickUp Task Management
+
+### Creating Sprint Tasks
+
+When instructed to create ClickUp tasks for a sprint, use the existing automation scripts located in `backlog/`:
+
+**Environment Setup** (One-time):
+```bash
+export CLICKUP_MCP_API_KEY="your-api-key-here"
+```
+
+**Method 1: Create Custom Sprint Tasks** (Recommended for new sprints)
+
+1. **Create task preview document**: Generate markdown file (`docs/SPRINT_X_Y_CLICKUP_PREVIEW.md`) with:
+   - Sprint name and date range
+   - All 16+ tasks with titles, descriptions, and hours
+   - TIER 1 (must-have) and TIER 2 (should-have) breakdown
+   - Complete subtasks and acceptance criteria for each task
+
+2. **Run creation script**:
+   ```bash
+   # Make sure API key is set
+   export CLICKUP_MCP_API_KEY="your-key"
+   
+   # Create tasks from preview using helper functions
+   source backlog/clickup-helpers.sh
+   
+   # Examples:
+   clickup_task "Task Title" "Description" 2 Q4-2025 sprint-5-6 feat client effort-large
+   clickup_feature "Dark Mode" "Implement theme system" client effort-large
+   clickup_bug "Fix bug title" "Description" client effort-medium
+   clickup_perf "Redis Caching" "Add caching layer" api effort-medium
+   ```
+
+3. **Helper Functions Available**:
+   - `clickup_task()` - Full custom task creation
+   - `clickup_feature()` - Quick feature creation with tags
+   - `clickup_bug()` - Quick bug fix creation
+   - `clickup_perf()` - Quick performance task creation
+   - `clickup_infra()` - Quick infrastructure task creation
+
+**Method 2: Bulk Task Creation from JSON**
+
+Use the pre-built script for standard sprints:
+```bash
+# For Sprint 3-4 tasks (already configured):
+source backlog/create-clickup-tasks.sh
+
+# This will create 8 pre-configured tasks with all details
+```
+
+**Key Files**:
+- `backlog/clickup-helpers.sh` - Reusable helper functions (150+ lines)
+- `backlog/create-clickup-tasks.sh` - Sprint 3-4 task template (173 lines)
+- `docs/SPRINT_X_Y_CLICKUP_PREVIEW.md` - Task preview/checklist before creation
+
+**List ID for Linkfy**: `901111127909`
+
+**Task Priority Levels**:
+- Priority 1 (🔥 HIGHEST): Critical features
+- Priority 2 (🟠 HIGH): Important features
+- Priority 3 (🟡 MEDIUM): Nice-to-have features
+- Priority 4 (🟢 LOW): Future enhancements
+
+**Tags Convention**:
+- Sprint: `sprint-5-6`, `sprint-7-8`, etc.
+- Type: `feat`, `fix`, `perf`, `refactor`, `chore`
+- Scope: `client`, `api`, `extension`, `infra`
+- Effort: `effort-small` (≤6h), `effort-medium` (6-12h), `effort-large` (12h+)
+- Status: `Q4-2025`, `Q1-2026`, etc.
+
+### Workflow Example
+
+```bash
+# 1. Create preview document (write as markdown)
+docs/SPRINT_5_6_CLICKUP_PREVIEW.md
+
+# 2. Source helper functions
+source backlog/clickup-helpers.sh
+
+# 3. Create tasks using helper functions
+clickup_feature "Dark Mode Implementation" "Full theme system..." client effort-large
+clickup_feature "Conversion Preview" "Real-time metadata..." client effort-medium
+clickup_feature "Favorites System" "Save and manage favorites..." client effort-medium
+
+# 4. Verify tasks created in ClickUp
+# (Check ClickUp web interface for task list)
+```
+
 ## Useful References
 
 - `README.md`: Setup, API, architecture overview
 - `shared/schema.ts`: Data models and validation
 - `client/src/lib/queryClient.ts`: API state management
 - `server/src/services/`: External API logic
+- `backlog/clickup-helpers.sh`: ClickUp task automation
+- `docs/SPRINT_*_CLICKUP_PREVIEW.md`: Sprint task checklists
 
 ---
 

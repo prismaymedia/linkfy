@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.6.0](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.5.0...linkfy-v2.6.0) (2025-11-14)
+
+
+### Features
+
+* Implement comprehensive version synchronization system ([2202204](https://github.com/prismaymedia/linkfy/commit/220220490f2141f36a9aa4d150c96ac7db84da28))
+
+
+### Bug Fixes
+
+* Correct alignment and formatting issues in README.md ([5330888](https://github.com/prismaymedia/linkfy/commit/5330888908f67f73aa5079c204a31c1b6891ccca))
+
 ## [2.5.0](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.4.0...linkfy-v2.5.0) (2025-11-11)
 
 

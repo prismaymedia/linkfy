@@ -15,11 +15,11 @@
 | Sprint | Dates | Theme | Release | Focus | Planned Capacity (h) | Status |
 |--------|-------|-------|---------|-------|----------------------|--------|
 | 1-2 | Oct 1-15 | Critical Stability 🔴 | v2.3.0 | Fix bugs, stable mobile | 80 | ✅ COMPLETED |
-| 3-4 | Oct 28-Nov 10 | API + Backlog + Features � | v2.4.0 | Universal `/api/convert`, Notion backlog, UX | 80 | 🚀 STARTING MONDAY |
-| 5-6 | Nov 13-24 | Extension + Engagement 💎 | v2.5.0 | History, favorites, extension complete | 80 | Backlog overflow items |
-| 7-8 | Nov 27-Dec 8 | Performance & Reliability ⚡ | v2.6.0 | Speed, caching, optimization | 76 | Adjusted for holiday Dec 8 |
-| 9 | Dec 11-22 | Music Player 🎵 | v2.7.0 | Player MVP complete | 68 | Dev A vacation days impact |
-| 10 | Dec 26-31 | Final Polish & Q1 Planning 🎁 | v2.8.0 | Wrap-up, Q1 prep | 48 | Holiday period reduced |
+| 3-4 | Oct 28-Nov 10 | API + Backlog + Features 🎨 | v2.4.0 | Universal `/api/convert`, Notion backlog, UX | 80 | ✅ **COMPLETED** |
+| 5-6 | Nov 13-24 | Dark Mode + Extension + UX 💎 | v2.5.0 | Dark mode, history, favorites, extension, UX | 80 | 🚀 **IN PROGRESS** |
+| 7-8 | Nov 27-Dec 8 | Performance & Reliability ⚡ | v2.6.0 | Speed, caching, UX polish, modal flows | 76 | Adjusted for holiday |
+| 9 | Dec 11-22 | Music Player + Drag & Drop P1 🎵 | v2.7.0 | Player MVP, drag & drop phase 1 | 68 | Dev A vacation impact |
+| 10 | Dec 26-31 | Final Polish + Drag & Drop P2 🎁 | v2.8.0 | Polish, drag & drop phase 2, Q1 prep | 48 | Holiday period reduced |
 
 > Capacity note: December staggered vacations (Dev A: first half 5 workdays off, Dev B: second half 5 workdays off) reduce effective capacity ~20% in Sprint 9 and ~35% in Sprint 10.
 

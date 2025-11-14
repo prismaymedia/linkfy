@@ -65,14 +65,14 @@ We're actively developing exciting new features! Check out our [**Q4 2025 Sprint
 
 ### Upcoming Releases
 
-- **v2.3.0** (Oct 15) - 🔴 Critical stability fixes & mobile improvements
-- **v2.4.0** (Oct 31) - 🚀 Dark mode + Smart URL detection
-- **v2.5.0** (Nov 15) - 💎 History, favorites & enhanced extension
-- **v2.6.0** (Nov 30) - ⚡ 2x faster with Redis caching
-- **v2.7.0** (Dec 15) - 🎵 Integrated music player
-- **v2.8.0** (Dec 31) - 🎁 Production-ready polish
+- **v2.3.0** (Oct 15) - 🔴 Critical stability fixes & mobile improvements ✅ COMPLETED
+- **v2.4.0** (Nov 10) - 🚀 Universal API + Notion backlog items ✅ COMPLETED
+- **v2.5.0** (Nov 24) - 💎 Dark mode, history, favorites & extension
+- **v2.6.0** (Dec 8) - ⚡ 2x faster with Redis caching & performance
+- **v2.7.0** (Dec 22) - 🎵 Integrated music player + drag & drop phase 1
+- **v2.8.0** (Dec 31) - 🎁 Production-ready polish & drag & drop phase 2
 
-👉 **Follow our progress**: [Roadmap](./ROADMAP.md) | [Sprint Plan](./docs/Q4_2025_SPRINT_PLAN.md)
+👉 **Follow our progress**: [Roadmap](./ROADMAP.md) | [Sprint Plan](./docs/Q4_2025_SPRINT_PLAN.md) | [Current Sprint Status](./docs/QUICK_REFERENCE.md)
 
 ## 🏛️ Architecture & Tech Stack
 

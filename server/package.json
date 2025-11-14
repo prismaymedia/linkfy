@@ -1,6 +1,6 @@
 {
   "name": "linkfy-server",
-  "version": "1.0.0",
+  "version": "2.5.0",
   "license": "MIT",
   "scripts": {
     "nest:dev": "nest start --watch --path tsconfig.json",

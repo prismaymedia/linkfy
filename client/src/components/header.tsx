@@ -47,16 +47,21 @@ export default function Header({ className }: HeaderProps) {
               <LanguageSwitcher />
             </div>
             <Button
-              onClick={() =>
-                window.open('https://github.com/prismaymedia/linkfy', '_blank')
-              }
+              asChild
               variant="ghost"
               size="sm"
               className="p-2 touch-target-sm"
               aria-label="GitHub repository"
             >
-              <SiGithub className="h-4 w-4 sm:h-5 sm:w-5" />
+              <a
+                href="https://github.com/prismaymedia/linkfy"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <SiGithub className="h-4 w-4 sm:h-5 sm:w-5" />
+              </a>
             </Button>
+
             {user && (
               <Button
                 onClick={() => setLocation(ROUTES.DASHBOARD)}

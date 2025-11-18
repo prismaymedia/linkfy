@@ -90,7 +90,7 @@ export const urlSchema = z
     },
     {
       message:
-        'URL must be a valid YouTube, Spotify, or Deezer track, album, or playlist link.',
+        'URL must be a valid YouTube, Spotify, Deezer, or Apple Music track, album, or playlist link.',
     },
   );
 

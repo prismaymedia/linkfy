@@ -1,5 +1,4 @@
 import { detectPlatform, insertConversionSchema } from '../../../shared/schema';
-import { z } from 'zod';
 
 describe('schema', () => {
   describe('detectPlatform', () => {

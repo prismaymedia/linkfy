@@ -1,13 +1,31 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { and, desc, eq, inArray } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import ws from 'ws';
 import * as schema from '../../../shared/schema';
+import {
+  conversionHistory,
+  favorites as favoritesTable,
+  type Favorite,
+  type HistoryEntry,
+  type InsertFavorite,
+  type InsertHistoryEntry,
+} from '../../../shared/schema';
+
+export class DatabaseOperationError extends Error {
+  constructor(message: string, public readonly cause?: unknown) {
+    super(message);
+    this.name = 'DatabaseOperationError';
+  }
+}
+
+type DrizzleDb = ReturnType<typeof drizzle>;
 
 @Injectable()
 export class DatabaseService implements OnModuleInit {
   private readonly logger = new Logger(DatabaseService.name);
-  private db: ReturnType<typeof drizzle>;
+  private db?: DrizzleDb;
 
   constructor() {
     this.logger.log('🔹 Initializing DatabaseService...');
@@ -19,16 +37,22 @@ export class DatabaseService implements OnModuleInit {
         '⚠️ DATABASE_URL not configured in environment variables',
       );
       this.logger.warn('⚠️ Drizzle ORM will not be available');
-    } else {
-      this.logger.log(`🔹 Database URL found`);
+      return;
     }
+
+    this.logger.log(`🔹 Database URL found`);
 
     // Configure WebSocket for Neon serverless
     neonConfig.webSocketConstructor = ws;
 
-    const pool = new Pool({ connectionString: databaseUrl });
-    this.db = drizzle(pool, { schema });
-    this.logger.log('✅ Drizzle database client initialized');
+    try {
+      const pool = new Pool({ connectionString: databaseUrl });
+      this.db = drizzle(pool, { schema });
+      this.logger.log('✅ Drizzle database client initialized');
+    } catch (error) {
+      this.logger.error('❌ Failed to initialize Drizzle client', error);
+      this.db = undefined;
+    }
   }
 
   async onModuleInit() {
@@ -36,16 +60,19 @@ export class DatabaseService implements OnModuleInit {
       '🔹 DatabaseService module initialized, verifying connection...',
     );
 
-    if (!process.env.DATABASE_URL) {
+    if (!this.db) {
       this.logger.warn(
-        '⚠️ Skipping database connection test (no DATABASE_URL)',
+        '⚠️ Skipping database connection test (database client unavailable)',
       );
       return;
     }
 
     try {
       // Test the connection by querying the conversions table
-      const result = await this.db.select().from(schema.conversions).limit(1);
+      const result = await this.db
+        .select()
+        .from(schema.conversions)
+        .limit(1);
       this.logger.log(
         `🎯 Connection to database successful, test query returned ${result.length} records`,
       );
@@ -54,7 +81,246 @@ export class DatabaseService implements OnModuleInit {
     }
   }
 
-  getDb() {
+  private ensureDb(): DrizzleDb {
+    if (!this.db) {
+      throw new DatabaseOperationError(
+        'Database client is not initialized. Check DATABASE_URL.',
+      );
+    }
     return this.db;
+  }
+
+  private async runQuery<T>(
+    operation: string,
+    handler: (db: DrizzleDb) => Promise<T>,
+  ): Promise<T> {
+    try {
+      const db = this.ensureDb();
+      return await handler(db);
+    } catch (error) {
+      this.logger.error(`❌ ${operation}`, error);
+      if (error instanceof DatabaseOperationError) {
+        throw error;
+      }
+      throw new DatabaseOperationError(operation, error);
+    }
+  }
+
+  getDb() {
+    return this.ensureDb();
+  }
+
+  async recordHistoryEntry(entry: InsertHistoryEntry): Promise<HistoryEntry> {
+    return this.runQuery('Failed to registrar historial', async (db) => {
+      const [created] = await db
+        .insert(conversionHistory)
+        .values({
+          ...entry,
+          payload: entry.payload ?? {},
+        })
+        .returning();
+      return created;
+    });
+  }
+
+  async updateHistoryEntry(
+    id: number,
+    userId: string,
+    updates: Partial<
+      Pick<
+        InsertHistoryEntry,
+        'targetPlatform' | 'targetUrl' | 'status' | 'payload'
+      >
+    >,
+  ): Promise<HistoryEntry> {
+    return this.runQuery('Failed to actualizar historial', async (db) => {
+      const [updated] = await db
+        .update(conversionHistory)
+        .set({
+          ...updates,
+          payload: updates.payload ?? {},
+          updatedAt: new Date(),
+        })
+        .where(
+          and(
+            eq(conversionHistory.id, id),
+            eq(conversionHistory.userId, userId),
+          ),
+        )
+        .returning();
+
+      if (!updated) {
+        throw new DatabaseOperationError(
+          `No se encontró historial con id ${id} para el usuario`,
+        );
+      }
+
+      return updated;
+    });
+  }
+
+  async deleteHistoryEntry(id: number, userId: string): Promise<void> {
+    await this.runQuery('Failed to eliminar historial', async (db) => {
+      await db
+        .delete(conversionHistory)
+        .where(
+          and(
+            eq(conversionHistory.id, id),
+            eq(conversionHistory.userId, userId),
+          ),
+        );
+    });
+  }
+
+  async listHistoryForUser(
+    userId: string,
+    limit = 50,
+  ): Promise<HistoryEntry[]> {
+    return this.runQuery('Failed to listar historial', async (db) => {
+      return await db
+        .select()
+        .from(conversionHistory)
+        .where(eq(conversionHistory.userId, userId))
+        .orderBy(desc(conversionHistory.createdAt))
+        .limit(limit);
+    });
+  }
+
+  async syncHistorySnapshot(
+    userId: string,
+    entries: InsertHistoryEntry[],
+  ): Promise<HistoryEntry[]> {
+    return this.runQuery('Failed to sincronizar historial', async (db) => {
+      return db.transaction(async (tx) => {
+        const synced: HistoryEntry[] = [];
+
+        for (const entry of entries) {
+          const normalizedEntry: InsertHistoryEntry = {
+            ...entry,
+            userId,
+            payload: entry.payload ?? {},
+          };
+
+          const [result] = await tx
+            .insert(conversionHistory)
+            .values(normalizedEntry)
+            .onConflictDoUpdate({
+              target: [
+                conversionHistory.userId,
+                conversionHistory.sourceUrl,
+              ],
+              set: {
+                targetPlatform: normalizedEntry.targetPlatform,
+                targetUrl: normalizedEntry.targetUrl,
+                status: normalizedEntry.status ?? 'pending',
+                payload: normalizedEntry.payload ?? {},
+                updatedAt: new Date(),
+              },
+            })
+            .returning();
+
+          if (result) {
+            synced.push(result);
+          }
+        }
+
+        return synced;
+      });
+    });
+  }
+
+  async upsertFavorite(
+    favorite: InsertFavorite,
+  ): Promise<Favorite | undefined> {
+    return this.runQuery('Failed to guardar favorito', async (db) => {
+      const [record] = await db
+        .insert(favoritesTable)
+        .values(favorite)
+        .onConflictDoUpdate({
+          target: [favoritesTable.userId, favoritesTable.historyId],
+          set: {
+            alias: favorite.alias,
+          },
+        })
+        .returning();
+      return record;
+    });
+  }
+
+  async removeFavorite(userId: string, historyId: number): Promise<void> {
+    await this.runQuery('Failed to eliminar favorito', async (db) => {
+      await db
+        .delete(favoritesTable)
+        .where(
+          and(
+            eq(favoritesTable.userId, userId),
+            eq(favoritesTable.historyId, historyId),
+          ),
+        );
+    });
+  }
+
+  async listFavoritesByUser(userId: string): Promise<Favorite[]> {
+    return this.runQuery('Failed to listar favoritos', async (db) => {
+      return await db
+        .select()
+        .from(favoritesTable)
+        .where(eq(favoritesTable.userId, userId))
+        .orderBy(desc(favoritesTable.createdAt));
+    });
+  }
+
+  async syncFavorites(
+    userId: string,
+    historyIds: number[],
+  ): Promise<Favorite[]> {
+    return this.runQuery('Failed to sincronizar favoritos', async (db) => {
+      return db.transaction(async (tx) => {
+        const existing = await tx
+          .select({
+            id: favoritesTable.id,
+            historyId: favoritesTable.historyId,
+          })
+          .from(favoritesTable)
+          .where(eq(favoritesTable.userId, userId));
+
+        const desiredSet = new Set(historyIds);
+        const existingSet = new Set(existing.map((fav) => fav.historyId));
+
+        const toInsert = historyIds.filter((id) => !existingSet.has(id));
+        const toDelete = existing
+          .filter((fav) => !desiredSet.has(fav.historyId))
+          .map((fav) => fav.historyId);
+
+        if (toInsert.length) {
+          await tx
+            .insert(favoritesTable)
+            .values(
+              toInsert.map((historyId) => ({
+                userId,
+                historyId,
+              })),
+            )
+            .onConflictDoNothing();
+        }
+
+        if (toDelete.length) {
+          await tx
+            .delete(favoritesTable)
+            .where(
+              and(
+                eq(favoritesTable.userId, userId),
+                inArray(favoritesTable.historyId, toDelete),
+              ),
+            );
+        }
+
+        return tx
+          .select()
+          .from(favoritesTable)
+          .where(eq(favoritesTable.userId, userId))
+          .orderBy(desc(favoritesTable.createdAt));
+      });
+    });
   }
 }

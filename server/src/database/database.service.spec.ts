@@ -34,7 +34,7 @@ describe('DatabaseService', () => {
     }
   });
 
-  it('debería registrar una entrada de historial', async () => {
+  it('should record a history entry', async () => {
     const historyRecord = {
       id: 1,
       userId: 'user-1',
@@ -65,7 +65,7 @@ describe('DatabaseService', () => {
     expect(result).toEqual(historyRecord);
   });
 
-  it('debería lanzar error al actualizar historial inexistente', async () => {
+  it('should throw error when updating non-existent history', async () => {
     const updateBuilder = createUpdateBuilder([]);
     mockDb.update.mockReturnValue(updateBuilder);
 
@@ -74,7 +74,7 @@ describe('DatabaseService', () => {
     ).rejects.toBeInstanceOf(DatabaseOperationError);
   });
 
-  it('debería sincronizar historial garantizando upsert transaccional', async () => {
+  it('should sync history ensuring transactional upsert', async () => {
     const firstResult = {
       id: 1,
       userId: 'user-3',
@@ -119,7 +119,7 @@ describe('DatabaseService', () => {
     expect(synced).toEqual([firstResult, secondResult]);
   });
 
-  it('debería sincronizar favoritos agregando y eliminando entradas', async () => {
+  it('should sync favorites by adding and removing entries', async () => {
     const existingFavorites = [
       { id: 10, historyId: 1 },
       { id: 11, historyId: 2 },
@@ -155,7 +155,7 @@ describe('DatabaseService', () => {
     expect(result).toEqual(syncedFavorites);
   });
 
-  it('debería envolver errores en DatabaseOperationError', async () => {
+  it('should wrap errors in DatabaseOperationError', async () => {
     mockDb.select.mockImplementation(() => {
       throw new Error('boom');
     });

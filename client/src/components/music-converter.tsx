@@ -397,7 +397,7 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                 </div>
               )}
 
-              {/* Solo mostrar botón de conversión para tracks individuales */}
+              {/* Only show conversion button for individual tracks */}
               {youtubePreview?.type === 'track' && (
                 <Button
                   type="submit"
@@ -551,7 +551,7 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
         )}
       </AnimatePresence>
 
-      {/* Resultado con AnimatePresence */}
+      {/* Result with AnimatePresence */}
       <AnimatePresence mode="wait">
         {convertMutation.isPending && (
           <motion.div

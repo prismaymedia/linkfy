@@ -93,7 +93,7 @@ async function bootstrap() {
 
   // Swagger
   const config = new DocumentBuilder()
-    .setTitle('API Conversión YouTube → Spotify')
+    .setTitle('API Conversion YouTube → Spotify')
     .setDescription('Convert YouTube Music links to Spotify')
     .setVersion('1.0')
     .build();

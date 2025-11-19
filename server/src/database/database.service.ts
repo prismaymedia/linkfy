@@ -111,7 +111,7 @@ export class DatabaseService implements OnModuleInit {
   }
 
   async recordHistoryEntry(entry: InsertHistoryEntry): Promise<HistoryEntry> {
-    return this.runQuery('Failed to registrar historial', async (db) => {
+    return this.runQuery('Failed to record history entry', async (db) => {
       const [created] = await db
         .insert(conversionHistory)
         .values({
@@ -133,14 +133,15 @@ export class DatabaseService implements OnModuleInit {
       >
     >,
   ): Promise<HistoryEntry> {
-    return this.runQuery('Failed to actualizar historial', async (db) => {
+    return this.runQuery('Failed to update history', async (db) => {
+      const updateData = { ...updates, updatedAt: new Date() };
+      if (updates.payload === undefined) {
+        delete updateData.payload;
+      }
+
       const [updated] = await db
         .update(conversionHistory)
-        .set({
-          ...updates,
-          payload: updates.payload ?? {},
-          updatedAt: new Date(),
-        })
+        .set(updateData)
         .where(
           and(
             eq(conversionHistory.id, id),
@@ -151,7 +152,7 @@ export class DatabaseService implements OnModuleInit {
 
       if (!updated) {
         throw new DatabaseOperationError(
-          `No se encontró historial con id ${id} para el usuario`,
+          `No history entry found with id ${id} for the user`,
         );
       }
 
@@ -160,7 +161,7 @@ export class DatabaseService implements OnModuleInit {
   }
 
   async deleteHistoryEntry(id: number, userId: string): Promise<void> {
-    await this.runQuery('Failed to eliminar historial', async (db) => {
+    await this.runQuery('Failed to delete history entry', async (db) => {
       await db
         .delete(conversionHistory)
         .where(
@@ -176,7 +177,7 @@ export class DatabaseService implements OnModuleInit {
     userId: string,
     limit = 50,
   ): Promise<HistoryEntry[]> {
-    return this.runQuery('Failed to listar historial', async (db) => {
+    return this.runQuery('Failed to list history', async (db) => {
       return await db
         .select()
         .from(conversionHistory)
@@ -190,7 +191,7 @@ export class DatabaseService implements OnModuleInit {
     userId: string,
     entries: InsertHistoryEntry[],
   ): Promise<HistoryEntry[]> {
-    return this.runQuery('Failed to sincronizar historial', async (db) => {
+    return this.runQuery('Failed to sync history', async (db) => {
       return db.transaction(async (tx) => {
         const synced: HistoryEntry[] = [];
 
@@ -232,7 +233,7 @@ export class DatabaseService implements OnModuleInit {
   async upsertFavorite(
     favorite: InsertFavorite,
   ): Promise<Favorite | undefined> {
-    return this.runQuery('Failed to guardar favorito', async (db) => {
+    return this.runQuery('Failed to save favorite', async (db) => {
       const [record] = await db
         .insert(favoritesTable)
         .values(favorite)
@@ -248,7 +249,7 @@ export class DatabaseService implements OnModuleInit {
   }
 
   async removeFavorite(userId: string, historyId: number): Promise<void> {
-    await this.runQuery('Failed to eliminar favorito', async (db) => {
+    await this.runQuery('Failed to delete favorite', async (db) => {
       await db
         .delete(favoritesTable)
         .where(
@@ -261,7 +262,7 @@ export class DatabaseService implements OnModuleInit {
   }
 
   async listFavoritesByUser(userId: string): Promise<Favorite[]> {
-    return this.runQuery('Failed to listar favoritos', async (db) => {
+    return this.runQuery('Failed to list favorites', async (db) => {
       return await db
         .select()
         .from(favoritesTable)
@@ -274,7 +275,7 @@ export class DatabaseService implements OnModuleInit {
     userId: string,
     historyIds: number[],
   ): Promise<Favorite[]> {
-    return this.runQuery('Failed to sincronizar favoritos', async (db) => {
+    return this.runQuery('Failed to sync favorites', async (db) => {
       return db.transaction(async (tx) => {
         const existing = await tx
           .select({

@@ -2,7 +2,7 @@ import { useEffect, useState, ReactNode } from 'react';
 import { useLocation } from 'wouter';
 import { isProtectedRoute, ROUTES } from '@/lib/routes';
 import { useAuth } from '@/contexts/AuthContext';
-import { Session } from '@supabase/supabase-js';
+import { useLoginModal } from '@/contexts/LoginModalContext';
 
 interface RouteGuardProps {
   children: ReactNode;
@@ -13,6 +13,8 @@ export default function RouteGuard({ children, path }: RouteGuardProps) {
   const { session, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
   const [, setLocation] = useLocation();
+  const { openModal } = useLoginModal();
+  const [showBlockedScreen, setShowBlockedScreen] = useState(false);
 
   useEffect(() => {
     // Mirror auth loading state into local loading to allow small delay before redirects
@@ -22,13 +24,15 @@ export default function RouteGuard({ children, path }: RouteGuardProps) {
       const requiresAuth = isProtectedRoute(path);
 
       if (requiresAuth && !session) {
-        setLocation(ROUTES.AUTH);
+        setShowBlockedScreen(true);
+        // Open modal instead of redirecting
+        openModal();
       } else if (!requiresAuth && session && path === ROUTES.AUTH) {
         setLocation(ROUTES.DASHBOARD);
       }
     }
     // only react to auth changes and path
-  }, [authLoading, session, path, setLocation]);
+  }, [authLoading, session, path, setLocation, openModal]);
 
   if (loading) {
     return (

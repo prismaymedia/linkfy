@@ -79,6 +79,83 @@
     overflow-x: hidden;
   }
 
+  button,
+  a,
+  input[type='button'],
+  input[type='submit'],
+  input[type='reset'],
+  [role='button'],
+  [role='link'],
+  .interactive,
+  .clickable {
+    cursor: pointer;
+    transition: background-color 200ms ease-out, border-color 200ms ease-out,
+      color 200ms ease-out, box-shadow 200ms ease-out, transform 200ms ease-out,
+      opacity 200ms ease-out;
+    will-change: transform, opacity, background-color;
+  }
+
+  /* Hover effects for desktop */
+  @media (hover: hover) and (pointer: fine) {
+    button:hover,
+    a:hover,
+    input[type='button']:hover,
+    input[type='submit']:hover,
+    input[type='reset']:hover,
+    [role='button']:hover,
+    [role='link']:hover,
+    .interactive:hover,
+    .clickable:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+  }
+
+  /* Active/touch state for all devices (especially mobile) */
+  button:active,
+  a:active,
+  input[type='button']:active,
+  input[type='submit']:active,
+  input[type='reset']:active,
+  [role='button']:active,
+  [role='link']:active,
+  .interactive:active,
+  .clickable:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Enhanced touch feedback for mobile */
+  @media (hover: none) and (pointer: coarse) {
+    button:active,
+    a:active,
+    input[type='button']:active,
+    input[type='submit']:active,
+    input[type='reset']:active,
+    [role='button']:active,
+    [role='link']:active,
+    .interactive:active,
+    .clickable:active {
+      transform: scale(0.97);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    button,
+    a,
+    input[type='button'],
+    input[type='submit'],
+    input[type='reset'],
+    [role='button'],
+    [role='link'],
+    .interactive,
+    .clickable {
+      transition: none;
+      transform: none;
+    }
+  }
+
   /* Mobile-first responsive utilities */
   @media (max-width: 319px) {
     .container {

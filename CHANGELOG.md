@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.6.0](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.5.0...linkfy-v2.6.0) (2025-11-21)
+
+
+### Features
+
+* **backend/config:** move CORS to config file with whitelist ([2c59762](https://github.com/prismaymedia/linkfy/commit/2c597629afc9560b45fb0ecf275df89d8b49c45b))
+* **config:** improve CORS config and whitelist handling ([f7d5b91](https://github.com/prismaymedia/linkfy/commit/f7d5b919c13a87c84d7821a920fade9d71a493f9))
+* **Frontend/UI:** add header repo link, enable user dashboard access, and remove unused UI elements ([63b9d1e](https://github.com/prismaymedia/linkfy/commit/63b9d1e032c750ba7802ae530844d994b1f51579))
+* Implement comprehensive version synchronization system ([2202204](https://github.com/prismaymedia/linkfy/commit/220220490f2141f36a9aa4d150c96ac7db84da28))
+
+
+### Bug Fixes
+
+* Correct alignment and formatting issues in README.md ([5330888](https://github.com/prismaymedia/linkfy/commit/5330888908f67f73aa5079c204a31c1b6891ccca))
+* secure external GitHub links in header and navigation ([a015450](https://github.com/prismaymedia/linkfy/commit/a0154503c858aa2f84cbd676383bef1b8536bfcb))
+
 ## [2.5.0](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.4.0...linkfy-v2.5.0) (2025-11-11)
 
 

@@ -23,7 +23,7 @@ import {
   Menu,
   X,
 } from 'lucide-react';
-import { SiYoutubemusic, SiSpotify } from 'react-icons/si';
+import { SiYoutubemusic, SiSpotify, SiGithub } from 'react-icons/si';
 import { useTranslation } from 'react-i18next';
 import { ROUTES, getNavigationRoutes, type RoutePath } from '@/lib/routes';
 import { Session } from '@supabase/supabase-js';
@@ -118,10 +118,15 @@ export default function Navigation({ className }: NavigationProps) {
             >
               <div className="flex items-center">
                 <SiYoutubemusic className="text-youtube text-lg sm:text-xl" />
-                <ArrowRight className="text-gray-400 mx-0.5 sm:mx-1" size={16} />
+                <ArrowRight
+                  className="text-gray-400 mx-0.5 sm:mx-1"
+                  size={16}
+                />
                 <SiSpotify className="text-spotify text-lg sm:text-xl" />
               </div>
-              <span className="font-bold text-lg sm:text-xl text-gray-800">Linkfy</span>
+              <span className="font-bold text-lg sm:text-xl text-gray-800">
+                Linkfy
+              </span>
             </button>
           </div>
 
@@ -219,8 +224,23 @@ export default function Navigation({ className }: NavigationProps) {
             </NavigationMenu>
           </div>
 
-          {/* Language Switcher & Mobile Menu Button */}
+          {/* Language Switcher, GitHub & Mobile Menu Button */}
           <div className="flex items-center space-x-1 sm:space-x-2">
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
+              className="p-2 touch-target-sm"
+              aria-label="GitHub repository"
+            >
+              <a
+                href="https://github.com/prismaymedia/linkfy"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <SiGithub className="h-4 w-4 sm:h-5 sm:w-5" />
+              </a>
+            </Button>
             <LanguageSwitcher />
             <div className="md:hidden">
               <Button
@@ -261,14 +281,31 @@ export default function Navigation({ className }: NavigationProps) {
               >
                 <div className="flex justify-between items-center mb-4 sm:mb-6">
                   <span className="font-bold text-base sm:text-lg">Menu</span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="touch-target-sm p-2"
-                  >
-                    <X className="h-4 w-4 sm:h-5 sm:w-5" />
-                  </Button>
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      asChild
+                      variant="ghost"
+                      size="sm"
+                      className="touch-target-sm p-2"
+                      aria-label="GitHub repository"
+                    >
+                      <a
+                        href="https://github.com/prismaymedia/linkfy"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <SiGithub className="h-4 w-4 sm:h-5 sm:w-5" />
+                      </a>
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="touch-target-sm p-2"
+                    >
+                      <X className="h-4 w-4 sm:h-5 sm:w-5" />
+                    </Button>
+                  </div>
                 </div>
 
                 <nav className="flex flex-col space-y-1 sm:space-y-2">

@@ -234,5 +234,10 @@
     "tip4": "Revisa la página de configuración para personalizar tus preferencias de conversión",
     "backToDashboard": "Volver al Panel",
     "settings": "Configuración"
+  },
+  "suggestion": {
+    "title": "URLs de Música Detectadas",
+    "convert": "Convertir",
+    "openLink": "Abrir en nueva pestaña"
   }
 }

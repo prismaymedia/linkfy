@@ -7,7 +7,11 @@ import { detectMusicService } from './music-service-detector';
 import { useToast } from '@/hooks/use-toast';
 import { useMutation } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
-import { convertUrlSchema, type ConvertUrlRequest, type SpotifyTrackInfo } from '../../../shared/schema';
+import {
+  convertUrlSchema,
+  type ConvertUrlRequest,
+  type SpotifyTrackInfo,
+} from '../../../shared/schema';
 import { Loader2, X, ExternalLink } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ResultCard from './result-card';
@@ -21,10 +25,13 @@ interface DetectedUrlData {
 }
 
 export default function UrlSuggestionPopup() {
-  const [detectedUrls, setDetectedUrls] = useState<DetectedUrlData | null>(null);
+  const [detectedUrls, setDetectedUrls] = useState<DetectedUrlData | null>(
+    null,
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [selectedUrl, setSelectedUrl] = useState<string | null>(null);
-  const [conversionResult, setConversionResult] = useState<SpotifyTrackInfo | null>(null);
+  const [conversionResult, setConversionResult] =
+    useState<SpotifyTrackInfo | null>(null);
   const { toast } = useToast();
   const { t } = useTranslation();
 
@@ -45,7 +52,7 @@ export default function UrlSuggestionPopup() {
               } else {
                 resolve(response);
               }
-            }
+            },
           );
         });
 
@@ -82,13 +89,10 @@ export default function UrlSuggestionPopup() {
     },
     onError: (error: any) => {
       const errorMessage = error?.message || t('conversion.errorDesc');
-      const isAuthError = errorMessage.includes('token') || errorMessage.includes('401') || errorMessage.includes('Unauthorized');
-      
+
       toast({
         title: t('conversion.errorTitle'),
-        description: isAuthError 
-          ? t('conversion.authRequired', 'Please sign in to convert URLs')
-          : errorMessage,
+        description: errorMessage,
         variant: 'destructive',
       });
     },
@@ -97,7 +101,7 @@ export default function UrlSuggestionPopup() {
   const handleConvert = async (url: string) => {
     setSelectedUrl(url);
     setConversionResult(null);
-    
+
     try {
       const parsedData = convertUrlSchema.parse({
         url,
@@ -106,13 +110,10 @@ export default function UrlSuggestionPopup() {
       await convertMutation.mutateAsync(parsedData);
     } catch (error: any) {
       const errorMessage = error?.message || t('conversion.errorDesc');
-      const isAuthError = errorMessage.includes('token') || errorMessage.includes('401') || errorMessage.includes('Unauthorized');
-      
+
       toast({
         title: t('conversion.errorTitle'),
-        description: isAuthError 
-          ? t('conversion.authRequired', 'Please sign in to convert URLs')
-          : errorMessage,
+        description: errorMessage,
         variant: 'destructive',
       });
     }
@@ -147,7 +148,9 @@ export default function UrlSuggestionPopup() {
       <Card className="mb-4">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg">{t('conversion.successTitle', 'Conversion Complete')}</CardTitle>
+            <CardTitle className="text-lg">
+              {t('conversion.successTitle', 'Conversion Complete')}
+            </CardTitle>
             <Button
               variant="ghost"
               size="sm"
@@ -182,7 +185,10 @@ export default function UrlSuggestionPopup() {
           </Button>
         </div>
         {detectedUrls.pageTitle && (
-          <p className="text-sm text-gray-600 truncate" title={detectedUrls.pageTitle}>
+          <p
+            className="text-sm text-gray-600 truncate"
+            title={detectedUrls.pageTitle}
+          >
             {detectedUrls.pageTitle}
           </p>
         )}
@@ -198,13 +204,21 @@ export default function UrlSuggestionPopup() {
               className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200 hover:border-blue-300 transition-colors"
             >
               <div className="flex items-center gap-3 flex-1 min-w-0">
-                <DynamicServiceIcon url={url} className="text-xl flex-shrink-0" />
+                <DynamicServiceIcon
+                  url={url}
+                  className="text-xl flex-shrink-0"
+                />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate" title={url}>
+                  <p
+                    className="text-sm font-medium text-gray-900 truncate"
+                    title={url}
+                  >
                     {url}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {service !== 'unknown' ? service.charAt(0).toUpperCase() + service.slice(1) : 'Music Service'}
+                    {service !== 'unknown'
+                      ? service.charAt(0).toUpperCase() + service.slice(1)
+                      : 'Music Service'}
                   </p>
                 </div>
               </div>
@@ -240,4 +254,3 @@ export default function UrlSuggestionPopup() {
     </Card>
   );
 }
-

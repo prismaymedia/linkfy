@@ -156,7 +156,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           sendResponse({ success: true, data: result });
           break;
 
-        case 'MUSIC_URLS_DETECTED':
+        case 'MUSIC_URLS_DETECTED': {
           const validUrls = filterValidUrls(data.urls || []);
           if (validUrls.length > 0 && sender.tab) {
             const tabId = sender.tab.id;
@@ -171,6 +171,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           }
           sendResponse({ success: true, count: validUrls.length });
           break;
+        }
 
         case 'GET_DETECTED_URLS':
           if (sender.tab) {

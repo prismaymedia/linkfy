@@ -51,20 +51,5 @@
 
   "background": {
     "service_worker": "background.js"
-  },
-
-  "web_accessible_resources": [
-    {
-      "resources": ["utils.js"],
-      "matches": [
-        "https://music.youtube.com/*",
-        "https://www.youtube.com/*",
-        "https://youtu.be/*",
-        "https://open.spotify.com/*",
-        "https://*.deezer.com/*",
-        "https://music.apple.com/*",
-        "https://itunes.apple.com/*"
-      ]
-    }
-  ]
+  }
 }

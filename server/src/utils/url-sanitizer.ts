@@ -117,7 +117,9 @@ export const urlSchema = z
             return /^\/s\/[a-zA-Z0-9]+$/.test(pathname);
           }
 
-          return /^\/([a-z]{2}\/)?(track|album|playlist|artist)\/[0-9]+$/.test(pathname);
+          return /^\/([a-z]{2}\/)?(track|album|playlist|artist)\/[0-9]+$/.test(
+            pathname,
+          );
         }
 
         if (

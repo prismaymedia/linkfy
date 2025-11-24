@@ -133,8 +133,7 @@ export const urlSchema = z
       }
     },
     {
-      message:
-        'URL must be a valid YouTube, Spotify, Deezer, or Apple Music track, album, playlist, or artist link.',
+      message: 'URL must be a valid track, album, playlist, or supported artist link from YouTube, Spotify, Deezer, or Apple Music.',
     },
   );
 

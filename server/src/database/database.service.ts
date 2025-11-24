@@ -72,10 +72,7 @@ export class DatabaseService implements OnModuleInit {
 
     try {
       // Test the connection by querying the conversions table
-      const result = await this.db
-        .select()
-        .from(schema.conversions)
-        .limit(1);
+      const result = await this.db.select().from(schema.conversions).limit(1);
       this.logger.log(
         `🎯 Connection to database successful, test query returned ${result.length} records`,
       );
@@ -202,24 +199,27 @@ export class DatabaseService implements OnModuleInit {
           const normalizedEntry: InsertHistoryEntry = {
             ...entry,
             userId,
-            payload: entry.payload ?? {},
           };
+
+          const conflictSet: Record<string, any> = {
+            targetPlatform: normalizedEntry.targetPlatform,
+            targetUrl: normalizedEntry.targetUrl,
+            updatedAt: new Date(),
+          };
+
+          if (normalizedEntry.status !== undefined) {
+            conflictSet.status = normalizedEntry.status;
+          }
+          if (normalizedEntry.payload !== undefined) {
+            conflictSet.payload = normalizedEntry.payload;
+          }
 
           const [result] = await tx
             .insert(conversionHistory)
             .values(normalizedEntry)
             .onConflictDoUpdate({
-              target: [
-                conversionHistory.userId,
-                conversionHistory.sourceUrl,
-              ],
-              set: {
-                targetPlatform: normalizedEntry.targetPlatform,
-                targetUrl: normalizedEntry.targetUrl,
-                status: normalizedEntry.status ?? 'pending',
-                payload: normalizedEntry.payload ?? {},
-                updatedAt: new Date(),
-              },
+              target: [conversionHistory.userId, conversionHistory.sourceUrl],
+              set: conflictSet,
             })
             .returning();
 

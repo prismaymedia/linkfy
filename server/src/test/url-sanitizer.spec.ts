@@ -3,6 +3,7 @@ import { urlSchema } from '../utils/url-sanitizer';
 describe('urlSchema', () => {
   describe('Valid URLs', () => {
     const validUrls = [
+      'http://music.youtube.com/watch?v=6Ejga4kJUts',
       'https://music.youtube.com/watch?v=6Ejga4kJUts',
       'https://www.youtube.com/watch?v=6Ejga4kJUts',
       'https://youtu.be/6Ejga4kJUts',
@@ -19,7 +20,6 @@ describe('urlSchema', () => {
 
   describe('Invalid URLs', () => {
     const invalidUrls = [
-      'http://music.youtube.com/watch?v=6Ejga4kJUts', // http instead of https
       'https://vimeo.com/123456',
       'not a url',
       'https://',

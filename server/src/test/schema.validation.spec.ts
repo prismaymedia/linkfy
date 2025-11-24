@@ -5,20 +5,35 @@ describe('schema', () => {
     it('should detect youtube platform', () => {
       expect(detectPlatform('https://www.youtube.com/watch?v=12345')).toBe('youtube');
       expect(detectPlatform('https://music.youtube.com/watch?v=12345')).toBe('youtube');
+      expect(detectPlatform('https://www.youtube.com/watch?v=12345')).toBe(
+        'youtube',
+      );
+      expect(detectPlatform('https://music.youtube.com/watch?v=12345')).toBe(
+        'youtube',
+      );
       expect(detectPlatform('https://youtu.be/12345')).toBe('youtube');
     });
 
     it('should detect spotify platform', () => {
       expect(detectPlatform('https://open.spotify.com/track/12345')).toBe('spotify');
+      expect(detectPlatform('https://open.spotify.com/track/12345')).toBe(
+        'spotify',
+      );
       expect(detectPlatform('spotify:track:12345')).toBe('spotify');
     });
 
     it('should detect deezer platform', () => {
       expect(detectPlatform('https://www.deezer.com/track/12345')).toBe('deezer');
+      expect(detectPlatform('https://www.deezer.com/track/12345')).toBe(
+        'deezer',
+      );
     });
 
     it('should detect apple platform', () => {
       expect(detectPlatform('https://music.apple.com/us/album/rehab/12345')).toBe('apple');
+      expect(
+        detectPlatform('https://music.apple.com/us/album/rehab/12345'),
+      ).toBe('apple');
     });
 
     it('should return unknown for other platforms', () => {

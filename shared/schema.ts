@@ -1,6 +1,7 @@
 import { pgTable, text, serial, varchar } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
+import { urlSchema } from '../server/src/utils/url-sanitizer';
 
 export const conversions = pgTable('conversions', {
   id: serial('id').primaryKey(),
@@ -20,8 +21,6 @@ export const insertConversionSchema = createInsertSchema(conversions).pick({
   deezerUrl: true,
   appleUrl: true,
 }) as unknown as z.ZodType<any, any, any>;
-
-import { urlSchema } from '../server/src/utils/url-sanitizer';
 
 export const convertUrlSchema = z.object({
   url: urlSchema,

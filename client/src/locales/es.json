@@ -57,6 +57,13 @@
     "convertButton": "Convertir",
     "clearInput": "Limpiar campo",
     "inputCleared": "Campo borrado",
+    "urlValidationError": "Error de Validación de URL",
+    "urlInvalidFormat": "Formato de URL inválido. Asegúrate de que la URL comience con http:// o https://",
+    "unsupportedService": "Servicio de música no compatible. Utiliza URLs de YouTube Music, Spotify, Apple Music o Deezer",
+    "urlNotSupported": "Este tipo de URL no es compatible para conversión",
+    "trackNotFound": "Canción no encontrada. Verifica la URL e inténtalo de nuevo",
+    "serviceError": "Error de servicio. El servicio de música puede estar temporalmente no disponible",
+    "networkError": "Error de red. Verifica tu conexión e inténtalo de nuevo",
     "serviceIcon": {
       "youtube": "Icono de YouTube Music",
       "spotify": "Icono de Spotify",

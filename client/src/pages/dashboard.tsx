@@ -178,37 +178,6 @@ export default function Dashboard() {
                 </button>
               </CardContent>
             </Card>
-
-            {/* Stats Card */}
-            <Card>
-              <CardHeader className="p-4 sm:p-6">
-                <CardTitle className="text-base sm:text-lg">
-                  {t('dashboard.stats', 'Your Stats')}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 sm:p-6 pt-0">
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 text-sm sm:text-base">
-                      {t('dashboard.conversions', 'Conversions')}
-                    </span>
-                    <span className="font-medium text-sm sm:text-base">0</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 text-sm sm:text-base">
-                      {t('dashboard.thisWeek', 'This Week')}
-                    </span>
-                    <span className="font-medium text-sm sm:text-base">0</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 text-sm sm:text-base">
-                      {t('dashboard.successRate', 'Success Rate')}
-                    </span>
-                    <span className="font-medium text-sm sm:text-base">--</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </div>

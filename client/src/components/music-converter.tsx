@@ -33,7 +33,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { detectMusicService } from '@/components/music-service-detector';
 import { ErrorMessage } from '@/components/ui/error-message';
 
-const PreviewCardSkeleton = ({ url, getPreviewTranslationKey }: { url?: string; getPreviewTranslationKey: (url: string, contentType?: 'track' | 'playlist' | 'album') => string }) => {
+const PreviewCardSkeleton = ({
+  url,
+  getPreviewTranslationKey,
+}: {
+  url?: string;
+  getPreviewTranslationKey: (
+    url: string,
+    contentType?: 'track' | 'playlist' | 'album',
+  ) => string;
+}) => {
   const { t } = useTranslation();
   return (
     <Card className="bg-white rounded-2xl shadow-lg mb-4 sm:mb-6">
@@ -44,7 +53,9 @@ const PreviewCardSkeleton = ({ url, getPreviewTranslationKey }: { url?: string; 
             className="text-lg sm:text-xl mr-2"
           />
           <h3 className="text-base sm:text-lg font-semibold text-gray-800">
-            {t(getPreviewTranslationKey(url || '', 'track'), { defaultValue: t('preview.unknownTrack') })}
+            {t(getPreviewTranslationKey(url || '', 'track'), {
+              defaultValue: t('preview.unknownTrack'),
+            })}
           </h3>
         </div>
       </CardHeader>
@@ -86,9 +97,13 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
   const queryClient = useQueryClient();
 
   // Helper function to get the preview translation key
-  const getPreviewTranslationKey = (url: string, contentType: 'track' | 'playlist' | 'album' = 'track') => {
+  const getPreviewTranslationKey = (
+    url: string,
+    contentType: 'track' | 'playlist' | 'album' = 'track',
+  ) => {
     const service = detectMusicService(url);
-    const contentTypeCapitalized = contentType.charAt(0).toUpperCase() + contentType.slice(1);
+    const contentTypeCapitalized =
+      contentType.charAt(0).toUpperCase() + contentType.slice(1);
     return `preview.${service}${contentTypeCapitalized}`;
   };
 
@@ -141,10 +156,44 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
   });
 
   const fetchYouTubePreview = async (url: string) => {
-    if (
-      !url ||
-      !convertUrlSchema.safeParse({ url, targetPlatform: 'spotify' }).success
-    ) {
+    if (!url || url.trim() === '') {
+      setYoutubePreview(null);
+      return;
+    }
+
+    // Enhanced URL validation with specific error messages
+    const urlValidation = convertUrlSchema.safeParse({
+      url,
+      targetPlatform: 'spotify',
+    });
+    if (!urlValidation.success) {
+      const error = urlValidation.error.issues[0];
+      let errorMessage = t('form.invalidUrl');
+
+      if (error.message.includes('url')) {
+        if (url.includes('http') && !url.startsWith('http')) {
+          errorMessage = t(
+            'form.urlInvalidFormat',
+            'Invalid URL format. Please ensure the URL starts with http:// or https://',
+          );
+        } else if (detectMusicService(url) === 'unknown') {
+          errorMessage = t(
+            'form.unsupportedService',
+            'Unsupported music service. Please use YouTube Music, Spotify, Apple Music, or Deezer URLs',
+          );
+        } else {
+          errorMessage = t(
+            'form.urlNotSupported',
+            'This URL type is not supported for conversion',
+          );
+        }
+      }
+
+      toast({
+        title: t('form.urlValidationError', 'URL Validation Error'),
+        description: errorMessage,
+        variant: 'destructive',
+      });
       setYoutubePreview(null);
       return;
     }
@@ -157,12 +206,49 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
         convert: false, // only preview YouTube data
       });
       if (!response.ok) {
+        const errorData = await response.json();
+        let errorMessage = t('conversion.errorDesc');
+
+        if (errorData.message) {
+          if (
+            errorData.message.includes('not found') ||
+            errorData.message.includes('404')
+          ) {
+            errorMessage = t(
+              'form.trackNotFound',
+              'Track not found. Please check the URL and try again',
+            );
+          } else if (
+            errorData.message.includes('unsupported') ||
+            errorData.message.includes('invalid')
+          ) {
+            errorMessage = t(
+              'form.serviceError',
+              'Service error. The music service may be temporarily unavailable',
+            );
+          }
+        }
+
+        toast({
+          title: t('conversion.errorTitle'),
+          description: errorMessage,
+          variant: 'destructive',
+        });
         setYoutubePreview(null);
         return;
       }
       const json = await response.json();
       setYoutubePreview(json as YouTubeTrackInfo);
-    } catch {
+    } catch (error) {
+      console.error('Preview fetch error:', error);
+      toast({
+        title: t('conversion.errorTitle'),
+        description: t(
+          'form.networkError',
+          'Network error. Please check your connection and try again',
+        ),
+        variant: 'destructive',
+      });
       setYoutubePreview(null);
     } finally {
       setIsLoadingPreview(false);
@@ -335,8 +421,8 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                             }`}
                         />
                         {!isLoadingPreview &&
-                          isInputHovered &&
-                          fieldState.isDirty ? (
+                        isInputHovered &&
+                        fieldState.isDirty ? (
                           <AnimatePresence>
                             <motion.button
                               type="button"
@@ -374,7 +460,8 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                           <div className="absolute right-3 top-1/2 transform -translate-y-1/2 opacity-50">
                             <DynamicServiceIcon
                               url={field.value || ''}
-                              className="w-4 sm:w-5 h-4 sm:h-5" />
+                              className="w-4 sm:w-5 h-4 sm:h-5"
+                            />
                           </div>
                         )}
                       </div>
@@ -461,7 +548,10 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <PreviewCardSkeleton url={watchedUrl} getPreviewTranslationKey={getPreviewTranslationKey} />
+            <PreviewCardSkeleton
+              url={watchedUrl}
+              getPreviewTranslationKey={getPreviewTranslationKey}
+            />
           </motion.div>
         )}
 
@@ -482,7 +572,8 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                 <div className="flex items-center">
                   <DynamicServiceIcon
                     url={watchedUrl || ''}
-                    className="text-xl mr-2" />
+                    className="text-xl mr-2"
+                  />
                   <h3 className="text-lg font-semibold text-gray-800">
                     {t('preview.youtubeTrack', {
                       defaultValue: 'YouTube Preview',
@@ -499,7 +590,7 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
 
               <CardContent className="pt-0">
                 {youtubePreview.type === 'playlist' ||
-                  youtubePreview.type === 'album' ? (
+                youtubePreview.type === 'album' ? (
                   <div className="max-h-[400px] overflow-y-auto space-y-3 pr-2 custom-scrollbar">
                     {youtubePreview.tracks.map((track) => (
                       <div
@@ -529,22 +620,23 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                             convertedTracks.includes(track.videoId)
                           }
                           size="sm"
-                          className={`text-white font-medium py-1 px-3 rounded-md transition-colors duration-200 ${convertedTracks.includes(track.videoId)
-                            ? 'bg-gray-400 opacity-70 cursor-not-allowed'
-                            : convertingTracks.includes(track.videoId)
-                              ? 'bg-spotify/80 cursor-wait'
-                              : 'bg-spotify hover:bg-green-600'
-                            }`}
+                          className={`text-white font-medium py-1 px-3 rounded-md transition-colors duration-200 ${
+                            convertedTracks.includes(track.videoId)
+                              ? 'bg-gray-400 opacity-70 cursor-not-allowed'
+                              : convertingTracks.includes(track.videoId)
+                                ? 'bg-spotify/80 cursor-wait'
+                                : 'bg-spotify hover:bg-green-600'
+                          }`}
                         >
                           {convertedTracks.includes(track.videoId)
                             ? t('form.converted', { defaultValue: 'Converted' })
                             : convertingTracks.includes(track.videoId)
                               ? t('form.converting', {
-                                defaultValue: 'Converting...',
-                              })
+                                  defaultValue: 'Converting...',
+                                })
                               : t('form.convertSingle', {
-                                defaultValue: 'Convert',
-                              })}
+                                  defaultValue: 'Convert',
+                                })}
                         </Button>
                       </div>
                     ))}

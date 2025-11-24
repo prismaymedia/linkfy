@@ -173,7 +173,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           break;
         }
 
-        case 'GET_DETECTED_URLS':
+        case 'GET_DETECTED_URLS': {
           if (sender.tab) {
             const tabData = detectedUrlsByTab.get(sender.tab.id);
             sendResponse({
@@ -199,8 +199,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             return true; // Keep channel open for async response
           }
           break;
+        }
 
-        case 'CLEAR_DETECTED_URLS':
+        case 'CLEAR_DETECTED_URLS': {
           if (sender.tab) {
             detectedUrlsByTab.delete(sender.tab.id);
             updateBadge(sender.tab.id, 0);
@@ -208,20 +209,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             sendResponse({ success: true });
           } else {
             // Get active tab when message comes from popup
-            chrome.tabs.query(
-              { active: true, currentWindow: true },
-              async (tabs) => {
-                if (tabs[0]) {
-                  detectedUrlsByTab.delete(tabs[0].id);
-                  updateBadge(tabs[0].id, 0);
-                }
-                await saveDetectedUrlsToStorage();
-                sendResponse({ success: true });
-              },
-            );
-            return true; // Keep channel open for async response
+            const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+            if (tabs[0]) {
+              detectedUrlsByTab.delete(tabs[0].id);
+              updateBadge(tabs[0].id, 0);
+            }
+            await saveDetectedUrlsToStorage();
+            sendResponse({ success: true });
           }
           break;
+        }
 
         default:
           sendResponse({ success: false, error: 'Unknown action' });

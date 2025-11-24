@@ -3,10 +3,7 @@ import {
   conversionHistory,
   favorites as favoritesTable,
 } from '../../../shared/schema';
-import {
-  DatabaseOperationError,
-  DatabaseService,
-} from './database.service';
+import { DatabaseOperationError, DatabaseService } from './database.service';
 
 describe('DatabaseService', () => {
   let service: DatabaseService;

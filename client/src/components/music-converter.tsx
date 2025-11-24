@@ -31,6 +31,7 @@ import { useTranslation } from 'react-i18next';
 import { Skeleton } from '@/components/ui/skeleton';
 import { motion, AnimatePresence } from 'framer-motion';
 import { detectMusicService } from '@/components/music-service-detector';
+import { ErrorMessage } from '@/components/ui/error-message';
 
 const PreviewCardSkeleton = ({ url, getPreviewTranslationKey }: { url?: string; getPreviewTranslationKey: (url: string, contentType?: 'track' | 'playlist' | 'album') => string }) => {
   const { t } = useTranslation();
@@ -300,7 +301,7 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                 name="url"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-medium text-gray-700">
+                    <FormLabel className={`text-sm font-medium ${fieldState.error ? 'text-red-600' : fieldState.isDirty && isFieldValid ? 'text-green-600' : 'text-gray-700'}`}>
                       {t('form.youtubeUrlLabel')}
                     </FormLabel>
                     <FormControl>
@@ -325,13 +326,12 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                           disabled={
                             convertMutation.isPending || isLoadingPreview
                           }
-                          className={`w-full px-3 sm:px-4 py-3 sm:py-4 border rounded-lg focus:ring-2 focus:ring-spotify focus:border-spotify transition-colors duration-200 pr-10 text-sm sm:text-base ${fieldState.error
-                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500 pr-10'
-                            : isFieldValid
-                              ? 'border-green-500 focus:ring-green-500 focus:border-green-500 pr-10'
-                              : isInputHovered && fieldState.isDirty
-                                ? 'border-gray-300 pr-[52px]'
-                                : 'border-gray-300 pr-10'
+                          className={`w-full px-3 sm:px-4 py-3 sm:py-4 border rounded-lg focus:ring-2 focus:ring-offset-2 transition-all duration-200 pr-10 text-sm sm:text-base ${
+                            fieldState.error
+                              ? 'border-red-500 bg-red-50 focus:ring-red-500 focus:border-red-500 focus:ring-offset-red-50'
+                              : isFieldValid
+                                ? 'border-green-500 bg-green-50 focus:ring-green-500 focus:border-green-500 focus:ring-offset-green-50'
+                                : 'border-gray-300 focus:ring-spotify focus:border-spotify focus:ring-offset-blue-50'
                             }`}
                         />
                         {!isLoadingPreview &&
@@ -357,7 +357,9 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                             </motion.button>
                           </AnimatePresence>
                         ) : isLoadingPreview ? (
-                          <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 animate-spin text-gray-400" />
+                          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-500">
+                            <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
+                          </div>
                         ) : isFieldValid ? (
                           <CheckCircle2
                             className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-green-500"
@@ -377,24 +379,48 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                         )}
                       </div>
                     </FormControl>
-                    <FormDescription
-                      id="url-hint"
-                      className={`text-xs text-gray-500 ${isCompact ? 'sr-only' : ''}`}
-                    >
-                      {t('form.youtubeUrlHint')}
-                    </FormDescription>
-                    <FormMessage role="alert" />
+                    {/* Hint y Error Messages mejorados */}
+                    <div className="space-y-2 mt-2">
+                      {!fieldState.error && (
+                        <FormDescription
+                          id="url-hint"
+                          className={`text-xs text-gray-500 flex items-center gap-1 ${isCompact ? 'sr-only' : ''}`}
+                        >
+                          {isFieldValid ? (
+                            <>
+                              <CheckCircle2 className="h-3 w-3 text-green-500" />
+                              <span className="text-green-600">{t('form.validation.valid')}</span>
+                            </>
+                          ) : (
+                            <>
+                              {t('form.youtubeUrlHint')}
+                            </>
+                          )}
+                        </FormDescription>
+                      )}
+                      {fieldState.error && (
+                        <ErrorMessage
+                          variant="error"
+                          message={fieldState.error.message}
+                          show={true}
+                          dismissible={false}
+                        />
+                      )}
+                    </div>
                   </FormItem>
                 )}
               />
 
               {!!cachedResultForWatchedUrl && (
-                <div className="flex items-center space-x-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                  <AlertCircle className="h-4 w-4 text-amber-600 flex-shrink-0" />
-                  <span className="text-sm text-amber-700">
-                    {t('form.duplicateUrlWarning')}
-                  </span>
-                </div>
+                <ErrorMessage
+                  variant="warning"
+                  message={t('form.duplicateUrlWarning')}
+                  show={true}
+                  dismissible={true}
+                  onDismiss={() => {
+                    // Opcionalmente, el usuario puede descartar la advertencia
+                  }}
+                />
               )}
 
               {/* Solo mostrar botón de conversión para tracks individuales */}

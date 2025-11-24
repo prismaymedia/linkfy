@@ -63,6 +63,23 @@
       "apple": "Icono de Apple Music",
       "deezer": "Icono de Deezer",
       "unknown": "Icono de servicio de música"
+    },
+    "errors": {
+      "urlRequired": "Por favor, ingresa una URL para comenzar",
+      "invalidUrlFormat": "El formato de URL es inválido. Asegúrate de que comience con https://",
+      "unsupportedPlatform": "Esta URL es de una plataforma no compatible. Servicios soportados: YouTube Music, Spotify, Apple Music y Deezer",
+      "invalidTrackUrl": "Esta URL no parece ser válida. Verifica el enlace e inténtalo de nuevo",
+      "emptyUrl": "El campo de URL no puede estar vacío",
+      "malformedUrl": "Esto no parece ser una URL válida. Verifica el formato e inténtalo de nuevo"
+    },
+    "hints": {
+      "urlExample": "Ejemplo: enlaces de canciones o listas de reproducción de YouTube Music, Spotify, Apple Music o Deezer",
+      "supportedServices": "YouTube Music, Spotify, Apple Music, Deezer"
+    },
+    "validation": {
+      "checking": "Validando URL...",
+      "valid": "La URL es válida y lista para convertir",
+      "invalid": "Esta URL no puede ser procesada"
     }
   },
   "preview": {

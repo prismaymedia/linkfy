@@ -22,12 +22,16 @@ export const urlSchema = z
     required_error: 'Music URL is required',
   })
   .min(1, 'Please enter a valid music URL')
-  .refine(
-    (url) =>
-      url.toLowerCase().startsWith('https://') ||
-      url.toLowerCase().startsWith('http://'),
-    'Please enter a valid URL format (starting with http:// or https://)',
-  )
+  .transform((url) => {
+    // Automatically correct http:// to https:// for better user experience
+    if (url.toLowerCase().startsWith('http://')) {
+      return 'https://' + url.substring(7);
+    }
+    return url;
+  })
+  .refine((url) => url.toLowerCase().startsWith('https://'), {
+    message: 'Please enter a valid URL format (e.g., https://...)',
+  })
   .refine(
     (url) => {
       try {
@@ -40,7 +44,7 @@ export const urlSchema = z
 
         // Enhanced XSS detection (decode and check for multiple encodings)
         const xssPattern =
-          /(<script|javascript:|vbscript:|data:|on\w+\s*=|on\w+\s*%3D|%3Cscript|&#x3c;script|&#60;script|src\s*=|src\s*%3D|src\s*&#x3d;|&#x2f;&#x2f;|\/\/)/i;
+          /(<script|javascript:|vbscript:|data:|on\w+\s*=|on\w+\s*%3D|%3Cscript|&#x3c;script|&#60;script|src\s*=|src\s*%3D|src\s*&#x3d;)/i;
         function decodeMulti(str: string, times = 2): string[] {
           const results = [str];
           let last = str;
@@ -129,16 +133,16 @@ export const urlSchema = z
     },
     {
       message:
-        'URL must be a valid YouTube, Spotify, Deezer, or Apple Music track, album, or playlist link.',
+        'URL must be a valid YouTube, Spotify, Deezer, or Apple Music track, album, playlist, or artist link.',
     },
   );
 
 /**
  * Validates a music streaming URL against security and format requirements.
  *
- * @param url 
- * @returns 
- * @throws {ZodError} 
+ * @param url - The URL string to validate
+ * @returns The validated URL string if valid
+ * @throws {ZodError} If the URL fails validation
  */
 export const validateUrl = (url: string): string => {
   return urlSchema.parse(url);

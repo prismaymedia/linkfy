@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 interface LoginModalContextType {
   isOpen: boolean;
@@ -10,20 +10,11 @@ const LoginModalContext = createContext<LoginModalContextType | undefined>(
   undefined,
 );
 
-export function LoginModalProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function LoginModalProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const openModal = useCallback(() => {
-    setIsOpen(true);
-  }, []);
-
-  const closeModal = useCallback(() => {
-    setIsOpen(false);
-  }, []);
+  const openModal = () => setIsOpen(true);
+  const closeModal = () => setIsOpen(false);
 
   return (
     <LoginModalContext.Provider value={{ isOpen, openModal, closeModal }}>
@@ -34,10 +25,8 @@ export function LoginModalProvider({
 
 export function useLoginModal() {
   const context = useContext(LoginModalContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useLoginModal must be used within a LoginModalProvider');
   }
   return context;
 }
-
-

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useLocation } from 'wouter';
 import { supabase, getSession, getRedirectUrl } from '@/lib/supabaseClient';
 import { useTranslation } from 'react-i18next';
@@ -36,84 +36,64 @@ export default function LoginModal() {
   useEffect(() => {
     if (session && isOpen) {
       closeModal();
-      // Only redirect to dashboard if we're on the auth route
-      // Otherwise, let the user stay on the route they were trying to access
+
       if (window.location.pathname === ROUTES.AUTH) {
-        setTimeout(() => {
+        const timeoutId = setTimeout(() => {
           setLocation(ROUTES.DASHBOARD);
         }, 200);
+
+        return () => clearTimeout(timeoutId);
       }
     }
   }, [session, isOpen, closeModal, setLocation]);
 
-  // Handle OAuth callback when modal opens on /auth route
-  useEffect(() => {
-    const handleOAuthCallback = async () => {
-      // Check if we're on the auth route (likely coming back from OAuth)
-      if (window.location.pathname === ROUTES.AUTH) {
-        setIsProcessingCallback(true);
-        try {
-          // Check for OAuth callback in URL hash
-          const hashParams = new URLSearchParams(
-            window.location.hash.substring(1),
-          );
-          const accessToken = hashParams.get('access_token');
-          const errorParam = hashParams.get('error');
+  // Handle OAuth callback
+  const handleOAuthCallback = useCallback(async () => {
+    if (window.location.pathname !== ROUTES.AUTH) return;
 
-          if (errorParam) {
-            setError(
-              t('errors.authError', 'Authentication error. Please try again.'),
-            );
-            setIsProcessingCallback(false);
-            // Clean up URL
-            window.history.replaceState(
-              {},
-              document.title,
-              window.location.pathname,
-            );
-            return;
-          }
+    setIsProcessingCallback(true);
 
-          if (accessToken) {
-            // Wait a bit for Supabase to process the session
-            await new Promise((resolve) => setTimeout(resolve, 500));
-            const currentSession = await getSession();
-            if (currentSession) {
-              setSuccess(t('auth.success', 'Successfully signed in!'));
-              // Clean up URL
-              window.history.replaceState(
-                {},
-                document.title,
-                window.location.pathname,
-              );
-              // Session update will trigger modal close via the other useEffect
-            } else {
-              setIsProcessingCallback(false);
-            }
-          } else {
-            // No OAuth callback, just normal modal open
-            setIsProcessingCallback(false);
-          }
-        } catch (err) {
-          console.error('Error handling OAuth callback:', err);
-          setError(
-            t('errors.authError', 'Authentication error. Please try again.'),
-          );
-          setIsProcessingCallback(false);
-          // Clean up URL on error
-          window.history.replaceState(
-            {},
-            document.title,
-            window.location.pathname,
-          );
-        }
+    try {
+      const hashParams = new URLSearchParams(window.location.hash.substring(1));
+      const accessToken = hashParams.get('access_token');
+      const errorParam = hashParams.get('error');
+
+      if (errorParam) {
+        setError(t('errors.authError', 'Authentication error. Please try again.'));
+        setIsProcessingCallback(false);
+        window.history.replaceState({}, document.title, window.location.pathname);
+        return;
       }
-    };
 
+      if (accessToken) {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        const currentSession = await getSession();
+
+        window.history.replaceState({}, document.title, window.location.pathname);
+
+        if (currentSession) {
+          setSuccess(t('auth.success', 'Successfully signed in!'));
+          // modal closes via session effect
+        } else {
+          setIsProcessingCallback(false);
+        }
+      } else {
+        setIsProcessingCallback(false);
+      }
+    } catch (error) {
+      console.error('OAuth callback error:', error);
+      setError(t('errors.authError', 'Authentication error. Please try again.'));
+      setIsProcessingCallback(false);
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, [t]);
+
+  // Run callback only when modal opens
+  useEffect(() => {
     if (isOpen) {
       handleOAuthCallback();
     }
-  }, [isOpen, t]);
+  }, [isOpen, handleOAuthCallback]);
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -131,19 +111,16 @@ export default function LoginModal() {
         setError(signInError.message);
       } else {
         setSuccess(t('auth.success', 'Successfully signed in!'));
-        // Session will be updated via AuthContext, which will trigger modal close
       }
-    } catch (err) {
-      console.error('Error signing in:', err);
-      setError(
-        t('errors.authError', 'An error occurred. Please try again.'),
-      );
+    } catch (error) {
+      console.error('Error signing in:', error);
+      setError(t('errors.authError', 'An error occurred. Please try again.'));
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleSocialLogin = async (provider: 'google' | 'github') => {
+  const handleSocialLogin = async (provider: 'google') => {
     setError(null);
     setSuccess(null);
     setIsOAuthLoading(true);
@@ -160,12 +137,9 @@ export default function LoginModal() {
         setError(oauthError.message);
         setIsOAuthLoading(false);
       }
-      // If successful, OAuth will redirect to /auth, which will be handled by the callback handler
-    } catch (err) {
-      console.error('Error initiating OAuth:', err);
-      setError(
-        t('errors.authError', 'An error occurred. Please try again.'),
-      );
+    } catch (error) {
+      console.error('Error initiating OAuth:', error);
+      setError(t('errors.authError', 'An error occurred. Please try again.'));
       setIsOAuthLoading(false);
     }
   };
@@ -182,19 +156,23 @@ export default function LoginModal() {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open && !isLoading && !isOAuthLoading && !isProcessingCallback) {
+          handleClose();
+        }
+      }}
+    >
       <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden">
-        {/* Header with gradient background */}
+        {/* Header */}
         <div className="bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-600 px-6 py-8 text-white">
           <DialogHeader className="space-y-2">
             <DialogTitle className="text-2xl sm:text-3xl font-bold text-white text-center">
               {t('auth.title', 'Sign in to Linkfy')}
             </DialogTitle>
             <DialogDescription className="text-blue-100 text-sm sm:text-base text-center">
-              {t(
-                'auth.subtitle',
-                'Sign in to start converting music links',
-              )}
+              {t('auth.subtitle', 'Sign in to start converting music links')}
             </DialogDescription>
           </DialogHeader>
         </div>

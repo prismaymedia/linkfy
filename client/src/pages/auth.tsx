@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
 import { useLoginModal } from '@/contexts/LoginModalContext';
 import { ROUTES } from '@/lib/routes';
+import { getSession } from '@/lib/supabaseClient';
 
 export default function AuthPage() {
   const [, setLocation] = useLocation();
@@ -16,7 +17,6 @@ export default function AuthPage() {
     // If authenticated, redirect to dashboard; if not, redirect to home
     // The modal handles most flows but we keep this as a fallback
     const checkSession = async () => {
-      const { getSession } = await import('@/lib/supabaseClient');
       const session = await getSession();
       if (session) {
         setLoadingMessage('Redirecting to dashboard...');

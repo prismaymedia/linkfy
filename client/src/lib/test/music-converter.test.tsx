@@ -7,7 +7,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { server } from '../mocks/server';
 import { http, HttpResponse } from 'msw';
 
-// Mock de react-i18next
+// Mock react-i18next
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => {

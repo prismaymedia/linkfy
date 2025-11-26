@@ -1,4 +1,14 @@
-import { pgTable, text, serial, varchar } from 'drizzle-orm/pg-core';
+import {
+  pgTable,
+  serial,
+  varchar,
+  uuid,
+  timestamp,
+  jsonb,
+  integer,
+  index,
+  uniqueIndex,
+} from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
 import { urlSchema } from '../server/src/utils/url-sanitizer';
@@ -14,6 +24,64 @@ export const conversions = pgTable('conversions', {
   albumName: varchar('album_name', { length: 200 }),
   thumbnailUrl: varchar('thumbnail_url', { length: 500 }),
 });
+
+export const conversionHistory = pgTable(
+  'conversion_history',
+  {
+    id: serial('id').primaryKey(),
+    userId: uuid('user_id').notNull(),
+    sourcePlatform: varchar('source_platform', { length: 32 }).notNull(),
+    sourceUrl: varchar('source_url', { length: 500 }).notNull(),
+    targetPlatform: varchar('target_platform', { length: 32 }),
+    targetUrl: varchar('target_url', { length: 500 }),
+    status: varchar('status', { length: 32 }).notNull().default('pending'),
+    payload: jsonb('payload')
+      .$type<Record<string, unknown>>()
+      .notNull()
+      .default({}),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => ({
+    userCreatedAtIdx: index('conversion_history_user_created_idx').on(
+      table.userId,
+      table.createdAt,
+    ),
+    userStatusIdx: index('conversion_history_user_status_idx').on(
+      table.userId,
+      table.status,
+    ),
+    userSourceUrlUnique: uniqueIndex(
+      'conversion_history_user_source_url_idx',
+    ).on(table.userId, table.sourceUrl),
+  }),
+);
+
+export const favorites = pgTable(
+  'favorites',
+  {
+    id: serial('id').primaryKey(),
+    userId: uuid('user_id').notNull(),
+    historyId: integer('history_id')
+      .notNull()
+      .references(() => conversionHistory.id, { onDelete: 'cascade' }),
+    alias: varchar('track_name', { length: 200 }),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => ({
+    userIdx: index('favorites_user_idx').on(table.userId),
+    userHistoryUnique: uniqueIndex('favorites_user_history_idx').on(
+      table.userId,
+      table.historyId,
+    ),
+  }),
+);
 
 export const insertConversionSchema = createInsertSchema(conversions).pick({
   youtubeUrl: true,
@@ -55,6 +123,11 @@ export const detectPlatform = (
 export type InsertConversion = z.infer<typeof insertConversionSchema>;
 export type Conversion = typeof conversions.$inferSelect;
 export type ConvertUrlRequest = z.infer<typeof convertUrlSchema>;
+export type HistoryEntry = typeof conversionHistory.$inferSelect;
+export type InsertHistoryEntry = typeof conversionHistory.$inferInsert;
+export type UpdateHistoryEntry = Partial<InsertHistoryEntry>;
+export type Favorite = typeof favorites.$inferSelect;
+export type InsertFavorite = typeof favorites.$inferInsert;
 
 export interface SpotifyTrackInfo {
   spotifyUrl: string;

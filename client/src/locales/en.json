@@ -263,5 +263,10 @@
     "tip4": "Check the settings page to customize your conversion preferences",
     "backToDashboard": "Back to Dashboard",
     "settings": "Settings"
+  },
+  "suggestion": {
+    "title": "Music URLs Detected",
+    "convert": "Convert",
+    "openLink": "Open in new tab"
   }
 }

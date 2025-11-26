@@ -2,11 +2,36 @@
   "manifest_version": 3,
   "name": "Linkfy",
   "version": "1.0.0",
-  "description": "Extensión de Google Chrome para Linkfy - Gestiona tus enlaces de forma inteligente",
+  "description": "Manage your links intelligently",
 
-  "permissions": ["storage", "activeTab", "scripting"],
+  "permissions": ["storage", "activeTab", "scripting", "tabs"],
 
-  "host_permissions": ["https://linkfy-production.up.railway.app/*"],
+  "host_permissions": [
+    "https://linkfy-production.up.railway.app/*",
+    "https://music.youtube.com/*",
+    "https://www.youtube.com/*",
+    "https://youtu.be/*",
+    "https://open.spotify.com/*",
+    "https://*.deezer.com/*",
+    "https://music.apple.com/*",
+    "https://itunes.apple.com/*"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": [
+        "https://music.youtube.com/*",
+        "https://www.youtube.com/*",
+        "https://youtu.be/*",
+        "https://open.spotify.com/*",
+        "https://*.deezer.com/*",
+        "https://music.apple.com/*",
+        "https://itunes.apple.com/*"
+      ],
+      "js": ["utils.js", "content.js"],
+      "run_at": "document_idle"
+    }
+  ],
 
   "icons": {
     "16": "icons/icon16.png",

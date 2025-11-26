@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { YoutubeService } from './youtube.service';
+import { YoutubeService, YouTubeLinkType } from './youtube.service';
 import { SpotifyService } from './spotify.service';
 import { ConvertUrlRequest, SpotifyTrackInfo } from '../../../shared/schema';
 import { StorageService } from './storage.service';
@@ -165,8 +165,14 @@ export class ConversionService {
   }
 
   private isValidYoutubeUrl(url: string): boolean {
-    const regex =
-      /^(https?:\/\/)?(m\.)?(music\.)?(www\.)?(youtube\.com|youtu\.be|music\.youtube\.com)\/(watch\?v=|playlist\?list=|browse\/|[\w-]{11})/;
-    return regex.test(url);
+    try {
+      const parsed = this.youtubeService.parseUrl(url);
+      // We consider it valid if the parser can identify it as a video, playlist, or album.
+      return parsed.type !== YouTubeLinkType.UNKNOWN;
+    } catch (error) {
+      // If URL parsing fails, it's not a valid URL.
+      this.logger.debug(`URL parsing failed for ${url}`, error);
+      return false;
+    }
   }
 }

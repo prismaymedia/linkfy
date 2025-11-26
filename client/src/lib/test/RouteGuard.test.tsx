@@ -10,6 +10,7 @@ import {
 } from 'vitest';
 import RouteGuard from '@/components/route-guard';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLoginModal } from '@/contexts/LoginModalContext';
 import { useLocation } from 'wouter';
 import * as routes from '@/lib/routes';
 import React from 'react';
@@ -17,6 +18,10 @@ import React from 'react';
 // Mock hooks and helpers
 vi.mock('@/contexts/AuthContext', () => ({
   useAuth: vi.fn(),
+}));
+
+vi.mock('@/contexts/LoginModalContext', () => ({
+  useLoginModal: vi.fn(),
 }));
 
 vi.mock('wouter', () => {
@@ -36,14 +41,18 @@ vi.mock('@/lib/routes', () => ({
 
 const mockUseAuth = useAuth as unknown as Mock;
 const mockUseLocation = useLocation as unknown as Mock;
+const mockUseLoginModal = useLoginModal as unknown as Mock;
 const mockIsProtectedRoute = routes.isProtectedRoute as Mock;
 
 describe('RouteGuard', () => {
   let setLocation: MockInstance<any>;
+  let openModal: MockInstance<any>;
 
   beforeEach(() => {
     setLocation = vi.fn();
+    openModal = vi.fn();
     mockUseLocation.mockReturnValue(['/', setLocation]);
+    mockUseLoginModal.mockReturnValue({ openModal, closeModal: vi.fn() });
   });
 
   it('renders loading spinner while auth is loading', () => {
@@ -59,7 +68,7 @@ describe('RouteGuard', () => {
     expect(screen.getByText(/Loading.../i)).toBeInTheDocument();
   });
 
-  it('redirects unauthenticated user from protected route to login', async () => {
+  it('opens login modal for unauthenticated user on protected route', async () => {
     mockUseAuth.mockReturnValue({ session: null, loading: false });
     mockIsProtectedRoute.mockReturnValue(true);
 
@@ -70,7 +79,7 @@ describe('RouteGuard', () => {
     );
 
     await waitFor(() => {
-      expect(setLocation).toHaveBeenCalledWith(routes.ROUTES.AUTH);
+      expect(openModal).toHaveBeenCalled();
     });
   });
 

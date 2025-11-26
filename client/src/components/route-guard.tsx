@@ -1,36 +1,38 @@
-import { useEffect, useState, ReactNode } from 'react';
+import { useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { isProtectedRoute, ROUTES } from '@/lib/routes';
 import { useAuth } from '@/contexts/AuthContext';
-import { Session } from '@supabase/supabase-js';
+import { useLoginModal } from '@/contexts/LoginModalContext';
 
 interface RouteGuardProps {
-  children: ReactNode;
+  children: React.ReactNode;
   path: string;
 }
 
 export default function RouteGuard({ children, path }: RouteGuardProps) {
   const { session, loading: authLoading } = useAuth();
-  const [loading, setLoading] = useState(true);
   const [, setLocation] = useLocation();
+  const { openModal } = useLoginModal();
+
+  const requiresAuth = isProtectedRoute(path);
 
   useEffect(() => {
-    // Mirror auth loading state into local loading to allow small delay before redirects
-    setLoading(authLoading);
+    if (authLoading) return;
 
-    if (!authLoading) {
-      const requiresAuth = isProtectedRoute(path);
-
-      if (requiresAuth && !session) {
-        setLocation(ROUTES.AUTH);
-      } else if (!requiresAuth && session && path === ROUTES.AUTH) {
-        setLocation(ROUTES.DASHBOARD);
-      }
+    // User is not authenticated and trying to access a protected route → open login modal
+    if (requiresAuth && !session) {
+      openModal();
+      return;
     }
-    // only react to auth changes and path
-  }, [authLoading, session, path, setLocation]);
 
-  if (loading) {
+    // User is authenticated and trying to access the auth page → redirect to dashboard
+    if (!requiresAuth && session && path === ROUTES.AUTH) {
+      setLocation(ROUTES.DASHBOARD);
+    }
+  }, [authLoading, requiresAuth, session, path, openModal, setLocation]);
+
+  // Show global loading state while auth status is being determined
+  if (authLoading) {
     return (
       <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center">
@@ -41,12 +43,12 @@ export default function RouteGuard({ children, path }: RouteGuardProps) {
     );
   }
 
-  // For protected routes, only render if authenticated
-  if (isProtectedRoute(path) && !session) {
+  // Block rendering of protected content until the user logs in (login modal is already open)
+  if (requiresAuth && !session) {
     return null;
   }
 
-  // For auth route, only render if not authenticated
+  // Prevent rendering of /auth route when user is already authenticated
   if (path === ROUTES.AUTH && session) {
     return null;
   }

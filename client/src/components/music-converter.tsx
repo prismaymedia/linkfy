@@ -505,10 +505,8 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                   variant="warning"
                   message={t('form.duplicateUrlWarning')}
                   show={true}
-                  dismissible={true}
-                  onDismiss={() => {
-                    // Opcionalmente, el usuario puede descartar la advertencia
-                  }}
+                  dismissible={false}
+                  dismissLabel={t('form.closeError')}
                 />
               )}
 

@@ -10,6 +10,7 @@ interface ErrorMessageProps {
   show?: boolean;
   onDismiss?: () => void;
   dismissible?: boolean;
+  dismissLabel?: string; 
 }
 
 const variantStyles = {
@@ -40,6 +41,7 @@ export const ErrorMessage = React.forwardRef<HTMLDivElement, ErrorMessageProps>(
       show = true,
       onDismiss,
       dismissible = false,
+      dismissLabel = 'Dismiss message'
     },
     ref,
   ) => {
@@ -74,7 +76,7 @@ export const ErrorMessage = React.forwardRef<HTMLDivElement, ErrorMessageProps>(
               'flex-shrink-0 hover:opacity-70 transition-opacity p-1 rounded',
               styles.icon,
             )}
-            aria-label="Dismiss message"
+            aria-label={dismissLabel}
           >
             <XCircle className="h-5 w-5" />
           </button>

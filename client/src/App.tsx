@@ -4,6 +4,8 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { LoginModalProvider } from '@/contexts/LoginModalContext';
+import LoginModal from '@/components/login-modal';
 import RouteGuard from '@/components/route-guard';
 import Navigation from '@/components/navigation';
 import BreadcrumbNav from '@/components/breadcrumb-nav';
@@ -100,11 +102,14 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <TooltipProvider>
-          <Toaster />
-          <AppRouter />
-          <Analytics />
-        </TooltipProvider>
+        <LoginModalProvider>
+          <TooltipProvider>
+            <Toaster />
+            <AppRouter />
+            <LoginModal />
+            <Analytics />
+          </TooltipProvider>
+        </LoginModalProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

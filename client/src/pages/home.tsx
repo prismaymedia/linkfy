@@ -9,10 +9,12 @@ import MusicConverter from '@/components/music-converter';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ROUTES } from '@/lib/routes';
+import { useLoginModal } from '@/contexts/LoginModalContext';
 
 export default function Home() {
   const { t } = useTranslation();
   const [, setLocation] = useLocation();
+  const { openModal } = useLoginModal();
 
   useEffect(() => {
     const checkSession = async () => {
@@ -26,7 +28,7 @@ export default function Home() {
   }, [setLocation]);
 
   const handleGetStarted = () => {
-    setLocation(ROUTES.AUTH);
+    openModal();
   };
 
   return (

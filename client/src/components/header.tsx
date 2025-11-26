@@ -5,6 +5,7 @@ import { LogIn, ArrowRight, LayoutDashboard } from 'lucide-react';
 import { SiYoutubemusic, SiSpotify, SiGithub } from 'react-icons/si';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@/lib/routes';
+import { useLoginModal } from '@/contexts/LoginModalContext';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface HeaderProps {
@@ -14,10 +15,11 @@ interface HeaderProps {
 export default function Header({ className }: HeaderProps) {
   const { t } = useTranslation();
   const [, setLocation] = useLocation();
+  const { openModal } = useLoginModal();
   const { user } = useAuth();
 
   const handleLoginClick = () => {
-    setLocation(ROUTES.AUTH);
+    openModal();
   };
 
   return (

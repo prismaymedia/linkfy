@@ -54,6 +54,7 @@ export const ErrorMessage = React.forwardRef<HTMLDivElement, ErrorMessageProps>(
       <div
         ref={ref}
         role="alert"
+        aria-live="polite"
         className={cn(
           'flex items-start gap-3 p-3 rounded-lg transition-all duration-200 animate-in fade-in slide-in-from-top-2',
           styles.container,
@@ -64,9 +65,7 @@ export const ErrorMessage = React.forwardRef<HTMLDivElement, ErrorMessageProps>(
           {icon || <DefaultIcon className="h-5 w-5" />}
         </div>
 
-        <div className="flex-1 text-sm leading-relaxed">
-          {message}
-        </div>
+        <div className="flex-1 text-sm leading-relaxed">{message}</div>
 
         {dismissible && onDismiss && (
           <button

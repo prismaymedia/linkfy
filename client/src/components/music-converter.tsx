@@ -387,7 +387,9 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                 name="url"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className={`text-sm font-medium ${fieldState.error ? 'text-red-600' : fieldState.isDirty && isFieldValid ? 'text-green-600' : 'text-gray-700'}`}>
+                    <FormLabel
+                      className={`text-sm font-medium ${fieldState.error ? 'text-red-600' : fieldState.isDirty && isFieldValid ? 'text-green-600' : 'text-gray-700'}`}
+                    >
                       {t('form.youtubeUrlLabel')}
                     </FormLabel>
                     <FormControl>
@@ -421,8 +423,8 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                             }`}
                         />
                         {!isLoadingPreview &&
-                        isInputHovered &&
-                        fieldState.isDirty ? (
+                          isInputHovered &&
+                          fieldState.isDirty ? (
                           <AnimatePresence>
                             <motion.button
                               type="button"
@@ -476,12 +478,12 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                           {isFieldValid ? (
                             <>
                               <CheckCircle2 className="h-3 w-3 text-green-500" />
-                              <span className="text-green-600">{t('form.validation.valid')}</span>
+                              <span className="text-green-600">
+                                {t('form.validation.valid')}
+                              </span>
                             </>
                           ) : (
-                            <>
-                              {t('form.youtubeUrlHint')}
-                            </>
+                            <>{t('form.youtubeUrlHint')}</>
                           )}
                         </FormDescription>
                       )}
@@ -590,7 +592,7 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
 
               <CardContent className="pt-0">
                 {youtubePreview.type === 'playlist' ||
-                youtubePreview.type === 'album' ? (
+                  youtubePreview.type === 'album' ? (
                   <div className="max-h-[400px] overflow-y-auto space-y-3 pr-2 custom-scrollbar">
                     {youtubePreview.tracks.map((track) => (
                       <div
@@ -620,23 +622,22 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                             convertedTracks.includes(track.videoId)
                           }
                           size="sm"
-                          className={`text-white font-medium py-1 px-3 rounded-md transition-colors duration-200 ${
-                            convertedTracks.includes(track.videoId)
+                          className={`text-white font-medium py-1 px-3 rounded-md transition-colors duration-200 ${convertedTracks.includes(track.videoId)
                               ? 'bg-gray-400 opacity-70 cursor-not-allowed'
                               : convertingTracks.includes(track.videoId)
                                 ? 'bg-spotify/80 cursor-wait'
                                 : 'bg-spotify hover:bg-green-600'
-                          }`}
+                            }`}
                         >
                           {convertedTracks.includes(track.videoId)
                             ? t('form.converted', { defaultValue: 'Converted' })
                             : convertingTracks.includes(track.videoId)
                               ? t('form.converting', {
-                                  defaultValue: 'Converting...',
-                                })
+                                defaultValue: 'Converting...',
+                              })
                               : t('form.convertSingle', {
-                                  defaultValue: 'Convert',
-                                })}
+                                defaultValue: 'Convert',
+                              })}
                         </Button>
                       </div>
                     ))}

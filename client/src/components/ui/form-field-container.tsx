@@ -1,5 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface FormFieldContainerProps {
   label?: string;
@@ -12,7 +13,10 @@ interface FormFieldContainerProps {
   fieldId?: string;
 }
 
-export const FormFieldContainer = React.forwardRef<HTMLDivElement, FormFieldContainerProps>(
+export const FormFieldContainer = React.forwardRef<
+  HTMLDivElement,
+  FormFieldContainerProps
+>(
   (
     {
       label,
@@ -26,6 +30,7 @@ export const FormFieldContainer = React.forwardRef<HTMLDivElement, FormFieldCont
     },
     ref,
   ) => {
+    const { t } = useTranslation();
     return (
       <div
         ref={ref}
@@ -48,7 +53,7 @@ export const FormFieldContainer = React.forwardRef<HTMLDivElement, FormFieldCont
             )}
           </div>
         )}
-        
+
         <div className="relative">
           {children}
         </div>
@@ -71,7 +76,7 @@ export const FormFieldContainer = React.forwardRef<HTMLDivElement, FormFieldCont
         {/* Success Message */}
         {validationState === 'success' && (
           <p className="text-xs text-green-600 flex items-center gap-1">
-            ✓ Campo válido
+            {t('form.validation.valid')}
           </p>
         )}
       </div>

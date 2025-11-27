@@ -32,6 +32,13 @@ interface HistoryResponse {
   total: number;
 }
 
+interface TrackPayload {
+  thumbnailUrl?: string;
+  trackName?: string;
+  artistName?: string;
+  albumName?: string;
+}
+
 const HistoryTimelineSkeleton = () => (
   <div className="space-y-3 sm:space-y-4">
     {[...Array(3)].map((_, i) => (
@@ -84,13 +91,12 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
   } = useQuery<HistoryResponse>({
     queryKey: ['history', queryParams],
     queryFn: async () => {
-      const response = await apiRequest(
-        'GET',
-        `/api/history?${queryParams}`,
-      );
+      const response = await apiRequest('GET', `/api/history?${queryParams}`);
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`Failed to fetch history: ${response.status} ${errorText}`);
+        throw new Error(
+          `Failed to fetch history: ${response.status} ${errorText}`,
+        );
       }
       return response.json();
     },
@@ -117,7 +123,10 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
     onError: () => {
       toast({
         title: t('history.deleteFailed', 'Delete Failed'),
-        description: t('history.deleteFailedDesc', 'Failed to delete history entry.'),
+        description: t(
+          'history.deleteFailedDesc',
+          'Failed to delete history entry.',
+        ),
         variant: 'destructive',
       });
     },
@@ -136,7 +145,10 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
       queryClient.invalidateQueries({ queryKey: ['history'] });
       toast({
         title: t('history.cleared', 'History Cleared'),
-        description: t('history.clearedDesc', `Removed ${data.deletedCount || 0} entries.`),
+        description: t(
+          'history.clearedDesc',
+          `Removed ${data.deletedCount || 0} entries.`,
+        ),
         variant: 'success',
       });
     },
@@ -210,13 +222,20 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
       case 'spotify':
         return <SiSpotify className="h-4 w-4 sm:h-5 sm:w-5 text-spotify" />;
       case 'youtube':
-        return <SiYoutubemusic className="h-4 w-4 sm:h-5 sm:w-5 text-youtube" />;
+        return (
+          <SiYoutubemusic className="h-4 w-4 sm:h-5 sm:w-5 text-youtube" />
+        );
       case 'deezer':
         return <FaDeezer className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />;
       case 'apple':
         return <SiApplemusic className="h-4 w-4 sm:h-5 sm:w-5 text-pink-600" />;
       default:
-        return <DynamicServiceIcon url={platform} className="h-4 w-4 sm:h-5 sm:w-5" />;
+        return (
+          <DynamicServiceIcon
+            url={platform}
+            className="h-4 w-4 sm:h-5 sm:w-5"
+          />
+        );
     }
   };
 
@@ -227,7 +246,8 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
     setStatus('');
   };
 
-  const hasActiveFilters = searchQuery || sourcePlatform || targetPlatform || status;
+  const hasActiveFilters =
+    searchQuery || sourcePlatform || targetPlatform || status;
 
   if (error) {
     return (
@@ -242,7 +262,9 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => queryClient.invalidateQueries({ queryKey: ['history'] })}
+            onClick={() =>
+              queryClient.invalidateQueries({ queryKey: ['history'] })
+            }
           >
             {t('history.retry', 'Retry')}
           </Button>
@@ -313,8 +335,12 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
               onChange={(e) => setStatus(e.target.value)}
               className="px-3 py-2 border rounded-lg text-sm"
             >
-              <option value="">{t('history.allStatuses', 'All Statuses')}</option>
-              <option value="completed">{t('history.success', 'Success')}</option>
+              <option value="">
+                {t('history.allStatuses', 'All Statuses')}
+              </option>
+              <option value="completed">
+                {t('history.success', 'Success')}
+              </option>
               <option value="failed">{t('history.failed', 'Failed')}</option>
               <option value="pending">{t('history.pending', 'Pending')}</option>
             </select>
@@ -391,7 +417,10 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
                       {entry.payload?.thumbnailUrl ? (
                         <img
                           src={entry.payload.thumbnailUrl as string}
-                          alt={entry.payload?.trackName as string || 'Track thumbnail'}
+                          alt={
+                            (entry.payload?.trackName as string) ||
+                            'Track thumbnail'
+                          }
                           className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg object-cover shadow-sm flex-shrink-0"
                         />
                       ) : (
@@ -406,25 +435,33 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
                         <div className="flex items-center gap-1 sm:gap-2 mb-1">
                           {getPlatformIcon(entry.sourcePlatform)}
                           <span className="text-gray-400 text-sm">→</span>
-                          {entry.targetPlatform && getPlatformIcon(entry.targetPlatform)}
+                          {entry.targetPlatform &&
+                            getPlatformIcon(entry.targetPlatform)}
                         </div>
 
                         {/* Track Name */}
                         <h3 className="font-medium text-sm sm:text-base truncate mb-1">
-                          {entry.payload?.trackName || entry.sourceUrl}
+                          {typeof (entry.payload as TrackPayload | undefined)
+                            ?.trackName === 'string'
+                            ? (entry.payload as TrackPayload).trackName
+                            : typeof entry.sourceUrl === 'string'
+                              ? entry.sourceUrl
+                              : ''}
                         </h3>
-                        
+
                         {/* Artist Name */}
-                        {entry.payload?.artistName && (
+                        {typeof (entry.payload as TrackPayload | undefined)
+                          ?.artistName === 'string' && (
                           <p className="text-xs sm:text-sm text-gray-600 truncate">
-                            {entry.payload.artistName}
+                            {(entry.payload as TrackPayload).artistName}
                           </p>
                         )}
-                        
+
                         {/* Album Name */}
-                        {entry.payload?.albumName && (
+                        {typeof (entry.payload as TrackPayload | undefined)
+                          ?.albumName === 'string' && (
                           <p className="text-xs text-gray-500 truncate">
-                            {entry.payload.albumName}
+                            {(entry.payload as TrackPayload).albumName}
                           </p>
                         )}
 
@@ -432,7 +469,11 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
                         <div className="flex items-center gap-1 mt-1">
                           <Clock className="h-3 w-3 text-gray-400" />
                           <p className="text-xs text-gray-500">
-                            {formatDate(entry.createdAt)}
+                            {formatDate(
+                              typeof entry.createdAt === 'string'
+                                ? entry.createdAt
+                                : entry.createdAt.toISOString(),
+                            )}
                           </p>
                         </div>
                       </div>
@@ -457,7 +498,10 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => openUrl(entry.targetUrl!)}
-                                title={t('history.openTarget', 'Open Target URL')}
+                                title={t(
+                                  'history.openTarget',
+                                  'Open Target URL',
+                                )}
                                 className="touch-target-sm p-2"
                               >
                                 {getPlatformIcon(entry.targetPlatform || '')}
@@ -466,7 +510,9 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => copyToClipboard(entry.targetUrl!)}
+                                onClick={() =>
+                                  copyToClipboard(entry.targetUrl!)
+                                }
                                 title={t('history.copyUrl', 'Copy URL')}
                                 className="touch-target-sm p-2"
                               >
@@ -499,11 +545,11 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
       {/* Total Count */}
       {historyData && historyData.total > 0 && (
         <div className="text-center text-sm text-gray-500">
-          {t('history.showing', 'Showing')} {entries.length} {t('history.of', 'of')}{' '}
-          {historyData.total} {t('history.entries', 'entries')}
+          {t('history.showing', 'Showing')} {entries.length}{' '}
+          {t('history.of', 'of')} {historyData.total}{' '}
+          {t('history.entries', 'entries')}
         </div>
       )}
     </div>
   );
 }
-

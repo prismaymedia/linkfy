@@ -211,9 +211,14 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
     const diffDays = Math.floor(diffMs / 86400000);
 
     if (diffMins < 1) return t('history.justNow', 'Just now');
-    if (diffMins < 60) return t('history.minutesAgo', `${diffMins}m ago`);
-    if (diffHours < 24) return t('history.hoursAgo', `${diffHours}h ago`);
-    if (diffDays < 7) return t('history.daysAgo', `${diffDays}d ago`);
+    if (diffMins < 60)
+      return t('history.minutesAgo', '{{count}}m ago', { count: diffMins });
+    if (diffHours < 24)
+      return t('history.hoursAgo', '{{count}}h ago', {
+        count: diffHours,
+      });
+    if (diffDays < 7)
+      return t('history.daysAgo', '{{count}}d ago', { count: diffDays });
     return date.toLocaleDateString();
   };
 

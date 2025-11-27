@@ -136,17 +136,14 @@ export default function History() {
     try {
       await navigator.clipboard.writeText(text);
       toast({
-        title: t('history.copied', 'Copied!'),
-        description: t(
-          'history.copiedDesc',
-          'Spotify URL copied to clipboard.'
-        ),
+        title: t('result.copiedButton', 'Copied!'),
+        description: t('result.copiedDescription', 'Spotify URL copied to clipboard'),
         variant: 'success',
       });
     } catch (err) {
       toast({
-        title: t('history.copyFailed', 'Failed to copy'),
-        description: t('history.copyFailedDesc', 'Please try again later.'),
+        title: t('result.copyFailedTitle', 'Copy Failed'),
+        description: t('result.copyFailedDescription', 'Could not copy to clipboard'),
         variant: 'destructive',
       });
     }
@@ -155,9 +152,9 @@ export default function History() {
   const deleteRecord = (id: string) => {
     setHistory((prev) => prev.filter((record) => record.id !== id));
     toast({
-      title: t('history.deleted', 'Deleted'),
-      description: t('history.deletedDesc', 'Conversion record removed.'),
-      variant: 'success',
+      title: t('history.delete', 'Deleted'),
+      description: t('history.deletedDesc', 'Conversion record deleted successfully'),
+      variant: 'info',
     });
   };
 

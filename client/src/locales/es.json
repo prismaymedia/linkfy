@@ -208,7 +208,8 @@
     "copySpotifyUrl": "Copiar URL de Spotify",
     "delete": "Eliminar",
     "backToDashboard": "Volver al Panel",
-    "settings": "Configuración"
+    "settings": "Configuración",
+    "deletedDesc": "Registro de conversión eliminado."
   },
   "help": {
     "title": "Ayuda y Soporte",

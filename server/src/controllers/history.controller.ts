@@ -16,6 +16,7 @@ import {
   ApiBadRequestResponse,
   ApiUnauthorizedResponse,
   ApiQuery,
+  ApiNoContentResponse,
 } from '@nestjs/swagger';
 import { HistoryService } from '../services/history.service';
 import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
@@ -27,7 +28,7 @@ import { Response } from 'express';
 @Controller('api/history')
 @UseGuards(SupabaseAuthGuard)
 export class HistoryController {
-  constructor(private readonly historyService: HistoryService) {}
+  constructor(private readonly historyService: HistoryService) { }
 
   @Get()
   @ApiOperation({ summary: 'Get conversion history with optional search and filters' })
@@ -69,14 +70,28 @@ export class HistoryController {
     @Query('limit') limit?: string,
     @Query('offset') offset?: string,
   ) {
+    // Parse and validate limit and offset
+    let parsedLimit: number | undefined;
+    let parsedOffset: number | undefined;
+
+    if (limit) {
+      const parsed = parseInt(limit, 10);
+      parsedLimit = !Number.isNaN(parsed) ? parsed : undefined;
+    }
+
+    if (offset) {
+      const parsed = parseInt(offset, 10);
+      parsedOffset = !Number.isNaN(parsed) ? parsed : undefined;
+    }
+
     const result = await this.historyService.searchHistory({
       userId: user.id,
       query,
       sourcePlatform,
       targetPlatform,
       status,
-      limit: limit ? parseInt(limit, 10) : undefined,
-      offset: offset ? parseInt(offset, 10) : undefined,
+      limit: parsedLimit,
+      offset: parsedOffset,
     });
 
     return result;
@@ -84,7 +99,7 @@ export class HistoryController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a specific history entry' })
-  @ApiOkResponse({ description: 'History entry deleted successfully' })
+  @ApiNoContentResponse({ description: 'History entry deleted successfully' })
   @ApiBadRequestResponse({ description: 'Invalid history entry ID' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   async deleteHistoryEntry(
@@ -117,4 +132,3 @@ export class HistoryController {
     return { deletedCount };
   }
 }
-

@@ -497,7 +497,9 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => openUrl(entry.targetUrl!)}
+                                onClick={() =>
+                                  entry.targetUrl && openUrl(entry.targetUrl)
+                                }
                                 title={t(
                                   'history.openTarget',
                                   'Open Target URL',
@@ -511,7 +513,8 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() =>
-                                  copyToClipboard(entry.targetUrl!)
+                                  entry.targetUrl &&
+                                  copyToClipboard(entry.targetUrl)
                                 }
                                 title={t('history.copyUrl', 'Copy URL')}
                                 className="touch-target-sm p-2"

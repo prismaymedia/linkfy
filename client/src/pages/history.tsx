@@ -3,10 +3,7 @@ import { useLocation } from 'wouter';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import {
-  History as HistoryIcon,
-  Calendar,
-} from 'lucide-react';
+import { History as HistoryIcon, Calendar } from 'lucide-react';
 import { SiSpotify } from 'react-icons/si';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@/lib/routes';
@@ -15,6 +12,7 @@ import { motion } from 'framer-motion';
 import HistoryTimeline from '@/components/history-timeline';
 import { useQuery } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
+import type { HistoryEntry } from '../../../shared/schema';
 
 interface HistoryStats {
   total: number;
@@ -83,8 +81,12 @@ export default function History() {
   const { user, loading: authLoading } = useAuth();
 
   // Fetch history stats
-  const { data: historyData, isLoading: historyLoading, error: historyError } = useQuery<{
-    entries: any[];
+  const {
+    data: historyData,
+    isLoading: historyLoading,
+    error: historyError,
+  } = useQuery<{
+    entries: HistoryEntry[];
     total: number;
   }>({
     queryKey: ['history', 'stats'],
@@ -92,7 +94,9 @@ export default function History() {
       const response = await apiRequest('GET', '/api/history?limit=1000');
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`Failed to fetch history: ${response.status} ${errorText}`);
+        throw new Error(
+          `Failed to fetch history: ${response.status} ${errorText}`,
+        );
       }
       return response.json();
     },
@@ -109,9 +113,12 @@ export default function History() {
   // Calculate stats
   const stats: HistoryStats = {
     total: historyData?.total || 0,
-    successful: historyData?.entries.filter((e) => e.status === 'completed').length || 0,
-    failed: historyData?.entries.filter((e) => e.status === 'failed').length || 0,
-    pending: historyData?.entries.filter((e) => e.status === 'pending').length || 0,
+    successful:
+      historyData?.entries.filter((e) => e.status === 'completed').length || 0,
+    failed:
+      historyData?.entries.filter((e) => e.status === 'failed').length || 0,
+    pending:
+      historyData?.entries.filter((e) => e.status === 'pending').length || 0,
   };
 
   const successRate =
@@ -135,7 +142,9 @@ export default function History() {
                 {t('history.loadError', 'Failed to load history')}
               </p>
               <p className="text-sm text-gray-500 mb-4">
-                {historyError instanceof Error ? historyError.message : 'Unknown error'}
+                {historyError instanceof Error
+                  ? historyError.message
+                  : 'Unknown error'}
               </p>
               <Button onClick={() => window.location.reload()}>
                 {t('history.retry', 'Retry')}

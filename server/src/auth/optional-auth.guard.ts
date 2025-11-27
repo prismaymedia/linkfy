@@ -15,7 +15,7 @@ export class OptionalAuthGuard implements CanActivate {
   constructor() {
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
-    
+
     if (supabaseUrl && supabaseAnonKey) {
       this.supabase = createClient(supabaseUrl, supabaseAnonKey);
     }
@@ -62,7 +62,7 @@ export class OptionalAuthGuard implements CanActivate {
         (request as any).user = user;
         (request as any).supabaseToken = token;
       }
-    } catch (err) {
+    } catch {
       // Silently fail - this is optional auth
       this.logger.debug('Optional auth failed, continuing without user');
     }

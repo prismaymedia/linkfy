@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import { HistoryEntry, InsertHistoryEntry } from '../../../shared/schema';
-import { and, desc, eq, ilike, or } from 'drizzle-orm';
+import { and, desc, eq, ilike, or, count } from 'drizzle-orm';
 import { conversionHistory } from '../../../shared/schema';
 
 export interface HistorySearchParams {
@@ -78,10 +78,12 @@ export class HistoryService {
 
     // Search query - search in sourceUrl, targetUrl, and payload
     if (query) {
+      // Escape LIKE pattern special characters
+      const escapedQuery = query.replace(/[%_]/g, '\\$&');
       conditions.push(
         or(
-          ilike(conversionHistory.sourceUrl, `%${query}%`),
-          ilike(conversionHistory.targetUrl, `%${query}%`),
+          ilike(conversionHistory.sourceUrl, `%${escapedQuery}%`),
+          ilike(conversionHistory.targetUrl, `%${escapedQuery}%`),
         )!,
       );
     }
@@ -104,12 +106,10 @@ export class HistoryService {
     const whereClause = and(...conditions);
 
     // Get total count - use a count query instead
-    const totalResult = await db
-      .select()
+    const [{ value: total }] = await db
+      .select({ value: count() })
       .from(conversionHistory)
       .where(whereClause);
-
-    const total = totalResult.length;
 
     // Get paginated results
     const entries = await db

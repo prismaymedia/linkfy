@@ -140,7 +140,7 @@ export default function History() {
         description: t('result.copiedDescription', 'Spotify URL copied to clipboard'),
         variant: 'success',
       });
-    } catch (err) {
+    } catch {
       toast({
         title: t('result.copyFailedTitle', 'Copy Failed'),
         description: t('result.copyFailedDescription', 'Could not copy to clipboard'),

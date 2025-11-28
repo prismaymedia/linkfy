@@ -7,7 +7,7 @@ import { TOAST_DURATION } from '@/hooks/use-toast';
  */
 
 interface ToastOptions {
-  title?: string;
+  title: string;
   description?: string;
   duration?: number;
 }
@@ -17,24 +17,22 @@ interface ToastOptions {
  */
 export const showSuccessToast = (options: ToastOptions) => {
   return toast({
-    title: options.title || 'Success',
+    title: options.title,
     description: options.description,
     variant: 'success',
     duration: options.duration ?? TOAST_DURATION.DEFAULT,
   });
 };
 
-/**
- * Show an error toast notification
- */
 export const showErrorToast = (options: ToastOptions) => {
   return toast({
-    title: options.title || 'Error',
-    description: options.description || 'An error occurred. Please try again.',
+    title: options.title,
+    description: options.description,
     variant: 'destructive',
     duration: options.duration ?? TOAST_DURATION.LONG,
   });
 };
+
 
 /**
  * Show an info toast notification

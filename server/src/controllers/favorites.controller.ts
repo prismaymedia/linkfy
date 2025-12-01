@@ -59,11 +59,7 @@ export class FavoritesController {
         @Body() body: AddFavoriteDto,
         @CurrentUser() user: User,
     ) {
-        if (!user) {
-            throw new BadRequestException('User not authenticated');
-        }
-
-        try {
+try {
             const { historyId, alias } = AddFavoriteSchema.parse(body);
 
             let resolvedHistoryId = historyId;
@@ -139,11 +135,7 @@ export class FavoritesController {
         @Body() body: RemoveFavoriteDto,
         @CurrentUser() user: User,
     ) {
-        if (!user) {
-            throw new BadRequestException('User not authenticated');
-        }
-
-        try {
+try {
             const { historyId } = RemoveFavoriteSchema.parse(body);
 
             await this.databaseService.removeFavorite(user.id, historyId);
@@ -168,11 +160,7 @@ export class FavoritesController {
     @ApiOperation({ summary: 'List all favorites for the current user' })
     @ApiCreatedResponse({ description: 'Favorites list retrieved' })
     async listFavorites(@CurrentUser() user: User) {
-        if (!user) {
-            throw new BadRequestException('User not authenticated');
-        }
-
-        try {
+try {
             const favorites = await this.databaseService.listFavoritesByUser(user.id);
 
             return {

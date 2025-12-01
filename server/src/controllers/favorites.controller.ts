@@ -7,10 +7,18 @@ import {
     Logger,
     UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiCreatedResponse, ApiBadRequestResponse } from '@nestjs/swagger';
+import {
+    ApiTags,
+    ApiOperation,
+    ApiCreatedResponse,
+    ApiBadRequestResponse,
+} from '@nestjs/swagger';
 import { CurrentUser } from '../auth/user.decorator';
 import { User } from '@supabase/supabase-js';
-import { DatabaseService, DatabaseOperationError } from '../database/database.service';
+import {
+    DatabaseService,
+    DatabaseOperationError,
+} from '../database/database.service';
 import { z } from 'zod';
 import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
 
@@ -32,6 +40,9 @@ const RemoveFavoriteSchema = z.object({
     historyId: z.number().int().positive(),
 });
 
+type AddFavoriteDto = z.infer<typeof AddFavoriteSchema>;
+type RemoveFavoriteDto = z.infer<typeof RemoveFavoriteSchema>;
+
 @ApiTags('Favorites')
 @UseGuards(SupabaseAuthGuard)
 @Controller('api/favorites')
@@ -45,7 +56,7 @@ export class FavoritesController {
     @ApiCreatedResponse({ description: 'Favorite added successfully' })
     @ApiBadRequestResponse({ description: 'Invalid input' })
     async addFavorite(
-        @Body() body: any,
+        @Body() body: AddFavoriteDto,
         @CurrentUser() user: User,
     ) {
         if (!user) {
@@ -125,7 +136,7 @@ export class FavoritesController {
     @ApiCreatedResponse({ description: 'Favorite removed successfully' })
     @ApiBadRequestResponse({ description: 'Invalid input' })
     async removeFavorite(
-        @Body() body: any,
+        @Body() body: RemoveFavoriteDto,
         @CurrentUser() user: User,
     ) {
         if (!user) {

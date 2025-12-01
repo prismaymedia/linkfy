@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ChevronDown, Star, Trash2, Copy, Check, Music } from 'lucide-react';
+import { Star, Trash2, Copy, Check, Music } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { useFavorites } from '@/hooks/use-favorites';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 interface FavoritesItem {
   id: number;
@@ -15,13 +14,14 @@ interface FavoritesItem {
   trackName?: string;
   artistName?: string;
   thumbnailUrl?: string;
+  spotifyUrl?: string;
   createdAt: string;
 }
 
 export function FavoritesSidebar() {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { favorites, isLoading } = useFavorites();
+  const { favorites, isLoading, removeFromFavorites } = useFavorites();
   const { toast } = useToast();
   const [copiedId, setCopiedId] = useState<number | null>(null);
 
@@ -39,7 +39,7 @@ export function FavoritesSidebar() {
         variant: 'success',
       });
       setTimeout(() => setCopiedId(null), 2000);
-    } catch (error) {
+    } catch {
       toast({
         title: t('result.copyFailedTitle'),
         description: t('result.copyFailedDescription'),
@@ -54,6 +54,7 @@ export function FavoritesSidebar() {
     trackName: fav.trackInfo?.trackName || fav.alias || 'Unknown Track',
     artistName: fav.trackInfo?.artistName || 'Unknown Artist',
     thumbnailUrl: fav.trackInfo?.thumbnailUrl,
+    spotifyUrl: fav.trackInfo?.spotifyUrl,
     createdAt: fav.createdAt,
   }));
 
@@ -136,7 +137,7 @@ export function FavoritesSidebar() {
                           variant="ghost"
                           className="h-7 w-7 p-0"
                           onClick={() =>
-                            handleCopyUrl('https://spotify.com/track', item.id)
+                            handleCopyUrl(item.spotifyUrl || '', item.id)
                           }
                           title="Copy URL"
                         >
@@ -150,6 +151,7 @@ export function FavoritesSidebar() {
                           size="sm"
                           variant="ghost"
                           className="h-7 w-7 p-0 hover:text-red-600"
+                          onClick={() => removeFromFavorites(item.historyId)}
                           title="Remove from favorites"
                         >
                           <Trash2 className="h-4 w-4" />

@@ -1,28 +1,41 @@
+import { z } from 'zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from './use-toast';
+import { useTranslation } from 'react-i18next';
 import type { SpotifyTrackInfo } from '../../../shared/schema';
 
-interface Favorite {
-    id: number;
-    userId: string;
-    historyId: number;
-    alias?: string;
-    createdAt: string;
-    trackInfo?: SpotifyTrackInfo;
-}
+const SpotifyTrackInfoSchema = z.object({
+  spotifyUrl: z.string(),
+  trackName: z.string(),
+  artistName: z.string(),
+  albumName: z.string(),
+  thumbnailUrl: z.string(),
+});
 
-interface FavoriteResponse {
-    success: boolean;
-    favorite?: Favorite;
-    message?: string;
-    error?: string;
-}
+const FavoriteSchema = z.object({
+  id: z.number(),
+  userId: z.string(),
+  historyId: z.number(),
+  alias: z.string().optional(),
+  createdAt: z.string(),
+  trackInfo: SpotifyTrackInfoSchema.optional(),
+});
 
-interface FavoritesListResponse {
-    success: boolean;
-    favorites: Favorite[];
-}
+const FavoriteResponseSchema = z.object({
+  success: z.boolean(),
+  favorite: FavoriteSchema.optional(),
+  message: z.string().optional(),
+  error: z.string().optional(),
+});
+
+const FavoritesListResponseSchema = z.object({
+  success: z.boolean(),
+  favorites: z.array(FavoriteSchema),
+});
+
+type Favorite = z.infer<typeof FavoriteSchema>;
+
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
@@ -30,6 +43,7 @@ export function useFavorites() {
     const { user, session } = useAuth();
     const { toast } = useToast();
     const queryClient = useQueryClient();
+    const { t } = useTranslation();
 
     // Fetch all favorites for the current user
     const { data: favorites = [], isLoading, error } = useQuery({
@@ -50,9 +64,10 @@ export function useFavorites() {
             if (!response.ok) {
                 throw new Error(`Failed to fetch favorites: ${response.statusText}`);
             }
-
-            const data: FavoritesListResponse = await response.json();
-            return data.favorites || [];
+            
+            const data = await response.json();
+            const parsedData = FavoritesListResponseSchema.parse(data);
+            return parsedData.favorites || [];
         },
         enabled: !!session,
         staleTime: 5 * 60 * 1000, // 5 minutes
@@ -85,20 +100,21 @@ export function useFavorites() {
                 throw new Error(`Failed to add favorite: ${response.statusText}`);
             }
 
-            return response.json() as Promise<FavoriteResponse>;
+            const data = await response.json();
+            return FavoriteResponseSchema.parse(data);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['favorites', session?.user?.id] });
             toast({
-                title: 'Added to favorites',
-                description: 'This conversion has been saved.',
+                title: t('favorites.addedTitle'),
+                description: t('favorites.addedDescription'),
                 variant: 'success',
             });
         },
         onError: (error: Error) => {
             toast({
-                title: 'Error',
-                description: error.message || 'Failed to add to favorites',
+                title: t('favorites.errorTitle'),
+                description: error.message || t('favorites.addErrorDescription'),
                 variant: 'destructive',
             });
         },
@@ -126,20 +142,21 @@ export function useFavorites() {
                 throw new Error(`Failed to remove favorite: ${response.statusText}`);
             }
 
-            return response.json();
+            const data = await response.json();
+            return FavoriteResponseSchema.parse(data);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['favorites', session?.user?.id] });
             toast({
-                title: 'Removed from favorites',
-                description: 'This conversion has been removed.',
+                title: t('favorites.removedTitle'),
+                description: t('favorites.removedDescription'),
                 variant: 'success',
             });
         },
         onError: (error: Error) => {
             toast({
-                title: 'Error',
-                description: error.message || 'Failed to remove from favorites',
+                title: t('favorites.errorTitle'),
+                description: error.message || t('favorites.removeErrorDescription'),
                 variant: 'destructive',
             });
         },
@@ -148,8 +165,8 @@ export function useFavorites() {
     const toggleFavorite = async (historyId: number) => {
         if (!session) {
             toast({
-                title: 'Not authenticated',
-                description: 'Please log in to use favorites.',
+                title: t('favorites.notAuthenticatedTitle'),
+                description: t('favorites.notAuthenticatedDescription'),
                 variant: 'destructive',
             });
             return;

@@ -244,17 +244,11 @@ export class DatabaseService implements OnModuleInit {
 
       const query = db
         .insert(favoritesTable)
-        .values(favorite);
-
-      // Only add onConflictDoUpdate if there are fields to update
-      if (Object.keys(updateSet).length > 0) {
-        query.onConflictDoUpdate({
+        .values(favorite)
+        .onConflictDoUpdate({
           target: [favoritesTable.userId, favoritesTable.historyId],
-          set: updateSet,
+          set: Object.keys(updateSet).length > 0 ? updateSet : { updatedAt: new Date() },
         });
-      } else {
-        query.onConflictDoNothing();
-      }
 
       const [record] = await query.returning();
       return record;

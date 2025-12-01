@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useFavorites } from '@/hooks/use-favorites';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface FavoritesButtonProps {
   historyId: number;
@@ -22,18 +23,16 @@ export function FavoritesButton({
   const { user } = useAuth();
   const { isFavorited, toggleFavorite, isAdding, isRemoving } = useFavorites();
   const { toast } = useToast();
-  const [isFav, setIsFav] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { t } = useTranslation();
 
-  useEffect(() => {
-    setIsFav(isFavorited(historyId));
-  }, [historyId, isFavorited]);
+  const isFav = isFavorited(historyId);
 
   const handleClick = async () => {
     if (!user) {
       toast({
-        title: 'Not authenticated',
-        description: 'Please log in to use favorites.',
+        title: t('favorites.notAuthenticatedTitle'),
+        description: t('favorites.notAuthenticatedDescription'),
         variant: 'destructive',
       });
       return;
@@ -42,7 +41,6 @@ export function FavoritesButton({
     setIsLoading(true);
     try {
       await toggleFavorite(historyId);
-      setIsFav(!isFav);
     } finally {
       setIsLoading(false);
     }

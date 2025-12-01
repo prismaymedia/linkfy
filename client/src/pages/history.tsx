@@ -17,9 +17,10 @@ import { ROUTES } from '@/lib/routes';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FavoritesButton } from '@/components/favorites-button';
 
 interface ConversionRecord {
-  id: string;
+  id: string | number;
   youtubeUrl: string;
   spotifyUrl: string;
   title: string;
@@ -139,7 +140,7 @@ export default function History() {
         title: t('history.copied', 'Copied!'),
         description: t(
           'history.copiedDesc',
-          'Spotify URL copied to clipboard.'
+          'Spotify URL copied to clipboard.',
         ),
         variant: 'success',
       });
@@ -152,7 +153,7 @@ export default function History() {
     }
   };
 
-  const deleteRecord = (id: string) => {
+  const deleteRecord = (id: string | number) => {
     setHistory((prev) => prev.filter((record) => record.id !== id));
     toast({
       title: t('history.deleted', 'Deleted'),
@@ -208,7 +209,9 @@ export default function History() {
               <div className="flex items-center gap-2 sm:gap-3">
                 <HistoryIcon className="h-6 w-6 sm:h-8 sm:w-8 text-blue-500" />
                 <div className="min-w-0">
-                  <p className="text-xl sm:text-2xl font-bold">{history.length}</p>
+                  <p className="text-xl sm:text-2xl font-bold">
+                    {history.length}
+                  </p>
                   <p className="text-xs sm:text-sm text-gray-600">
                     {t('history.totalConversions', 'Total Conversions')}
                   </p>
@@ -242,7 +245,7 @@ export default function History() {
                     {Math.round(
                       (history.filter((h) => h.status === 'success').length /
                         history.length) *
-                      100,
+                        100,
                     ) || 0}
                     %
                   </p>
@@ -312,6 +315,15 @@ export default function History() {
                       </div>
 
                       <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
+                        <FavoritesButton
+                          historyId={
+                            typeof record.id === 'string'
+                              ? parseInt(record.id)
+                              : record.id
+                          }
+                          size="sm"
+                        />
+
                         <Button
                           variant="ghost"
                           size="sm"
@@ -337,9 +349,7 @@ export default function History() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() =>
-                                copyToClipboard(record.spotifyUrl)
-                              }
+                              onClick={() => copyToClipboard(record.spotifyUrl)}
                               title={t(
                                 'history.copySpotifyUrl',
                                 'Copy Spotify URL',

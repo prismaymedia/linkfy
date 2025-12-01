@@ -268,5 +268,18 @@
     "title": "Music URLs Detected",
     "convert": "Convert",
     "openLink": "Open in new tab"
+  },
+  "favorites": {
+    "title": "Favorites",
+    "empty": "No favorites yet",
+    "emptyDescription": "Click the star icon to save your favorite conversions",
+    "addButton": "Add to favorites",
+    "removeButton": "Remove from favorites",
+    "addedTitle": "Added to favorites",
+    "addedDescription": "This conversion has been saved.",
+    "removedTitle": "Removed from favorites",
+    "removedDescription": "This conversion has been removed.",
+    "notAuthenticatedTitle": "Not authenticated",
+    "notAuthenticatedDescription": "Please log in to use favorites."
   }
 }

@@ -237,16 +237,26 @@ export class DatabaseService implements OnModuleInit {
     favorite: InsertFavorite,
   ): Promise<Favorite | undefined> {
     return this.runQuery('Failed to save favorite', async (db) => {
-      const [record] = await db
+      const updateSet: any = {};
+      if (favorite.alias !== undefined) {
+        updateSet.alias = favorite.alias;
+      }
+
+      const query = db
         .insert(favoritesTable)
-        .values(favorite)
-        .onConflictDoUpdate({
+        .values(favorite);
+
+      // Only add onConflictDoUpdate if there are fields to update
+      if (Object.keys(updateSet).length > 0) {
+        query.onConflictDoUpdate({
           target: [favoritesTable.userId, favoritesTable.historyId],
-          set: {
-            alias: favorite.alias,
-          },
-        })
-        .returning();
+          set: updateSet,
+        });
+      } else {
+        query.onConflictDoNothing();
+      }
+
+      const [record] = await query.returning();
       return record;
     });
   }

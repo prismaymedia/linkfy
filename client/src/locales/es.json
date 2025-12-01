@@ -246,5 +246,18 @@
     "title": "URLs de Música Detectadas",
     "convert": "Convertir",
     "openLink": "Abrir en nueva pestaña"
+  },
+  "favorites": {
+    "title": "Favoritos",
+    "empty": "No hay favoritos aún",
+    "emptyDescription": "Haz clic en el icono de estrella para guardar tus conversiones favoritas",
+    "addButton": "Agregar a favoritos",
+    "removeButton": "Quitar de favoritos",
+    "addedTitle": "Agregado a favoritos",
+    "addedDescription": "Esta conversión ha sido guardada.",
+    "removedTitle": "Removido de favoritos",
+    "removedDescription": "Esta conversión ha sido removida.",
+    "notAuthenticatedTitle": "No autenticado",
+    "notAuthenticatedDescription": "Por favor, inicia sesión para usar favoritos."
   }
 }

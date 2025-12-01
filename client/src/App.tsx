@@ -9,6 +9,7 @@ import LoginModal from '@/components/login-modal';
 import RouteGuard from '@/components/route-guard';
 import Navigation from '@/components/navigation';
 import BreadcrumbNav from '@/components/breadcrumb-nav';
+import { FavoritesSidebar } from '@/components/favorites-sidebar';
 import Home from '@/pages/home';
 import AuthPage from '@/pages/auth';
 import Dashboard from '@/pages/dashboard';
@@ -105,6 +106,7 @@ function App() {
         <LoginModalProvider>
           <TooltipProvider>
             <Toaster />
+            <FavoritesSidebar />
             <AppRouter />
             <LoginModal />
             <Analytics />

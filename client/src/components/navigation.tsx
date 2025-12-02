@@ -137,7 +137,7 @@ export default function Navigation({ className }: NavigationProps) {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:block">
+          <div className="hidden xl:block">
             <NavigationMenu>
               <NavigationMenuList className="justify-end">
                 {navigationRoutes.map((route) => {
@@ -248,7 +248,7 @@ export default function Navigation({ className }: NavigationProps) {
               </a>
             </Button>
             <LanguageSwitcher />
-            <div className="md:hidden">
+            <div className="xl:hidden">
               <Button
                 variant="ghost"
                 size="sm"
@@ -274,7 +274,7 @@ export default function Navigation({ className }: NavigationProps) {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="fixed inset-0 bg-black/60 z-40 md:hidden"
+                className="fixed inset-0 bg-black/60 z-40 xl:hidden"
                 onClick={() => setMobileMenuOpen(false)}
               />
               <motion.div
@@ -283,7 +283,7 @@ export default function Navigation({ className }: NavigationProps) {
                 initial="closed"
                 animate="open"
                 exit="closed"
-                className="fixed top-0 right-0 h-full max-h-screen w-4/5 max-w-xs bg-white z-50 md:hidden flex flex-col overflow-y-auto"
+                className="fixed top-0 right-0 h-full max-h-screen w-4/5 max-w-xs sm:max-w-sm md:max-w-md bg-white z-50 xl:hidden flex flex-col overflow-y-auto"
               >
                 {/* Header */}
                 <div className="flex justify-between items-center p-4 sm:p-6 border-b border-gray-200 flex-shrink-0">

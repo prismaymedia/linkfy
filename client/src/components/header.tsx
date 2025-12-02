@@ -34,7 +34,7 @@ export default function Header({ className }: HeaderProps) {
           <button
             onClick={() => setLocation(ROUTES.HOME)}
             className={cn(
-              "sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-sm",
+              "flex items-center gap-2 hover:opacity-80 transition-opacity",
               className
             )}
           >

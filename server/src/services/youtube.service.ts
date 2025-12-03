@@ -256,12 +256,11 @@ export class YoutubeService {
       if (videoId) return { id: videoId, type: YouTubeLinkType.VIDEO };
     }
 
-    // watch URLs
     if (url.pathname === '/watch' && params.has('v')) {
       const videoId = params.get('v')!;
       const listId = params.get('list');
 
-      if (listId && (listId.startsWith('RDAMVM') || listId.startsWith('RDMM'))) {
+      if (listId && listId.startsWith('RD')) {
         return { id: videoId, type: YouTubeLinkType.VIDEO };
       }
 
@@ -291,7 +290,6 @@ export class YoutubeService {
       if (albumId) return { id: albumId, type: YouTubeLinkType.ALBUM };
     }
 
-    // Fallback for URLs that might not have a clear API mapping (like albums)
     // but can be handled by oEmbed.
     const videoId = params.get('v');
     if (videoId) return { id: videoId, type: YouTubeLinkType.VIDEO };

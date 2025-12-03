@@ -1,4 +1,4 @@
-const ENV = 'local';
+const ENV = chrome.runtime.getManifest().update_url ? 'production' : 'local';
 
 const CONFIG = {
     local: {

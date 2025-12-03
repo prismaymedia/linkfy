@@ -282,26 +282,19 @@ async function convertUrl(url) {
   });
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/convert`, {
+    const result = await makeAPIRequest('/api/convert', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify({ url, targetPlatform: 'spotify' })
     });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ message: `HTTP ${response.status}` }));
-      throw new Error(errorData.message || 'Error converting link');
-    }
-
-    const result = await response.json();
 
     // Clear progress notification
     chrome.notifications.clear(notificationId);
 
     // Show success notification
     const successNotificationId = `success-${Date.now()}`;
+
+    // Store result for potential click handling
+    conversionResults.set(successNotificationId, result);
 
     chrome.notifications.create(successNotificationId, {
       type: 'basic',

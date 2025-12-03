@@ -293,6 +293,10 @@ async function convertUrl(url) {
     // Show success notification
     const successNotificationId = `success-${Date.now()}`;
 
+    if (!result.spotifyUrl) {
+      throw new Error('No Spotify URL returned from conversion');
+    }
+
     // Store result for potential click handling
     conversionResults.set(successNotificationId, result);
 
@@ -300,7 +304,7 @@ async function convertUrl(url) {
       type: 'basic',
       iconUrl: 'icons/icon48.png',
       title: 'Conversion Successful',
-      message: `Opening: ${result.trackName} - ${result.artistName}`,
+      message: `Opening: ${result.trackName || 'Unknown'} - ${result.artistName || 'Unknown'}`,
       priority: 1
     });
 
@@ -347,13 +351,17 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
       convertUrl(url);
     } else {
       console.log('[BG] Invalid music URL:', url);
-      chrome.notifications.create(`invalid-${Date.now()}`, {
+      const invalidNotificationId = `invalid-${Date.now()}`;
+      chrome.notifications.create(invalidNotificationId, {
         type: 'basic',
         iconUrl: 'icons/icon48.png',
         title: 'Invalid Link',
         message: 'The selected link is not a supported music link.',
         priority: 1
       });
+      setTimeout(() => {
+        chrome.notifications.clear(invalidNotificationId);
+      }, 5000);
     }
   }
 });

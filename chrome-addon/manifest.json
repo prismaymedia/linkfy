@@ -12,7 +12,6 @@
     "notifications"
   ],
   "host_permissions": [
-    "http://localhost:3000/*",
     "https://linkfy-production.up.railway.app/*",
     "https://music.youtube.com/*",
     "https://www.youtube.com/*",

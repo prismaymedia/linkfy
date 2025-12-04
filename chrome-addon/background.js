@@ -308,23 +308,53 @@ async function convertUrl(url) {
       priority: 1
     });
 
+    // Open tab after 500ms
     setTimeout(() => {
       chrome.tabs.create({ url: result.spotifyUrl });
-      setTimeout(() => {
-        chrome.notifications.clear(successNotificationId);
-      }, 2000);
     }, 500);
+    // Clear notification after 2500ms (from notification shown)
+    setTimeout(() => {
+      chrome.notifications.clear(successNotificationId);
+    }, 2500);
 
   } catch (error) {
-    console.error('[BG] Conversion error:', error);
+    // Log full error details for debugging
+    console.error('[BG] Conversion error:', error, error && error.stack ? error.stack : '');
     chrome.notifications.clear(notificationId);
 
     const errorNotificationId = `error-${Date.now()}`;
+    // Map error to user-friendly message
+    let errorMsg = 'An error occurred while converting the link.';
+    if (error) {
+      if (typeof error === 'string') {
+        errorMsg = error;
+      } else if (error.message) {
+        // Check for common error scenarios
+        if (/auth/i.test(error.message) || /token/i.test(error.message)) {
+          errorMsg = 'Authentication required. Please log in again.';
+        } else if (/network/i.test(error.message) || error.message === 'Failed to fetch') {
+          errorMsg = 'Network error. Please check your internet connection.';
+        } else if (/not found/i.test(error.message) || /404/.test(error.message)) {
+          errorMsg = 'Link not found or unsupported.';
+        } else {
+          errorMsg = error.message;
+        }
+      } else if (error.status === 401 || error.code === 'AUTH') {
+        errorMsg = 'Authentication required. Please log in again.';
+      } else if (error.status === 404) {
+        errorMsg = 'Link not found or unsupported.';
+      } else if (error.status === 0) {
+        errorMsg = 'Network error. Please check your internet connection.';
+      } else {
+        // Fallback: show stringified error
+        errorMsg = JSON.stringify(error);
+      }
+    }
     chrome.notifications.create(errorNotificationId, {
       type: 'basic',
       iconUrl: 'icons/icon48.png',
       title: 'Conversion Error',
-      message: error.message || 'An error occurred while converting the link.',
+      message: errorMsg,
       priority: 2
     });
     setTimeout(() => {
@@ -333,7 +363,7 @@ async function convertUrl(url) {
   }
 }
 
-// Auto-dismiss success notifications after 3 seconds
+// Clean up conversion results when notifications are closed
 chrome.notifications.onClosed.addListener((notificationId) => {
   if (notificationId.startsWith('success-')) {
     conversionResults.delete(notificationId);

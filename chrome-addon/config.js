@@ -12,5 +12,7 @@ const CONFIG = {
 const CURRENT_CONFIG = CONFIG[ENV];
 const API_BASE_URL = CURRENT_CONFIG.API_BASE_URL;
 
-console.log(`[Config] Running in ${ENV.toUpperCase()} mode`);
-console.log(`[Config] API URL: ${API_BASE_URL}`);
+if (ENV !== 'production') {
+    console.log(`[Config] Running in ${ENV.toUpperCase()} mode`);
+    console.log(`[Config] API URL: ${API_BASE_URL}`);
+}

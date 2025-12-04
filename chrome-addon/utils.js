@@ -24,6 +24,7 @@ function isValidMusicUrl(urlString) {
       if (pathname.startsWith('/@') || pathname.startsWith('/channel/')) {
         return false;
       }
+      // Playlists are not supported - only individual tracks and albums
       if (pathname.startsWith('/playlist')) {
         return false;
       }

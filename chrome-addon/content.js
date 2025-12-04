@@ -94,7 +94,7 @@ function scanPageForMusicUrls() {
           }
         });
       });
-    } catch (e) { }
+    } catch (e) { console.debug('[Content] Error extracting text:', e); }
   });
 
   return Array.from(detectedUrls.values());

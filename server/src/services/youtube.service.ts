@@ -260,7 +260,10 @@ export class YoutubeService {
       const videoId = params.get('v')!;
       const listId = params.get('list');
 
-      if (listId && listId.startsWith('RD')) {
+      if (
+        listId &&
+        (listId.startsWith('RDAMVM') || listId.startsWith('RDMM'))
+      ) {
         return { id: videoId, type: YouTubeLinkType.VIDEO };
       }
 

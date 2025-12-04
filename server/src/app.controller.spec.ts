@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from '../src/controllers/app.controller';
 import { YoutubeService, YouTubeLinkType } from '../src/services/youtube.service';
+import { HistoryService } from '../src/services/history.service';
 import { ConversionService } from '../src/services/conversion.service';
 import {
   BadRequestException,
@@ -12,6 +13,7 @@ describe('AppController', () => {
   let controller: AppController;
   let youtubeService: jest.Mocked<Partial<YoutubeService>>;
   let conversionService: jest.Mocked<Partial<ConversionService>>;
+  let historyService: jest.Mocked<Partial<HistoryService>>;
 
   beforeEach(async () => {
     youtubeService = {
@@ -22,12 +24,16 @@ describe('AppController', () => {
     conversionService = {
       getOrCreateConversion: jest.fn(),
     };
+    historyService = {
+      recordHistoryEntry: jest.fn(),
+    } as jest.Mocked<Partial<HistoryService>>;
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
       providers: [
         { provide: YoutubeService, useValue: youtubeService },
         { provide: ConversionService, useValue: conversionService },
+        { provide: HistoryService, useValue: historyService },
       ],
     })
       .overrideGuard(SupabaseAuthGuard)

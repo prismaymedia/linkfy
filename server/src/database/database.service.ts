@@ -162,14 +162,21 @@ export class DatabaseService implements OnModuleInit {
 
   async deleteHistoryEntry(id: number, userId: string): Promise<void> {
     await this.runQuery('Failed to delete history entry', async (db) => {
-      await db
+      const [deleted] = await db
         .delete(conversionHistory)
         .where(
           and(
             eq(conversionHistory.id, id),
             eq(conversionHistory.userId, userId),
           ),
+        )
+        .returning();
+
+      if (!deleted) {
+        throw new DatabaseOperationError(
+          `No history entry found with id ${id} for the user`,
         );
+      }
     });
   }
 

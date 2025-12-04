@@ -39,6 +39,22 @@ interface TrackPayload {
   albumName?: string;
 }
 
+const getTrackPayload = (entry: HistoryEntry): TrackPayload | undefined => {
+  const payload = entry.payload;
+  if (!payload || typeof payload !== 'object') return undefined;
+
+  // Check if it looks like a track payload (has at least one relevant field)
+  const p = payload as Record<string, unknown>;
+  if (
+    typeof p.trackName === 'string' ||
+    typeof p.artistName === 'string' ||
+    typeof p.thumbnailUrl === 'string'
+  ) {
+    return payload as unknown as TrackPayload;
+  }
+  return undefined;
+};
+
 const HistoryTimelineSkeleton = () => (
   <div className="space-y-3 sm:space-y-4">
     {[...Array(3)].map((_, i) => (
@@ -407,68 +423,60 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
       ) : (
         <div className="space-y-3 sm:space-y-4">
           <AnimatePresence>
-            {entries.map((entry) => (
-              <motion.div
-                key={entry.id}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.2 }}
-              >
-                <Card className="hover:shadow-md transition-shadow">
-                  <CardContent className="p-3 sm:p-4">
-                    <div className="flex items-start sm:items-center gap-3 sm:gap-4">
-                      {/* Thumbnail Image */}
-                      {entry.payload?.thumbnailUrl ? (
-                        <img
-                          src={entry.payload.thumbnailUrl as string}
-                          alt={
-                            (entry.payload?.trackName as string) ||
-                            'Track thumbnail'
-                          }
-                          className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg object-cover shadow-sm flex-shrink-0"
-                        />
-                      ) : (
-                        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg bg-gray-200 flex items-center justify-center flex-shrink-0">
-                          <HistoryIcon className="h-6 w-6 sm:h-7 sm:w-7 text-gray-400" />
-                        </div>
-                      )}
-
-                      {/* Content */}
-                      <div className="flex-1 min-w-0">
-                        {/* Platform Icons */}
-                        <div className="flex items-center gap-1 sm:gap-2 mb-1">
-                          {getPlatformIcon(entry.sourcePlatform)}
-                          <span className="text-gray-400 text-sm">→</span>
-                          {entry.targetPlatform &&
-                            getPlatformIcon(entry.targetPlatform)}
-                        </div>
-
-                        {/* Track Name */}
-                        <h3 className="font-medium text-sm sm:text-base truncate mb-1">
-                          {typeof (entry.payload as TrackPayload | undefined)
-                            ?.trackName === 'string'
-                            ? (entry.payload as TrackPayload).trackName
-                            : typeof entry.sourceUrl === 'string'
-                              ? entry.sourceUrl
-                              : ''}
-                        </h3>
-
-                        {/* Artist Name */}
-                        {typeof (entry.payload as TrackPayload | undefined)
-                          ?.artistName === 'string' && (
-                          <p className="text-xs sm:text-sm text-gray-600 truncate">
-                            {(entry.payload as TrackPayload).artistName}
-                          </p>
+            {entries.map((entry) => {
+              const payload = getTrackPayload(entry);
+              return (
+                <motion.div
+                  key={entry.id}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Card className="hover:shadow-md transition-shadow">
+                    <CardContent className="p-3 sm:p-4">
+                      <div className="flex items-start sm:items-center gap-3 sm:gap-4">
+                        {/* Thumbnail Image */}
+                        {payload?.thumbnailUrl ? (
+                          <img
+                            src={payload.thumbnailUrl}
+                            alt={payload.trackName || 'Track thumbnail'}
+                            className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg object-cover shadow-sm flex-shrink-0"
+                          />
+                        ) : (
+                          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg bg-gray-200 flex items-center justify-center flex-shrink-0">
+                            <HistoryIcon className="h-6 w-6 sm:h-7 sm:w-7 text-gray-400" />
+                          </div>
                         )}
 
-                        {/* Album Name */}
-                        {typeof (entry.payload as TrackPayload | undefined)
-                          ?.albumName === 'string' && (
-                          <p className="text-xs text-gray-500 truncate">
-                            {(entry.payload as TrackPayload).albumName}
-                          </p>
-                        )}
+                        {/* Content */}
+                        <div className="flex-1 min-w-0">
+                          {/* Platform Icons */}
+                          <div className="flex items-center gap-1 sm:gap-2 mb-1">
+                            {getPlatformIcon(entry.sourcePlatform)}
+                            <span className="text-gray-400 text-sm">→</span>
+                            {entry.targetPlatform &&
+                              getPlatformIcon(entry.targetPlatform)}
+                          </div>
+
+                          {/* Track Name */}
+                          <h3 className="font-medium text-sm sm:text-base truncate mb-1">
+                            {payload?.trackName || entry.sourceUrl}
+                          </h3>
+
+                          {/* Artist Name */}
+                          {payload?.artistName && (
+                            <p className="text-xs sm:text-sm text-gray-600 truncate">
+                              {payload.artistName}
+                            </p>
+                          )}
+
+                          {/* Album Name */}
+                          {payload?.albumName && (
+                            <p className="text-xs text-gray-500 truncate">
+                              {payload.albumName}
+                            </p>
+                          )}
 
                         {/* Timestamp */}
                         <div className="flex items-center gap-1 mt-1">
@@ -503,7 +511,7 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() =>
-                                  entry.targetUrl && openUrl(entry.targetUrl)
+                                  openUrl(entry.targetUrl!)
                                 }
                                 title={t(
                                   'history.openTarget',
@@ -518,8 +526,7 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() =>
-                                  entry.targetUrl &&
-                                  copyToClipboard(entry.targetUrl)
+                                  copyToClipboard(entry.targetUrl!)
                                 }
                                 title={t('history.copyUrl', 'Copy URL')}
                                 className="touch-target-sm p-2"
@@ -545,7 +552,8 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
                   </CardContent>
                 </Card>
               </motion.div>
-            ))}
+            );
+          })}
           </AnimatePresence>
         </div>
       )}

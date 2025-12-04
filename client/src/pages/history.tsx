@@ -82,20 +82,17 @@ export default function History() {
 
   // Fetch history stats
   const {
-    data: historyData,
-    isLoading: historyLoading,
-    error: historyError,
-  } = useQuery<{
-    entries: HistoryEntry[];
-    total: number;
-  }>({
+    data: stats,
+    isLoading: statsLoading,
+    error: statsError,
+  } = useQuery<HistoryStats>({
     queryKey: ['history', 'stats'],
     queryFn: async () => {
-      const response = await apiRequest('GET', '/api/history?limit=1000');
+      const response = await apiRequest('GET', '/api/history/stats');
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(
-          `Failed to fetch history: ${response.status} ${errorText}`,
+          `Failed to fetch stats: ${response.status} ${errorText}`,
         );
       }
       return response.json();
@@ -110,21 +107,12 @@ export default function History() {
     }
   }, [authLoading, user, setLocation]);
 
-  // Calculate stats
-  const stats: HistoryStats = {
-    total: historyData?.total || 0,
-    successful:
-      historyData?.entries.filter((e) => e.status === 'completed').length || 0,
-    failed:
-      historyData?.entries.filter((e) => e.status === 'failed').length || 0,
-    pending:
-      historyData?.entries.filter((e) => e.status === 'pending').length || 0,
-  };
-
   const successRate =
-    stats.total > 0 ? Math.round((stats.successful / stats.total) * 100) : 0;
+    stats && stats.total > 0
+      ? Math.round((stats.successful / stats.total) * 100)
+      : 0;
 
-  if (authLoading || historyLoading) {
+  if (authLoading || statsLoading) {
     return <HistorySkeleton />;
   }
 
@@ -132,7 +120,7 @@ export default function History() {
     return null;
   }
 
-  if (historyError) {
+  if (statsError) {
     return (
       <div className="min-h-screen bg-surface p-4">
         <div className="max-w-6xl mx-auto">
@@ -142,8 +130,8 @@ export default function History() {
                 {t('history.loadError', 'Failed to load history')}
               </p>
               <p className="text-sm text-gray-500 mb-4">
-                {historyError instanceof Error
-                  ? historyError.message
+                {statsError instanceof Error
+                  ? statsError.message
                   : 'Unknown error'}
               </p>
               <Button onClick={() => window.location.reload()}>
@@ -179,7 +167,9 @@ export default function History() {
               <div className="flex items-center gap-2 sm:gap-3">
                 <HistoryIcon className="h-6 w-6 sm:h-8 sm:w-8 text-blue-500" />
                 <div className="min-w-0">
-                  <p className="text-xl sm:text-2xl font-bold">{stats.total}</p>
+                  <p className="text-xl sm:text-2xl font-bold">
+                    {stats?.total || 0}
+                  </p>
                   <p className="text-xs sm:text-sm text-gray-600">
                     {t('history.totalConversions', 'Total Conversions')}
                   </p>
@@ -194,7 +184,7 @@ export default function History() {
                 <SiSpotify className="h-6 w-6 sm:h-8 sm:w-8 text-spotify" />
                 <div className="min-w-0">
                   <p className="text-xl sm:text-2xl font-bold">
-                    {stats.successful}
+                    {stats?.successful || 0}
                   </p>
                   <p className="text-xs sm:text-sm text-gray-600">
                     {t('history.successful', 'Successful')}

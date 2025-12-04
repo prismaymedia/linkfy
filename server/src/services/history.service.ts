@@ -18,7 +18,7 @@ export interface HistorySearchParams {
 export class HistoryService {
   private readonly logger = new Logger(HistoryService.name);
 
-  constructor(private readonly databaseService: DatabaseService) { }
+  constructor(private readonly databaseService: DatabaseService) {}
 
   async recordHistoryEntry(entry: InsertHistoryEntry): Promise<HistoryEntry> {
     this.logger.log(`Recording history entry for user: ${entry.userId}`);
@@ -79,7 +79,7 @@ export class HistoryService {
     // Search query - search in sourceUrl, targetUrl, and payload
     if (query) {
       // Escape LIKE pattern special characters
-      const escapedQuery = query.replace(/[%_]/g, '\\$&');
+      const escapedQuery = query.replace(/[\\%_]/g, '\\$&');
       conditions.push(
         or(
           ilike(conversionHistory.sourceUrl, `%${escapedQuery}%`),
@@ -121,6 +121,57 @@ export class HistoryService {
       .offset(offset);
 
     return { entries, total };
+  }
+
+  async getHistoryStats(userId: string): Promise<{
+    total: number;
+    successful: number;
+    failed: number;
+    pending: number;
+  }> {
+    this.logger.log(`Getting history stats for user: ${userId}`);
+    const db = this.databaseService.getDb();
+
+    // Get total count
+    const [{ value: total }] = await db
+      .select({ value: count() })
+      .from(conversionHistory)
+      .where(eq(conversionHistory.userId, userId));
+
+    // Get successful count
+    const [{ value: successful }] = await db
+      .select({ value: count() })
+      .from(conversionHistory)
+      .where(
+        and(
+          eq(conversionHistory.userId, userId),
+          eq(conversionHistory.status, 'completed'),
+        ),
+      );
+
+    // Get failed count
+    const [{ value: failed }] = await db
+      .select({ value: count() })
+      .from(conversionHistory)
+      .where(
+        and(
+          eq(conversionHistory.userId, userId),
+          eq(conversionHistory.status, 'failed'),
+        ),
+      );
+
+    // Get pending count
+    const [{ value: pending }] = await db
+      .select({ value: count() })
+      .from(conversionHistory)
+      .where(
+        and(
+          eq(conversionHistory.userId, userId),
+          eq(conversionHistory.status, 'pending'),
+        ),
+      );
+
+    return { total, successful, failed, pending };
   }
 
   async listHistoryForUser(

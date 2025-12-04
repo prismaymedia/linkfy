@@ -18,6 +18,16 @@ export class OptionalAuthGuard implements CanActivate {
 
     if (supabaseUrl && supabaseAnonKey) {
       this.supabase = createClient(supabaseUrl, supabaseAnonKey);
+    } else {
+      this.logger.warn(
+        `Supabase authentication is disabled: missing environment variable(s) ${
+          !supabaseUrl && !supabaseAnonKey
+            ? 'SUPABASE_URL and SUPABASE_ANON_KEY'
+            : !supabaseUrl
+            ? 'SUPABASE_URL'
+            : 'SUPABASE_ANON_KEY'
+        }.`
+      );
     }
   }
 

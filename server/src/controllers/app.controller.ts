@@ -38,11 +38,12 @@ export class AppController {
     private readonly conversionService: ConversionService,
     private readonly historyService: HistoryService,
     private readonly youtubeService: YoutubeService,
-  ) { }
+  ) {}
 
   @Post('convert')
   @ApiOperation({
-    summary: 'Universal convert endpoint: detect source platform and convert metadata/audio',
+    summary:
+      'Universal convert endpoint: detect source platform and convert metadata/audio',
   })
   @ApiBody({
     schema: {
@@ -56,7 +57,8 @@ export class AppController {
         targetPlatform: {
           type: 'string',
           enum: ['spotify', 'deezer', 'apple'],
-          description: 'Target platform for conversion / lookup (default: spotify)',
+          description:
+            'Target platform for conversion / lookup (default: spotify)',
           default: 'spotify',
         },
         convert: {
@@ -68,7 +70,8 @@ export class AppController {
         format: {
           type: 'string',
           enum: ['mp3', 'wav', 'flac'],
-          description: 'Desired audio output format (if audio conversion is supported).',
+          description:
+            'Desired audio output format (if audio conversion is supported).',
           default: 'mp3',
         },
       },
@@ -116,7 +119,9 @@ export class AppController {
     @CurrentUser() user: User | undefined,
   ) {
     try {
-      this.logger.log(`Processing conversion request for user: ${user?.email ?? 'anonymous'} (id: ${user?.id ?? 'none'})`);
+      this.logger.log(
+        `Processing conversion request for user: ${user?.email ?? 'anonymous'} (id: ${user?.id ?? 'none'})`,
+      );
 
       const RequestSchema = z.object({
         url: convertUrlSchema.shape.url,
@@ -125,18 +130,22 @@ export class AppController {
         format: z.enum(['mp3', 'wav', 'flac']).default('mp3'),
       });
 
-      const { url, targetPlatform, convert, format } = RequestSchema.parse(body);
+      const { url, targetPlatform, convert, format } =
+        RequestSchema.parse(body);
 
       const sourcePlatform = detectPlatform(url);
 
-      this.logger.log(`Detected source platform: ${sourcePlatform} for url: ${url}`);
+      this.logger.log(
+        `Detected source platform: ${sourcePlatform} for url: ${url}`,
+      );
 
       if (convert === false) {
         if (sourcePlatform === 'youtube') {
           const parsedUrl = this.youtubeService.parseUrl(url);
 
           if (parsedUrl.type === YouTubeLinkType.PLAYLIST) {
-            const playlistInfo = await this.youtubeService.getPlaylistTracks(url);
+            const playlistInfo =
+              await this.youtubeService.getPlaylistTracks(url);
             res.status(HttpStatus.OK);
             return {
               success: true,
@@ -163,10 +172,14 @@ export class AppController {
         }
       }
 
-      const conversionResult = await this.conversionService.getOrCreateConversion({
-        url,
-        targetPlatform: targetPlatform ?? 'spotify',
-      }, sourcePlatform);
+      const conversionResult =
+        await this.conversionService.getOrCreateConversion(
+          {
+            url,
+            targetPlatform: targetPlatform ?? 'spotify',
+          },
+          sourcePlatform,
+        );
 
       // Save history entry for successful conversion
       if (user) {
@@ -187,7 +200,9 @@ export class AppController {
               format,
             },
           });
-          this.logger.log(`History entry saved successfully for user: ${user.id}`);
+          this.logger.log(
+            `History entry saved successfully for user: ${user.id}`,
+          );
         } catch (historyError) {
           // Log but don't fail the conversion if history saving fails
           this.logger.error('Failed to save history entry', historyError);
@@ -212,7 +227,7 @@ export class AppController {
             username: user.email ? user.email.split('@')[0] : undefined,
           });
         Sentry.setContext('request', { body, route: 'convert' });
-      } catch (e) { }
+      } catch (e) {}
 
       Sentry.captureException(error);
 
@@ -220,7 +235,8 @@ export class AppController {
         throw new BadRequestException({
           success: false,
           error: 'INVALID_INPUT',
-          message: 'Invalid input. Please check `url`, `targetPlatform` and `format`.',
+          message:
+            'Invalid input. Please check `url`, `targetPlatform` and `format`.',
           details: error.flatten?.() ?? undefined,
         });
       }
@@ -229,7 +245,8 @@ export class AppController {
         throw new InternalServerErrorException({
           success: false,
           error: 'YOUTUBE_INFO_FAILED',
-          message: 'Could not retrieve YouTube information. The video might be private or unavailable.',
+          message:
+            'Could not retrieve YouTube information. The video might be private or unavailable.',
         });
       }
 
@@ -249,13 +266,17 @@ export class AppController {
               },
             });
           } catch (historyError) {
-            this.logger.warn('Failed to save failed history entry', historyError);
+            this.logger.warn(
+              'Failed to save failed history entry',
+              historyError,
+            );
           }
         }
         throw new BadRequestException({
           success: false,
           error: 'SPOTIFY_SEARCH_FAILED',
-          message: 'The song could not be found on Spotify. It might not be available on the platform.',
+          message:
+            'The song could not be found on Spotify. It might not be available on the platform.',
         });
       }
 
@@ -270,7 +291,10 @@ export class AppController {
             status: 'failed',
             payload: {
               error: error.response?.error || 'CONVERSION_FAILED',
-              message: error.response?.message || error.message || 'An unexpected error occurred.',
+              message:
+                error.response?.message ||
+                error.message ||
+                'An unexpected error occurred.',
             },
           });
         } catch (historyError) {

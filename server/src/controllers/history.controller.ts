@@ -28,16 +28,40 @@ import { Response } from 'express';
 @Controller('api/history')
 @UseGuards(SupabaseAuthGuard)
 export class HistoryController {
-  constructor(private readonly historyService: HistoryService) { }
+  constructor(private readonly historyService: HistoryService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get conversion history with optional search and filters' })
+  @ApiOperation({
+    summary: 'Get conversion history with optional search and filters',
+  })
   @ApiQuery({ name: 'query', required: false, description: 'Search query' })
-  @ApiQuery({ name: 'sourcePlatform', required: false, description: 'Filter by source platform' })
-  @ApiQuery({ name: 'targetPlatform', required: false, description: 'Filter by target platform' })
-  @ApiQuery({ name: 'status', required: false, description: 'Filter by status' })
-  @ApiQuery({ name: 'limit', required: false, description: 'Limit results', type: Number })
-  @ApiQuery({ name: 'offset', required: false, description: 'Offset for pagination', type: Number })
+  @ApiQuery({
+    name: 'sourcePlatform',
+    required: false,
+    description: 'Filter by source platform',
+  })
+  @ApiQuery({
+    name: 'targetPlatform',
+    required: false,
+    description: 'Filter by target platform',
+  })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    description: 'Filter by status',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Limit results',
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'offset',
+    required: false,
+    description: 'Offset for pagination',
+    type: Number,
+  })
   @ApiOkResponse({
     description: 'History entries retrieved successfully',
     schema: {
@@ -76,12 +100,12 @@ export class HistoryController {
 
     if (limit) {
       const parsed = parseInt(limit, 10);
-      parsedLimit = !Number.isNaN(parsed) ? parsed : undefined;
+      parsedLimit = !Number.isNaN(parsed) && parsed >= 0 ? parsed : undefined;
     }
 
     if (offset) {
       const parsed = parseInt(offset, 10);
-      parsedOffset = !Number.isNaN(parsed) ? parsed : undefined;
+      parsedOffset = !Number.isNaN(parsed) && parsed >= 0 ? parsed : undefined;
     }
 
     const result = await this.historyService.searchHistory({
@@ -97,6 +121,24 @@ export class HistoryController {
     return result;
   }
 
+  @Get('stats')
+  @ApiOperation({ summary: 'Get history statistics for the current user' })
+  @ApiOkResponse({
+    description: 'History statistics retrieved successfully',
+    schema: {
+      example: {
+        total: 100,
+        successful: 85,
+        failed: 10,
+        pending: 5,
+      },
+    },
+  })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  async getHistoryStats(@CurrentUser() user: User) {
+    return this.historyService.getHistoryStats(user.id);
+  }
+
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a specific history entry' })
   @ApiNoContentResponse({ description: 'History entry deleted successfully' })
@@ -109,7 +151,6 @@ export class HistoryController {
   ) {
     await this.historyService.deleteHistoryEntry(id, user.id);
     res.status(HttpStatus.NO_CONTENT);
-    return;
   }
 
   @Delete()

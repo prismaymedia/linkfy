@@ -280,6 +280,11 @@
     "removedTitle": "Removed from favorites",
     "removedDescription": "This conversion has been removed.",
     "notAuthenticatedTitle": "Not authenticated",
-    "notAuthenticatedDescription": "Please log in to use favorites."
+    "notAuthenticatedDescription": "Please log in to use favorites.",
+    "favorited": "Favorited",
+    "copyUrl": "Copy URL",
+    "errorTitle": "Error",
+    "addErrorDescription": "Failed to add to favorites. Please try again.",
+    "removeErrorDescription": "Failed to remove from favorites. Please try again."
   }
 }

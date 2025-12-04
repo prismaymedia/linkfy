@@ -12,6 +12,7 @@ import {
     ApiOperation,
     ApiCreatedResponse,
     ApiBadRequestResponse,
+    ApiOkResponse,
 } from '@nestjs/swagger';
 import { CurrentUser } from '../auth/user.decorator';
 import { User } from '@supabase/supabase-js';
@@ -59,7 +60,7 @@ export class FavoritesController {
         @Body() body: AddFavoriteDto,
         @CurrentUser() user: User,
     ) {
-try {
+        try {
             const { historyId, alias } = AddFavoriteSchema.parse(body);
 
             let resolvedHistoryId = historyId;
@@ -135,7 +136,7 @@ try {
         @Body() body: RemoveFavoriteDto,
         @CurrentUser() user: User,
     ) {
-try {
+        try {
             const { historyId } = RemoveFavoriteSchema.parse(body);
 
             await this.databaseService.removeFavorite(user.id, historyId);
@@ -158,9 +159,9 @@ try {
 
     @Get('list')
     @ApiOperation({ summary: 'List all favorites for the current user' })
-    @ApiCreatedResponse({ description: 'Favorites list retrieved' })
+    @ApiOkResponse({ description: 'Favorites list retrieved' })
     async listFavorites(@CurrentUser() user: User) {
-try {
+        try {
             const favorites = await this.databaseService.listFavoritesByUser(user.id);
 
             return {

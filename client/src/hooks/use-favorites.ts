@@ -17,7 +17,7 @@ const FavoriteSchema = z.object({
   id: z.number(),
   userId: z.string(),
   historyId: z.number(),
-  alias: z.string().optional(),
+  alias: z.string().nullable().optional(),
   createdAt: z.string(),
   trackInfo: SpotifyTrackInfoSchema.optional(),
 });
@@ -40,7 +40,7 @@ type Favorite = z.infer<typeof FavoriteSchema>;
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 export function useFavorites() {
-    const { user, session } = useAuth();
+    const { session } = useAuth();
     const { toast } = useToast();
     const queryClient = useQueryClient();
     const { t } = useTranslation();

@@ -39,7 +39,8 @@ export function FavoritesSidebar() {
         variant: 'success',
       });
       setTimeout(() => setCopiedId(null), 2000);
-    } catch {
+    } catch (error) {
+      console.error('Failed to copy URL to clipboard:', error);
       toast({
         title: t('result.copyFailedTitle'),
         description: t('result.copyFailedDescription'),
@@ -136,10 +137,13 @@ export function FavoritesSidebar() {
                           size="sm"
                           variant="ghost"
                           className="h-7 w-7 p-0"
-                          onClick={() =>
-                            handleCopyUrl(item.spotifyUrl || '', item.id)
-                          }
-                          title="Copy URL"
+                          disabled={!item.spotifyUrl}
+                          onClick={() => {
+                            if (item.spotifyUrl) {
+                              handleCopyUrl(item.spotifyUrl, item.id);
+                            }
+                          }}
+                          title={item.spotifyUrl ? t('favorites.copyUrl') : 'No Spotify URL available'}
                         >
                           {copiedId === item.id ? (
                             <Check className="h-4 w-4 text-green-600" />
@@ -152,7 +156,7 @@ export function FavoritesSidebar() {
                           variant="ghost"
                           className="h-7 w-7 p-0 hover:text-red-600"
                           onClick={() => removeFromFavorites(item.historyId)}
-                          title="Remove from favorites"
+                          title={t('favorites.removeButton')}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>

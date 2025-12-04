@@ -244,18 +244,27 @@ export class DatabaseService implements OnModuleInit {
     favorite: InsertFavorite,
   ): Promise<Favorite | undefined> {
     return this.runQuery('Failed to save favorite', async (db) => {
-      const updateSet: any = {};
+      const updateSet: Partial<
+        Pick<typeof favoritesTable.$inferInsert, 'alias'>
+      > = {};
       if (favorite.alias !== undefined) {
         updateSet.alias = favorite.alias;
       }
 
       const query = db
         .insert(favoritesTable)
-        .values(favorite)
-        .onConflictDoUpdate({
+        .values(favorite);
+
+      if (Object.keys(updateSet).length > 0) {
+        query.onConflictDoUpdate({
           target: [favoritesTable.userId, favoritesTable.historyId],
-          set: Object.keys(updateSet).length > 0 ? updateSet : { updatedAt: new Date() },
+          set: updateSet,
         });
+      } else {
+        query.onConflictDoNothing({
+          target: [favoritesTable.userId, favoritesTable.historyId],
+        });
+      }
 
       const [record] = await query.returning();
       return record;
@@ -275,13 +284,31 @@ export class DatabaseService implements OnModuleInit {
     });
   }
 
-  async listFavoritesByUser(userId: string): Promise<Favorite[]> {
+  async listFavoritesByUser(userId: string): Promise<any[]> {
     return this.runQuery('Failed to list favorites', async (db) => {
-      return await db
-        .select()
+      const results = await db
+        .select({
+          favorite: favoritesTable,
+          history: conversionHistory,
+        })
         .from(favoritesTable)
+        .leftJoin(conversionHistory, eq(favoritesTable.historyId, conversionHistory.id))
         .where(eq(favoritesTable.userId, userId))
         .orderBy(desc(favoritesTable.createdAt));
+
+      return results.map(({ favorite, history }) => {
+        const payload = history?.payload as Record<string, any> || {};
+        return {
+          ...favorite,
+          trackInfo: {
+            spotifyUrl: payload.spotifyUrl || history?.targetUrl || '',
+            trackName: payload.trackName || favorite.alias || 'Unknown Track',
+            artistName: payload.artistName || 'Unknown Artist',
+            albumName: payload.albumName || '',
+            thumbnailUrl: payload.thumbnailUrl || '',
+          },
+        };
+      });
     });
   }
 

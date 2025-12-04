@@ -22,6 +22,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { HistoryEntry } from '../../../shared/schema';
 import DynamicServiceIcon from './dynamic-service-icon';
+import { FavoritesButton } from './favorites-button';
 
 interface HistoryTimelineProps {
   userId?: string;
@@ -504,6 +505,12 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
                           >
                             <ExternalLink className="h-3 w-3 sm:h-4 sm:w-4" />
                           </Button>
+
+                          <FavoritesButton
+                            historyId={entry.id}
+                            size="sm"
+                            className="touch-target-sm"
+                          />
 
                           {entry.targetUrl && (
                             <>

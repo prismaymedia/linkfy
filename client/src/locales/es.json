@@ -258,6 +258,11 @@
     "removedTitle": "Removido de favoritos",
     "removedDescription": "Esta conversión ha sido removida.",
     "notAuthenticatedTitle": "No autenticado",
-    "notAuthenticatedDescription": "Por favor, inicia sesión para usar favoritos."
+    "notAuthenticatedDescription": "Por favor, inicia sesión para usar favoritos.",
+    "favorited": "Favorito",
+    "copyUrl": "Copiar URL",
+    "errorTitle": "Error",
+    "addErrorDescription": "No se pudo agregar a favoritos. Por favor, inténtalo de nuevo.",
+    "removeErrorDescription": "No se pudo quitar de favoritos. Por favor, inténtalo de nuevo."
   }
 }

@@ -48,12 +48,6 @@ export function FavoritesButton({
 
   const isProcessing = isLoading || isAdding || isRemoving;
 
-  const sizeClasses = {
-    sm: 'h-8 w-8',
-    md: 'h-10 w-10',
-    lg: 'h-12 w-12',
-  };
-
   const iconSizes = {
     sm: 'h-4 w-4',
     md: 'h-5 w-5',
@@ -64,29 +58,35 @@ export function FavoritesButton({
     <Button
       onClick={handleClick}
       disabled={isProcessing || !user}
-      variant="outline"
+      variant="ghost"
       className={cn(
         'transition-all duration-200',
-        isFav && 'bg-yellow-50 border-yellow-300 hover:bg-yellow-100',
-        !isFav && 'hover:bg-gray-100',
-        size === 'sm' && 'p-1',
-        size === 'md' && 'px-2 py-2',
-        size === 'lg' && 'px-3 py-2',
+        !isFav && 'text-gray-400 hover:text-gray-600',
+        isFav && 'text-yellow-400 hover:text-yellow-500 hover:bg-yellow-50',
+        size === 'sm' && 'h-8 w-8 p-1',
+        size === 'md' && 'h-10 w-10 p-2',
+        size === 'lg' && 'h-12 w-12 p-2',
         className,
       )}
-      title={isFav ? 'Remove from favorites' : 'Add to favorites'}
+      title={
+        isFav
+          ? t('favorites.removeButton')
+          : t('favorites.addButton')
+      }
     >
       <Star
         className={cn(
           iconSizes[size],
           'transition-all duration-200',
-          isFav && 'fill-yellow-400 text-yellow-400',
-          !isFav && 'text-gray-600',
+          isFav && 'fill-yellow-400',
+          !isFav && 'fill-transparent',
         )}
       />
       {showText && (
-        <span className="ml-2 text-sm font-medium">
-          {isFav ? 'Favorited' : 'Add to favorites'}
+        <span className="ml-2 text-sm font-medium text-foreground">
+          {isFav
+            ? t('favorites.favorited')
+            : t('favorites.addButton')}
         </span>
       )}
     </Button>

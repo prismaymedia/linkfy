@@ -130,7 +130,7 @@ export class FavoritesController {
 
     @Post('remove')
     @ApiOperation({ summary: 'Remove a conversion from favorites' })
-    @ApiCreatedResponse({ description: 'Favorite removed successfully' })
+    @ApiOkResponse({ description: 'Favorite removed successfully' })
     @ApiBadRequestResponse({ description: 'Invalid input' })
     async removeFavorite(
         @Body() body: RemoveFavoriteDto,

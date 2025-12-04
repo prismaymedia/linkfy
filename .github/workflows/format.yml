@@ -37,6 +37,6 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: 'style(prettier): format code with GA'
-          file_pattern: '**/* !**/.github/workflows/**'
+          file_pattern: '.'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

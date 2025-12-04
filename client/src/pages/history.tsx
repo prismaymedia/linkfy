@@ -13,13 +13,16 @@ import HistoryTimeline from '@/components/history-timeline';
 import { useQuery } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import type { HistoryEntry } from '../../../shared/schema';
+import { z } from 'zod';
 
-interface HistoryStats {
-  total: number;
-  successful: number;
-  failed: number;
-  pending: number;
-}
+const historyStatsSchema = z.object({
+  total: z.number(),
+  successful: z.number(),
+  failed: z.number(),
+  pending: z.number(),
+});
+
+type HistoryStats = z.infer<typeof historyStatsSchema>;
 
 const HistorySkeleton = () => (
   <div className="min-h-screen bg-surface p-4">
@@ -95,7 +98,8 @@ export default function History() {
           `Failed to fetch stats: ${response.status} ${errorText}`,
         );
       }
-      return response.json();
+      const data = await response.json();
+      return historyStatsSchema.parse(data);
     },
     enabled: !!user,
     retry: false,

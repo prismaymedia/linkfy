@@ -118,9 +118,12 @@ export class AppController {
     @Res({ passthrough: true }) res: Response,
     @CurrentUser() user: User | undefined,
   ) {
+    // Track the validated convert flag for error handling
+    let isConversionRequest = true;
+    
     try {
       this.logger.log(
-        `Processing conversion request for user: ${user?.email ?? 'anonymous'} (id: ${user?.id ?? 'none'})`,
+        `Processing conversion request for user: ${user?.id ?? 'anonymous'}`,
       );
 
       const RequestSchema = z.object({
@@ -132,6 +135,9 @@ export class AppController {
 
       const { url, targetPlatform, convert, format } =
         RequestSchema.parse(body);
+      
+      // Update the tracked conversion flag with validated value
+      isConversionRequest = convert ?? true;
 
       const sourcePlatform = detectPlatform(url);
 
@@ -252,7 +258,7 @@ export class AppController {
 
       if (error.response?.error === 'SPOTIFY_SEARCH_FAILED') {
         // Save failed history entry
-        if (user && body?.url) {
+        if (user && body?.url && isConversionRequest) {
           try {
             await this.historyService.recordHistoryEntry({
               userId: user.id,
@@ -281,7 +287,7 @@ export class AppController {
       }
 
       // Save failed history entry for other errors
-      if (user && body?.url && body?.convert !== false) {
+      if (user && body?.url && isConversionRequest) {
         try {
           await this.historyService.recordHistoryEntry({
             userId: user.id,

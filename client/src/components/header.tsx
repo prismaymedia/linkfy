@@ -34,8 +34,7 @@ export default function Header({ className }: HeaderProps) {
           <button
             onClick={() => setLocation(ROUTES.HOME)}
             className={cn(
-              "flex items-center gap-2 hover:opacity-80 transition-opacity",
-              className
+              "flex items-center gap-2 hover:opacity-80 transition-opacity"
             )}
           >
             <div className="flex items-center">

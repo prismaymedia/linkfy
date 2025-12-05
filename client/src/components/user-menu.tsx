@@ -20,15 +20,19 @@ export default function UserMenu() {
   const { user, signOut } = useAuth();
 
   const handleSignOut = async () => {
-    await signOut();
-    setLocation(ROUTES.HOME);
+    try {
+      await signOut();
+      setLocation(ROUTES.HOME);
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
   };
 
   const userInitials = user?.email
     ? user.email
-        .split('@')[0]
-        .slice(0, 2)
-        .toUpperCase()
+      .split('@')[0]
+      .slice(0, 2)
+      .toUpperCase()
     : 'U';
 
   return (
@@ -58,45 +62,45 @@ export default function UserMenu() {
         sticky="partial"
         onCloseAutoFocus={(e) => e.preventDefault()}
       >
-            <DropdownMenuLabel className="font-normal">
-              <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none text-foreground truncate">
-                  {user?.email}
-                </p>
-                <p className="text-xs leading-none text-muted-foreground">
-                  {t('navigation.signedIn', 'Signed in')}
-                </p>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => setLocation(ROUTES.DASHBOARD)}
-              className="cursor-pointer min-h-[44px] sm:min-h-[36px] py-2 sm:py-1.5"
-            >
-              <LayoutDashboard className="mr-2 h-4 w-4 flex-shrink-0" />
-              <span className="text-sm sm:text-sm">{t('header.dashboard', 'Dashboard')}</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => setLocation(ROUTES.PROFILE)}
-              className="cursor-pointer min-h-[44px] sm:min-h-[36px] py-2 sm:py-1.5"
-            >
-              <User className="mr-2 h-4 w-4 flex-shrink-0" />
-              <span className="text-sm sm:text-sm">{t('navigation.profile', 'Profile')}</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => setLocation(ROUTES.SETTINGS)}
-              className="cursor-pointer min-h-[44px] sm:min-h-[36px] py-2 sm:py-1.5"
-            >
-              <Settings className="mr-2 h-4 w-4 flex-shrink-0" />
-              <span className="text-sm sm:text-sm">{t('navigation.settings', 'Settings')}</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
+        <DropdownMenuLabel className="font-normal">
+          <div className="flex flex-col space-y-1">
+            <p className="text-sm font-medium leading-none text-foreground truncate">
+              {user?.email}
+            </p>
+            <p className="text-xs leading-none text-muted-foreground">
+              {t('navigation.signedIn', 'Signed in')}
+            </p>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          onClick={() => setLocation(ROUTES.DASHBOARD)}
+          className="cursor-pointer min-h-[44px] sm:min-h-[36px] py-2 sm:py-1.5"
+        >
+          <LayoutDashboard className="mr-2 h-4 w-4 flex-shrink-0" />
+          <span className="text-sm">{t('header.dashboard', 'Dashboard')}</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => setLocation(ROUTES.PROFILE)}
+          className="cursor-pointer min-h-[44px] sm:min-h-[36px] py-2 sm:py-1.5"
+        >
+          <User className="mr-2 h-4 w-4 flex-shrink-0" />
+          <span className="text-sm">{t('navigation.profile', 'Profile')}</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => setLocation(ROUTES.SETTINGS)}
+          className="cursor-pointer min-h-[44px] sm:min-h-[36px] py-2 sm:py-1.5"
+        >
+          <Settings className="mr-2 h-4 w-4 flex-shrink-0" />
+          <span className="text-sm">{t('navigation.settings', 'Settings')}</span>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={handleSignOut}
           className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50 min-h-[44px] sm:min-h-[36px] py-2 sm:py-1.5"
         >
           <LogOut className="mr-2 h-4 w-4 flex-shrink-0" />
-          <span className="text-sm sm:text-sm">{t('navigation.signOut', 'Sign Out')}</span>
+          <span className="text-sm">{t('navigation.signOut', 'Sign Out')}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

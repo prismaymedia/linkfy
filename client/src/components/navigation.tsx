@@ -110,7 +110,7 @@ export default function Navigation({ className }: NavigationProps) {
   return (
     <nav
       className={cn(
-        'border-b border-gray-200 sticky top-0 z-50',
+        'bg-white border-b border-gray-200 sticky top-0 z-50',
         className,
       )}
     >
@@ -364,11 +364,7 @@ export default function Navigation({ className }: NavigationProps) {
                   {/* Sign Out Action */}
                   <button
                     type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleSignOut(e);
-                    }}
+                    onClick={handleSignOut}
                     className="w-full flex items-center px-3 py-3 text-left rounded-md text-sm sm:text-base font-medium text-red-600 hover:bg-red-50 hover:text-red-700 active:bg-red-100 transition-colors min-h-[44px] touch-target cursor-pointer"
                   >
                     <LogOut className="h-4 w-4 sm:h-5 sm:w-5 mr-3 flex-shrink-0" />

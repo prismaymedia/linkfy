@@ -10,6 +10,7 @@ interface Preferences {
   autoConvert: boolean;
   saveHistory: boolean;
   notifications: boolean;
+  historyRetentionDays: number;
 }
 
 interface PreferencesContextType extends Preferences {
@@ -19,6 +20,7 @@ interface PreferencesContextType extends Preferences {
   setAutoConvert: (v: boolean) => void;
   setSaveHistory: (v: boolean) => void;
   setNotifications: (v: boolean) => void;
+  setHistoryRetentionDays: (v: number) => void;
   clearAllData: () => void;
 }
 
@@ -28,6 +30,7 @@ const DEFAULT_PREFERENCES: Preferences = {
   autoConvert: false,
   saveHistory: true,
   notifications: true,
+  historyRetentionDays: 30,
 };
 
 const STORAGE_KEY = "linkfy-preferences";
@@ -127,6 +130,7 @@ export function PreferencesProvider({ children }: { children: React.ReactNode })
     setAutoConvert: (v) => update("autoConvert", v),
     setSaveHistory: (v) => update("saveHistory", v),
     setNotifications: (v) => update("notifications", v),
+    setHistoryRetentionDays: (v) => update("historyRetentionDays", v),
     clearAllData,
   };
 

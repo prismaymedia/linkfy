@@ -4,13 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -34,60 +28,39 @@ import {
 import { usePreferences } from '@/contexts/PreferencesContext';
 import LanguageSwitcher from '@/components/language-switcher';
 import ThemeSwitcher from '@/components/theme-switcher';
+import HistoryRetentionSwitcher from '@/components/history-retention-switcher';
 import { useToast } from '@/hooks/use-toast';
 import { getSession } from '@/lib/supabaseClient';
 
-const SETTINGS_STORAGE_KEY = 'linkfy-settings';
 
-interface SettingsData {
-  notifications: boolean;
-  autoConvert: boolean;
-  saveHistory: boolean;
-  historyRetentionDays: number;
-}
-
-const DEFAULT_SETTINGS: SettingsData = {
-  notifications: true,
-  autoConvert: false,
-  saveHistory: true,
-  historyRetentionDays: 30,
-};
-
-function loadSettings(): SettingsData {
-  if (typeof window === 'undefined') return DEFAULT_SETTINGS;
-  try {
-    const stored = localStorage.getItem(SETTINGS_STORAGE_KEY);
-    if (stored) {
-      return { ...DEFAULT_SETTINGS, ...JSON.parse(stored) };
-    }
-  } catch (error) {
-    console.error('Failed to load settings:', error);
-  }
-  return DEFAULT_SETTINGS;
-}
-
-function saveSettings(settings: SettingsData) {
-  if (typeof window === 'undefined') return;
-  try {
-    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
-  } catch (error) {
-    console.error('Failed to save settings:', error);
-  }
-}
 
 export default function SettingsPanel() {
   const { t } = useTranslation();
-  const { theme, setTheme, resolvedTheme } = usePreferences();
+  const {
+    notifications,
+    setNotifications,
+    autoConvert,
+    setAutoConvert,
+    saveHistory,
+    setSaveHistory,
+  } = usePreferences();
   const { toast } = useToast();
-  const [settings, setSettings] = useState<SettingsData>(loadSettings);
   const [isClearing, setIsClearing] = useState(false);
 
-  useEffect(() => {
-    saveSettings(settings);
-  }, [settings]);
+  const handleSettingChange = (key: string, value: boolean | number) => {
+    switch (key) {
+      case 'notifications':
+        setNotifications(value as boolean);
+        break;
+      case 'autoConvert':
+        setAutoConvert(value as boolean);
+        break;
+      case 'saveHistory':
+        setSaveHistory(value as boolean);
+        break;
 
-  const handleSettingChange = (key: keyof SettingsData, value: boolean | number) => {
-    setSettings((prev) => ({ ...prev, [key]: value }));
+    }
+
     toast({
       title: t('settings.saved', 'Settings saved'),
       description: t('settings.savedDesc', 'Your preferences have been updated.'),
@@ -106,12 +79,10 @@ export default function SettingsPanel() {
         localStorage.removeItem('linkfy-favorites');
       }
 
-      // Clear all local storage except settings and theme
-      const themeValue = localStorage.getItem('linkfy-theme');
-      const settingsValue = localStorage.getItem(SETTINGS_STORAGE_KEY);
+      // Clear all local storage except preferences (which includes theme and settings)
+      const preferencesValue = localStorage.getItem('linkfy-preferences');
       localStorage.clear();
-      if (themeValue) localStorage.setItem('linkfy-theme', themeValue);
-      if (settingsValue) localStorage.setItem(SETTINGS_STORAGE_KEY, settingsValue);
+      if (preferencesValue) localStorage.setItem('linkfy-preferences', preferencesValue);
 
       toast({
         title: t('settings.dataCleared', 'Data cleared'),
@@ -156,7 +127,7 @@ export default function SettingsPanel() {
             <div className="flex-shrink-0">
               <Switch
                 id="auto-convert"
-                checked={settings.autoConvert}
+                checked={autoConvert}
                 onCheckedChange={(checked) => handleSettingChange('autoConvert', checked)}
                 className="scale-110"
               />
@@ -175,45 +146,21 @@ export default function SettingsPanel() {
             <div className="flex-shrink-0">
               <Switch
                 id="save-history"
-                checked={settings.saveHistory}
+                checked={saveHistory}
                 onCheckedChange={(checked) => handleSettingChange('saveHistory', checked)}
                 className="scale-110"
               />
             </div>
           </div>
 
-          {settings.saveHistory && (
+          {saveHistory && (
             <div className="space-y-2">
               <Label htmlFor="history-retention" className="text-sm font-medium">
                 {t('settings.historyRetention', 'History Retention')}
               </Label>
-              <Select
-                value={settings.historyRetentionDays.toString()}
-                onValueChange={(value) =>
-                  handleSettingChange('historyRetentionDays', parseInt(value, 10))
-                }
-              >
-                <SelectTrigger id="history-retention" className="w-full max-w-xs">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="7">
-                    {t('settings.retention7Days', '7 days')}
-                  </SelectItem>
-                  <SelectItem value="30">
-                    {t('settings.retention30Days', '30 days')}
-                  </SelectItem>
-                  <SelectItem value="90">
-                    {t('settings.retention90Days', '90 days')}
-                  </SelectItem>
-                  <SelectItem value="365">
-                    {t('settings.retention1Year', '1 year')}
-                  </SelectItem>
-                  <SelectItem value="-1">
-                    {t('settings.retentionForever', 'Forever')}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="w-full max-w-xs">
+                <HistoryRetentionSwitcher />
+              </div>
               <p className="text-sm text-muted-foreground">
                 {t(
                   'settings.historyRetentionDesc',
@@ -302,7 +249,7 @@ export default function SettingsPanel() {
             <div className="flex-shrink-0">
               <Switch
                 id="notifications"
-                checked={settings.notifications}
+                checked={notifications}
                 onCheckedChange={(checked) => handleSettingChange('notifications', checked)}
                 className="scale-110"
               />
@@ -414,7 +361,6 @@ export default function SettingsPanel() {
           </div>
         </CardContent>
       </Card>
-    </div >
+    </div>
   );
 }
-

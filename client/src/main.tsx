@@ -11,8 +11,8 @@ import { browserTracingIntegration } from '@sentry/react';
 // If Sentry DSN is not configured or fails to initialize, the app will continue to run
 try {
   const sentryDsn = import.meta.env.VITE_SENTRY_DSN;
-  
-  if (sentryDsn) {
+
+  if (sentryDsn && sentryDsn.includes('@')) {
     Sentry.init({
       dsn: sentryDsn,
       // Use 1.0 for development to capture all transactions, reduce for production

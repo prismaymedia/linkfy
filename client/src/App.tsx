@@ -5,6 +5,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { LoginModalProvider } from '@/contexts/LoginModalContext';
+import { PreferencesProvider } from '@/contexts/PreferencesContext';
 import LoginModal from '@/components/login-modal';
 import RouteGuard from '@/components/route-guard';
 import Navigation from '@/components/navigation';
@@ -101,16 +102,18 @@ function AppRouter() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <LoginModalProvider>
-          <TooltipProvider>
-            <Toaster />
-            <AppRouter />
-            <LoginModal />
-            <Analytics />
-          </TooltipProvider>
-        </LoginModalProvider>
-      </AuthProvider>
+      <PreferencesProvider>
+        <AuthProvider>
+          <LoginModalProvider>
+            <TooltipProvider>
+              <Toaster />
+              <AppRouter />
+              <LoginModal />
+              <Analytics />
+            </TooltipProvider>
+          </LoginModalProvider>
+        </AuthProvider>
+      </PreferencesProvider>
     </QueryClientProvider>
   );
 }

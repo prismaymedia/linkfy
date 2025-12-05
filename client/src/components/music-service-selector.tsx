@@ -24,10 +24,10 @@ const services: {
   icon: React.ComponentType<{ className?: string }>;
   color: string;
 }[] = [
-  { name: 'YouTube Music', icon: SiYoutubemusic, color: 'text-red-600' },
-  { name: 'Spotify', icon: SiSpotify, color: 'text-green-600' },
-  { name: 'SoundCloud', icon: SiSoundcloud, color: 'text-orange-500' },
-];
+    { name: 'YouTube Music', icon: SiYoutubemusic, color: 'text-red-600' },
+    { name: 'Spotify', icon: SiSpotify, color: 'text-green-600' },
+    { name: 'SoundCloud', icon: SiSoundcloud, color: 'text-orange-500' },
+  ];
 
 const getServiceInfo = (serviceName: MusicService | null) => {
   return services.find((s) => s.name === serviceName) || null;

@@ -1,10 +1,12 @@
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import LanguageSwitcher from '@/components/language-switcher';
-import { LogIn, ArrowRight, LayoutDashboard } from 'lucide-react';
+import UserMenu from '@/components/user-menu';
+import { LogIn, ArrowRight } from 'lucide-react';
 import { SiYoutubemusic, SiSpotify, SiGithub } from 'react-icons/si';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@/lib/routes';
+import { cn } from '@/lib/utils';
 import { useLoginModal } from '@/contexts/LoginModalContext';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -31,7 +33,9 @@ export default function Header({ className }: HeaderProps) {
           {/* Logo */}
           <button
             onClick={() => setLocation(ROUTES.HOME)}
-            className="flex items-center space-x-1 sm:space-x-2 hover:opacity-80 transition-opacity touch-target-sm"
+            className={cn(
+              "flex items-center gap-2 hover:opacity-80 transition-opacity"
+            )}
           >
             <div className="flex items-center">
               <SiYoutubemusic className="text-youtube text-lg sm:text-xl" />
@@ -64,29 +68,22 @@ export default function Header({ className }: HeaderProps) {
               </a>
             </Button>
 
-            {user && (
+            {user ? (
+              <UserMenu />
+            ) : (
               <Button
-                onClick={() => setLocation(ROUTES.DASHBOARD)}
-                variant="ghost"
+                onClick={handleLoginClick}
+                variant="default"
                 size="sm"
-                className="p-2 touch-target-sm"
-                aria-label={t('header.dashboard', 'Dashboard')}
+                className="flex items-center space-x-1 touch-target-sm text-sm sm:text-base px-2 sm:px-4"
+                aria-label={t('header.login', 'Login')}
               >
-                <LayoutDashboard className="h-4 w-4 sm:h-5 sm:w-5" />
+                <LogIn className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden xs:inline">
+                  {t('header.login', 'Login')}
+                </span>
               </Button>
             )}
-            <Button
-              onClick={handleLoginClick}
-              variant="default"
-              size="sm"
-              className="flex items-center space-x-1 touch-target-sm text-sm sm:text-base px-2 sm:px-4"
-              aria-label={t('header.login', 'Login')}
-            >
-              <LogIn className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden xs:inline">
-                {t('header.login', 'Login')}
-              </span>
-            </Button>
           </div>
         </div>
       </div>

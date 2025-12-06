@@ -1,8 +1,7 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { and, desc, eq, inArray } from 'drizzle-orm';
-import { drizzle } from 'drizzle-orm/neon-serverless';
-import { Pool, neonConfig } from '@neondatabase/serverless';
-import ws from 'ws';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { Pool } from 'pg';
 import * as schema from '../../../shared/schema';
 import {
   conversionHistory,
@@ -43,10 +42,9 @@ export class DatabaseService implements OnModuleInit {
       return;
     }
 
-    this.logger.log(`🔹 Database URL found`);
+    this.logger.log(`🔹 Database URL found: ${databaseUrl.replace(/:[^:@]+@/, ':****@')}`);
 
-    // Configure WebSocket for Neon serverless
-    neonConfig.webSocketConstructor = ws;
+
 
     try {
       const pool = new Pool({ connectionString: databaseUrl });

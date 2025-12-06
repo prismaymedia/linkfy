@@ -125,22 +125,12 @@ function AppRouter() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <LoginModalProvider>
-          <TooltipProvider>
-            <Toaster />
-            <FavoritesSidebar />
-            <AppRouter />
-            <LoginModal />
-            <Analytics />
-          </TooltipProvider>
-        </LoginModalProvider>
-      </AuthProvider>
       <PreferencesProvider>
         <AuthProvider>
           <LoginModalProvider>
             <TooltipProvider>
               <Toaster />
+              <FavoritesSidebar />
               <AppRouter />
               <LoginModal />
               <Analytics />

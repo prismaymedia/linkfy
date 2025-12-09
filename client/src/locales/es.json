@@ -109,6 +109,16 @@
     "copyFailedTitle": "Error al copiar",
     "copyFailedDescription": "Por favor, inténtalo de nuevo."
   },
+  "common": {
+    "copied": "¡Copiado!",
+    "copiedItem": "¡{{item}} copiado al portapapeles!",
+    "copiedGeneric": "¡Copiado al portapapeles!",
+    "copyErrorTitle": "Error al copiar",
+    "copyErrorDesc": "No se pudo copiar al portapapeles. Por favor, inténtalo de nuevo.",
+    "deletedTitle": "Eliminado",
+    "deletedItem": "Se eliminó {{item}}",
+    "deleted": "Eliminado correctamente"
+  },
   "navigation": {
     "home": "Inicio",
     "dashboard": "Panel",
@@ -186,6 +196,8 @@
     "notifications": "Notificaciones",
     "enableNotifications": "Habilitar Notificaciones",
     "notificationsDesc": "Recibir notificaciones sobre resultados de conversión",
+    "savedTitle": "Configuración guardada",
+    "savedDesc": "Tus ajustes han sido guardados",
     "privacy": "Privacidad y Seguridad",
     "privacyDesc": "Configuración de privacidad y seguridad estará disponible en futuras actualizaciones.",
     "backToDashboard": "Volver al Panel",
@@ -209,7 +221,7 @@
     "delete": "Eliminar",
     "backToDashboard": "Volver al Panel",
     "settings": "Configuración",
-    "deletedDesc": "Registro de conversión eliminado."
+    "deletedDesc": "Registro de conversión eliminado exitosamente"
   },
   "help": {
     "title": "Ayuda y Soporte",

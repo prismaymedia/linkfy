@@ -1,149 +1,110 @@
 import { toast } from '@/hooks/use-toast';
 import { TOAST_DURATION } from '@/hooks/use-toast';
+import { useTranslation } from 'react-i18next';
 
-/**
- * Toast Manager - Utility functions for showing toast notifications
- * Provides consistent toast messages across the application
- */
+// Tipos permitidos por el componente Toast (Shadcn)
+type ToastVariant = "default" | "destructive" | "success" | "warning" | "info";
 
 interface ToastOptions {
-  title: string;
+  title?: string;
   description?: string;
   duration?: number;
+  titleKey?: string;
+  descriptionKey?: string;
 }
 
-/**
- * Show a success toast notification
- */
-export const showSuccessToast = (options: ToastOptions) => {
-  return toast({
-    title: options.title,
-    description: options.description,
-    variant: 'success',
-    duration: options.duration ?? TOAST_DURATION.DEFAULT,
-  });
+export const useToastManager = () => {
+  const { t } = useTranslation();
+
+  const createToast = ({
+    title,
+    description,
+    duration,
+    titleKey,
+    descriptionKey,
+    variant,
+  }: ToastOptions & { variant: ToastVariant }) => {
+    return toast({
+      title: titleKey ? t(titleKey) : title,
+      description: descriptionKey ? t(descriptionKey) : description,
+      variant,
+      duration: duration ?? TOAST_DURATION.DEFAULT,
+    });
+  };
+
+  const showSuccessToast = (opts: ToastOptions) =>
+    createToast({ ...opts, variant: "success" });
+
+  const showErrorToast = (opts: ToastOptions) =>
+    createToast({ ...opts, variant: "destructive" });
+
+  const showInfoToast = (opts: ToastOptions) =>
+    createToast({ ...opts, variant: "info" });
+
+  const showWarningToast = (opts: ToastOptions) =>
+    createToast({ ...opts, variant: "warning" });
+
+  const showCopySuccessToast = (itemName?: string) =>
+    createToast({
+      titleKey: "common.copied",
+      description: itemName
+        ? t("common.copiedItem", { item: itemName })
+        : t("common.copiedGeneric"),
+      variant: "success",
+      duration: TOAST_DURATION.SHORT,
+    });
+
+  const showCopyErrorToast = () =>
+    createToast({
+      titleKey: "common.copyErrorTitle",
+      descriptionKey: "common.copyErrorDesc",
+      variant: "destructive",
+    });
+
+  const showConversionSuccessToast = () =>
+    createToast({
+      titleKey: "conversion.successTitle",
+      descriptionKey: "conversion.successDesc",
+      variant: "success",
+    });
+
+  const showConversionErrorToast = (message?: string) =>
+    createToast({
+      titleKey: "conversion.errorTitle",
+      description: message,
+      descriptionKey: message ? undefined : "conversion.errorDesc",
+      variant: "destructive",
+      duration: TOAST_DURATION.LONG,
+    });
+
+  const showSettingsSavedToast = () =>
+    createToast({
+      titleKey: "settings.savedTitle",
+      descriptionKey: "settings.savedDesc",
+      variant: "success",
+      duration: TOAST_DURATION.SHORT,
+    });
+
+  const showDeleteSuccessToast = (itemName?: string) =>
+    createToast({
+      titleKey: "common.deletedTitle",
+      description: itemName
+        ? t("common.deletedItem", { item: itemName })
+        : t("common.deleted"),
+      variant: "success",
+      duration: TOAST_DURATION.SHORT,
+    });
+
+  return {
+    showSuccessToast,
+    showErrorToast,
+    showInfoToast,
+    showWarningToast,
+    showCopySuccessToast,
+    showCopyErrorToast,
+    showConversionSuccessToast,
+    showConversionErrorToast,
+    showSettingsSavedToast,
+    showDeleteSuccessToast,
+  };
 };
-
-export const showErrorToast = (options: ToastOptions) => {
-  return toast({
-    title: options.title,
-    description: options.description,
-    variant: 'destructive',
-    duration: options.duration ?? TOAST_DURATION.LONG,
-  });
-};
-
-
-/**
- * Show an info toast notification
- */
-export const showInfoToast = (options: ToastOptions) => {
-  return toast({
-    title: options.title || 'Info',
-    description: options.description,
-    variant: 'info',
-    duration: options.duration ?? TOAST_DURATION.DEFAULT,
-  });
-};
-
-/**
- * Show a warning toast notification
- */
-export const showWarningToast = (options: ToastOptions) => {
-  return toast({
-    title: options.title || 'Warning',
-    description: options.description,
-    variant: 'warning',
-    duration: options.duration ?? TOAST_DURATION.DEFAULT,
-  });
-};
-
-/**
- * Show a toast notification for clipboard copy success
- */
-export const showCopySuccessToast = (itemName?: string) => {
-  return toast({
-    title: 'Copied!',
-    description: itemName
-      ? `${itemName} copied to clipboard.`
-      : 'Copied to clipboard.',
-    variant: 'success',
-    duration: TOAST_DURATION.SHORT,
-  });
-};
-
-/**
- * Show a toast notification for clipboard copy failure
- */
-export const showCopyErrorToast = () => {
-  return toast({
-    title: 'Failed to copy',
-    description: 'Please try again or copy manually.',
-    variant: 'destructive',
-    duration: TOAST_DURATION.DEFAULT,
-  });
-};
-
-/**
- * Show a toast notification for conversion success
- */
-export const showConversionSuccessToast = () => {
-  return toast({
-    title: 'Conversion successful',
-    description: 'Your track has been converted successfully.',
-    variant: 'success',
-    duration: TOAST_DURATION.DEFAULT,
-  });
-};
-
-/**
- * Show a toast notification for conversion error
- */
-export const showConversionErrorToast = (message?: string) => {
-  return toast({
-    title: 'Conversion failed',
-    description: message || 'Unable to convert the track. Please try again.',
-    variant: 'destructive',
-    duration: TOAST_DURATION.LONG,
-  });
-};
-
-/**
- * Show a toast notification for settings saved
- */
-export const showSettingsSavedToast = () => {
-  return toast({
-    title: 'Settings saved',
-    description: 'Your preferences have been updated.',
-    variant: 'success',
-    duration: TOAST_DURATION.SHORT,
-  });
-};
-
-/**
- * Show a toast notification for item deleted
- */
-export const showDeleteSuccessToast = (itemName?: string) => {
-  return toast({
-    title: 'Deleted',
-    description: itemName
-      ? `${itemName} has been removed.`
-      : 'Item has been removed.',
-    variant: 'success',
-    duration: TOAST_DURATION.SHORT,
-  });
-};
-
-export default {
-  showSuccessToast,
-  showErrorToast,
-  showInfoToast,
-  showWarningToast,
-  showCopySuccessToast,
-  showCopyErrorToast,
-  showConversionSuccessToast,
-  showConversionErrorToast,
-  showSettingsSavedToast,
-  showDeleteSuccessToast,
-};
-

@@ -153,9 +153,13 @@ export default function History() {
     setHistory((prev) => prev.filter((record) => record.id !== id));
     toast({
       title: t('history.delete', 'Deleted'),
-      description: t('history.deletedDesc', 'Conversion record deleted successfully'),
-      variant: 'info',
+      description: t(
+        'history.deletedDesc',
+        'Conversion record deleted successfully'
+      ),
+      variant: 'success',
     });
+
   };
 
   const openUrl = (url: string) => {

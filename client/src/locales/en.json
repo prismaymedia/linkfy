@@ -109,6 +109,16 @@
     "copyFailedTitle": "Failed to copy",
     "copyFailedDescription": "Please try again."
   },
+  "common": {
+    "copied": "Copied!",
+    "copiedItem": "{{item}} copied to clipboard!",
+    "copiedGeneric": "Copied to clipboard!",
+    "copyErrorTitle": "Failed to copy",
+    "copyErrorDesc": "Unable to copy to clipboard. Please try again.",
+    "deletedTitle": "Deleted",
+    "deletedItem": "{{item}} deleted",
+    "deleted": "Deleted successfully"
+  },
   "navigation": {
     "home": "Home",
     "dashboard": "Dashboard",
@@ -186,6 +196,8 @@
     "notifications": "Notifications",
     "enableNotifications": "Enable Notifications",
     "notificationsDesc": "Get notified about conversion results",
+    "savedTitle": "Settings saved",
+    "savedDesc": "Your settings have been saved",
     "privacy": "Privacy & Security",
     "privacyDesc": "Privacy and security settings will be available in future updates.",
     "backToDashboard": "Back to Dashboard",
@@ -209,7 +221,7 @@
     "delete": "Delete",
     "backToDashboard": "Back to Dashboard",
     "settings": "Settings",
-    "deletedDesc": "Conversion record removed."
+    "deletedDesc": "Conversion record deleted successfully"
   },
   "help": {
     "title": "Help & Support",

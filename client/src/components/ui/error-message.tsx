@@ -10,7 +10,7 @@ interface ErrorMessageProps {
   show?: boolean;
   onDismiss?: () => void;
   dismissible?: boolean;
-  dismissLabel?: string; 
+  dismissLabel?: string;
 }
 
 const variantStyles = {
@@ -41,7 +41,7 @@ export const ErrorMessage = React.forwardRef<HTMLDivElement, ErrorMessageProps>(
       show = true,
       onDismiss,
       dismissible = false,
-      dismissLabel = 'Dismiss message'
+      dismissLabel = 'Dismiss message',
     },
     ref,
   ) => {

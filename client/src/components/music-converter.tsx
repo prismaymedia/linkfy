@@ -20,6 +20,7 @@ import {
   FormMessage,
   FormDescription,
 } from '@/components/ui/form';
+import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -388,7 +389,13 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel
-                      className={`text-sm font-medium ${fieldState.error ? 'text-red-600' : fieldState.isDirty && isFieldValid ? 'text-green-600' : 'text-gray-700'}`}
+                      className={cn(
+                        'text-sm font-medium',
+                        fieldState.error && 'text-red-600',
+                        fieldState.isDirty && isFieldValid && 'text-green-600',
+                        !fieldState.error && !(fieldState.isDirty && isFieldValid) && 'text-gray-700',
+                      )}
+
                     >
                       {t('form.youtubeUrlLabel')}
                     </FormLabel>
@@ -414,13 +421,12 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                           disabled={
                             convertMutation.isPending || isLoadingPreview
                           }
-                          className={`w-full px-3 sm:px-4 py-3 sm:py-4 border rounded-lg focus:ring-2 focus:ring-offset-2 transition-all duration-200 pr-10 text-sm sm:text-base ${
-                            fieldState.error
-                              ? 'border-red-500 bg-red-50 focus:ring-red-500 focus:border-red-500 focus:ring-offset-red-50'
-                              : isFieldValid
-                                ? 'border-green-500 bg-green-50 focus:ring-green-500 focus:border-green-500 focus:ring-offset-green-50'
-                                : 'border-gray-300 focus:ring-spotify focus:border-spotify focus:ring-offset-blue-50'
-                            }`}
+                          className={cn(
+                            'w-full px-3 sm:px-4 py-3 sm:py-4 border rounded-lg focus:ring-2 focus:ring-offset-2 transition-all duration-200 pr-10 text-sm sm:text-base',
+                            fieldState.error && 'border-red-500 bg-red-50 focus:ring-red-500 focus:border-red-500 focus:ring-offset-red-50',
+                            isFieldValid && 'border-green-500 bg-green-50 focus:ring-green-500 focus:border-green-500 focus:ring-offset-green-50',
+                            !fieldState.error && !isFieldValid && 'border-gray-300 focus:ring-spotify focus:border-spotify focus:ring-offset-blue-50'
+                          )}
                         />
                         {!isLoadingPreview &&
                           isInputHovered &&
@@ -473,7 +479,10 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                       {!fieldState.error && (
                         <FormDescription
                           id="url-hint"
-                          className={`text-xs text-gray-500 flex items-center gap-1 ${isCompact ? 'sr-only' : ''}`}
+                          className={cn(
+                            'text-xs text-gray-500 flex items-center gap-1',
+                            isCompact && 'sr-only'
+                          )}
                         >
                           {isFieldValid ? (
                             <>
@@ -506,7 +515,6 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                   message={t('form.duplicateUrlWarning')}
                   show={true}
                   dismissible={false}
-                  dismissLabel={t('form.closeError')}
                 />
               )}
 
@@ -620,12 +628,12 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                             convertedTracks.includes(track.videoId)
                           }
                           size="sm"
-                          className={`text-white font-medium py-1 px-3 rounded-md transition-colors duration-200 ${convertedTracks.includes(track.videoId)
-                              ? 'bg-gray-400 opacity-70 cursor-not-allowed'
-                              : convertingTracks.includes(track.videoId)
-                                ? 'bg-spotify/80 cursor-wait'
-                                : 'bg-spotify hover:bg-green-600'
-                            }`}
+                          className={cn(
+                            'text-white font-medium py-1 px-3 rounded-md transition-colors duration-200',
+                            convertedTracks.includes(track.videoId) && 'bg-gray-400 opacity-70 cursor-not-allowed',
+                            convertingTracks.includes(track.videoId) && !convertedTracks.includes(track.videoId) && 'bg-spotify/80 cursor-wait',
+                            !convertedTracks.includes(track.videoId) && !convertingTracks.includes(track.videoId) && 'bg-spotify hover:bg-green-600'
+                          )}
                         >
                           {convertedTracks.includes(track.videoId)
                             ? t('form.converted', { defaultValue: 'Converted' })

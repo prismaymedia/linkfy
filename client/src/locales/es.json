@@ -55,6 +55,7 @@
     "convertSingle": "Convertir",
     "urlAlreadyConverted": "URL ya convertida",
     "convertButton": "Convertir",
+    "dismissMessage": "Cerrar mensaje",
     "clearInput": "Limpiar campo",
     "closeError": "Cerrar mensaje",
     "inputCleared": "Campo borrado",

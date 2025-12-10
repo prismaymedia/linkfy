@@ -105,35 +105,6 @@ export default function History() {
     retry: false,
   });
 
-  const copyToClipboard = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      toast({
-        title: t('result.copiedButton', 'Copied!'),
-        description: t('result.copiedDescription', 'Spotify URL copied to clipboard'),
-        variant: 'success',
-      });
-    } catch {
-      toast({
-        title: t('result.copyFailedTitle', 'Copy Failed'),
-        description: t('result.copyFailedDescription', 'Could not copy to clipboard'),
-        variant: 'destructive',
-      });
-    }
-  };
-
-  const deleteRecord = (id: string) => {
-    setHistory((prev) => prev.filter((record) => record.id !== id));
-    toast({
-      title: t('history.delete', 'Deleted'),
-      description: t(
-        'history.deletedDesc',
-        'Conversion record deleted successfully'
-      ),
-      variant: 'success',
-    });
-  };
-
   useEffect(() => {
     if (!authLoading && !user) {
       setLocation(ROUTES.AUTH);

@@ -207,7 +207,6 @@
     "notificationsDesc": "Get notified about conversion results",
     "enableNotifications": "Enable Notifications",
     "savedTitle": "Settings saved",
-    "savedDesc": "Your settings have been saved",
     "extension": "Extension Permissions",
     "extensionDesc": "Manage browser extension permissions",
     "clipboardAccess": "Clipboard Access",

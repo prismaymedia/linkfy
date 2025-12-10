@@ -39,14 +39,14 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-surface p-4">
+    <div className="min-h-screen bg-background p-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+          <h1 className="text-3xl font-bold text-foreground mb-2">
             {t('profile.title', 'Profile')}
           </h1>
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             {t('profile.subtitle', 'Manage your account information')}
           </p>
         </div>
@@ -67,12 +67,12 @@ export default function Profile() {
                     {t('profile.email', 'Email')}
                   </Label>
                   <div className="flex items-center gap-2 mt-1">
-                    <Mail className="h-4 w-4 text-gray-500 flex-shrink-0" />
+                    <Mail className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                     <Input
                       id="email"
                       value={session?.user?.email || ''}
                       disabled
-                      className="bg-gray-50 min-w-0 text-xs xs:text-sm"
+                      className="bg-muted min-w-0 text-xs xs:text-sm"
                     />
                   </div>
                 </div>
@@ -82,7 +82,7 @@ export default function Profile() {
                     {t('profile.memberSince', 'Member Since')}
                   </Label>
                   <div className="flex items-center gap-2 mt-1">
-                    <Calendar className="h-4 w-4 text-gray-500 flex-shrink-0" />
+                    <Calendar className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                     <Input
                       id="created"
                       value={
@@ -93,7 +93,7 @@ export default function Profile() {
                           : ''
                       }
                       disabled
-                      className="bg-gray-50 min-w-0 text-xs xs:text-sm"
+                      className="bg-muted min-w-0 text-xs xs:text-sm"
                     />
                   </div>
                 </div>
@@ -106,7 +106,7 @@ export default function Profile() {
                     id="id"
                     value={session?.user?.id || ''}
                     disabled
-                    className="bg-gray-50 font-mono text-[10px] xs:text-xs min-w-0"
+                    className="bg-muted font-mono text-[10px] xs:text-xs min-w-0"
                   />
                 </div>
               </CardContent>
@@ -118,7 +118,7 @@ export default function Profile() {
                 <CardTitle>{t('profile.preferences', 'Preferences')}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-500 text-sm">
+                <p className="text-muted-foreground text-sm">
                   {t(
                     'profile.preferencesDesc',
                     'User preferences will be available in a future update.',
@@ -182,19 +182,19 @@ export default function Profile() {
               <CardContent>
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">
+                    <span className="text-muted-foreground">
                       {t('profile.totalConversions', 'Total Conversions')}
                     </span>
                     <span className="font-medium">0</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">
+                    <span className="text-muted-foreground">
                       {t('profile.successfulConversions', 'Successful')}
                     </span>
                     <span className="font-medium">0</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">
+                    <span className="text-muted-foreground">
                       {t('profile.lastActivity', 'Last Activity')}
                     </span>
                     <span className="font-medium text-sm">Today</span>

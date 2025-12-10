@@ -132,7 +132,7 @@ export default function UrlSuggestionPopup() {
       <Card className="mb-4">
         <CardContent className="p-4">
           <div className="flex items-center justify-center py-4">
-            <Loader2 className="h-5 w-5 animate-spin text-gray-400" />
+            <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
           </div>
         </CardContent>
       </Card>
@@ -171,11 +171,11 @@ export default function UrlSuggestionPopup() {
   }
 
   return (
-    <Card className="mb-4 border-blue-200 bg-blue-50/50">
+    <Card className="mb-4 border-border bg-muted/50">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg flex items-center gap-2">
-            <Badge variant="secondary" className="bg-blue-100 text-blue-700">
+            <Badge variant="secondary" className="bg-primary/10 text-primary">
               {detectedUrls.urls.length}
             </Badge>
             {t('suggestion.title', 'Music URLs Detected')}
@@ -186,7 +186,7 @@ export default function UrlSuggestionPopup() {
         </div>
         {detectedUrls.pageTitle && (
           <p
-            className="text-sm text-gray-600 truncate"
+            className="text-sm text-muted-foreground truncate"
             title={detectedUrls.pageTitle}
           >
             {detectedUrls.pageTitle}
@@ -201,7 +201,7 @@ export default function UrlSuggestionPopup() {
           return (
             <div
               key={index}
-              className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200 hover:border-blue-300 transition-colors"
+              className="flex items-center justify-between p-3 bg-card rounded-lg border border-border hover:border-primary transition-colors"
             >
               <div className="flex items-center gap-3 flex-1 min-w-0">
                 <DynamicServiceIcon
@@ -210,12 +210,12 @@ export default function UrlSuggestionPopup() {
                 />
                 <div className="flex-1 min-w-0">
                   <p
-                    className="text-sm font-medium text-gray-900 truncate"
+                    className="text-sm font-medium text-foreground truncate"
                     title={url}
                   >
                     {url}
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted-foreground">
                     {service !== 'unknown'
                       ? service.charAt(0).toUpperCase() + service.slice(1)
                       : 'Music Service'}

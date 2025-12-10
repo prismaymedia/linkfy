@@ -13,7 +13,7 @@ export default function AuthPage() {
     // If user navigates directly to /auth, open the modal instead
     // This serves as a fallback for direct navigation or OAuth callbacks
     openModal();
-    
+
     // If authenticated, redirect to dashboard; if not, redirect to home
     // The modal handles most flows but we keep this as a fallback
     const checkSession = async () => {
@@ -34,8 +34,8 @@ export default function AuthPage() {
   // This page now just serves as a fallback that opens the modal
   // The actual login UI is in the LoginModal component
   return (
-      <div className="min-h-screen flex items-center justify-center text-gray-500">
-        {loadingMessage}
-      </div>
+    <div className="min-h-screen flex items-center justify-center bg-background text-muted-foreground">
+      {loadingMessage}
+    </div>
   );
 }

@@ -166,25 +166,25 @@ export default function LoginModal() {
     >
       <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-600 px-6 py-8 text-white">
+        <div className="bg-primary px-6 py-8 text-primary-foreground">
           <DialogHeader className="space-y-2">
-            <DialogTitle className="text-2xl sm:text-3xl font-bold text-white text-center">
+            <DialogTitle className="text-2xl sm:text-3xl font-bold text-primary-foreground text-center">
               {t('auth.title', 'Sign in to Linkfy')}
             </DialogTitle>
-            <DialogDescription className="text-blue-100 text-sm sm:text-base text-center">
+            <DialogDescription className="text-primary-foreground/80 text-sm sm:text-base text-center">
               {t('auth.subtitle', 'Sign in to start converting music links')}
             </DialogDescription>
           </DialogHeader>
         </div>
 
         {/* Content */}
-        <div className="px-6 py-6 space-y-5 bg-white">
+        <div className="px-6 py-6 space-y-5 bg-background">
           {/* OAuth Buttons */}
           <div className="space-y-3">
             <Button
               type="button"
               variant="outline"
-              className="w-full h-11 border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all shadow-sm font-medium"
+              className="w-full h-11 border-2 border-border hover:border-input hover:bg-accent dark:hover:bg-white/5 transition-all shadow-sm font-medium"
               onClick={() => handleSocialLogin('google')}
               disabled={isLoading || isOAuthLoading || isProcessingCallback}
             >
@@ -193,7 +193,7 @@ export default function LoginModal() {
               ) : (
                 <FcGoogle className="mr-2 h-5 w-5" />
               )}
-              <span className="text-gray-700">
+              <span className="text-foreground">
                 {t('auth.signInWithGoogle', 'Sign in with Google')}
               </span>
             </Button>
@@ -202,10 +202,10 @@ export default function LoginModal() {
           {/* Divider */}
           <div className="relative py-2">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-gray-200" />
+              <span className="w-full border-t border-border" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-3 text-gray-500 font-medium">
+              <span className="bg-background px-3 text-muted-foreground font-medium">
                 {t('auth.or', 'Or')}
               </span>
             </div>
@@ -214,7 +214,7 @@ export default function LoginModal() {
           {/* Email/Password Form */}
           <form onSubmit={handleEmailLogin} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-semibold text-gray-700">
+              <Label htmlFor="email" className="text-sm font-semibold text-foreground">
                 {t('auth.email', 'Email')}
               </Label>
               <Input
@@ -226,12 +226,12 @@ export default function LoginModal() {
                 required
                 disabled={isLoading || isOAuthLoading || isProcessingCallback}
                 autoComplete="email"
-                className="h-11 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                className="h-11 border-input focus:border-primary focus:ring-primary"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-sm font-semibold text-gray-700">
+              <Label htmlFor="password" className="text-sm font-semibold text-foreground">
                 {t('auth.password', 'Password')}
               </Label>
               <Input
@@ -243,25 +243,25 @@ export default function LoginModal() {
                 required
                 disabled={isLoading || isOAuthLoading || isProcessingCallback}
                 autoComplete="current-password"
-                className="h-11 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                className="h-11 border-input focus:border-primary focus:ring-primary"
               />
             </div>
 
             {error && (
-              <div className="p-4 bg-red-50 border-l-4 border-red-500 rounded-r-lg shadow-sm">
-                <p className="text-red-700 text-sm font-medium">{error}</p>
+              <div className="p-4 bg-destructive/10 border-l-4 border-destructive rounded-r-lg shadow-sm">
+                <p className="text-destructive text-sm font-medium">{error}</p>
               </div>
             )}
 
             {success && (
-              <div className="p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg shadow-sm">
-                <p className="text-green-700 text-sm font-medium">{success}</p>
+              <div className="p-4 bg-green-500/10 border-l-4 border-green-500 rounded-r-lg shadow-sm">
+                <p className="text-green-600 text-sm font-medium">{success}</p>
               </div>
             )}
 
             <Button
               type="submit"
-              className="w-full h-11 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+              className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
               disabled={isLoading || isOAuthLoading || isProcessingCallback}
             >
               {isLoading || isProcessingCallback ? (

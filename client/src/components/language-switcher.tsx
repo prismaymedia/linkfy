@@ -65,14 +65,14 @@ export default function LanguageSwitcher({ variant = 'header' }: LanguageSwitche
     );
 
     const buttonClasses = clsx(
-        "flex items-center font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-gray-300 transition-colors w-full",
+        "flex items-center font-medium text-foreground bg-background dark:bg-white/10 backdrop-blur-md border-2 border-border dark:border-white/30 rounded-md hover:bg-accent/50 dark:hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-border transition-colors w-full",
         variant === "header"
             ? "gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 text-xs sm:text-sm touch-target-sm sm:w-auto min-w-0"
             : "gap-2 px-3 py-2 text-sm justify-between"
     );
 
     const dropdownClasses = clsx(
-        "absolute z-50 mt-1 bg-white border border-gray-200 rounded-md shadow-lg",
+        "absolute z-50 mt-1 bg-popover backdrop-blur-md text-popover-foreground border-2 border-border dark:border-white/30 rounded-md shadow-lg",
         variant === "header"
             ? "right-0 sm:right-0 w-40"
             : "left-0 w-full"
@@ -98,7 +98,7 @@ export default function LanguageSwitcher({ variant = 'header' }: LanguageSwitche
                     )}
                 </div>
                 {variant === 'settings' && (
-                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                 )}
@@ -114,8 +114,8 @@ export default function LanguageSwitcher({ variant = 'header' }: LanguageSwitche
                             <button
                                 onClick={() => handleLanguageChange(lang)}
                                 className={clsx(
-                                    'w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center gap-2 touch-target-sm',
-                                    language === lang.code && 'bg-gray-50 font-semibold'
+                                    'w-full text-left px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground dark:hover:bg-white/5 flex items-center gap-2 touch-target-sm',
+                                    language === lang.code && 'bg-accent/50 font-semibold'
                                 )}
                                 role="menuitem"
                             >

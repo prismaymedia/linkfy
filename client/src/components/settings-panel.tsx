@@ -336,7 +336,7 @@ export default function SettingsPanel() {
                     : t('settings.clearAllData', 'Clear All Data')}
                 </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent className="!bg-white dark:!bg-zinc-950 !text-gray-900 dark:!text-gray-50 !border-gray-200 dark:!border-zinc-800">
+              <AlertDialogContent className="bg-background text-foreground border-border">
                 <AlertDialogHeader>
                   <AlertDialogTitle>
                     {t('settings.confirmClearTitle', 'Clear All Data?')}

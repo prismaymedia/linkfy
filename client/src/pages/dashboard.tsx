@@ -10,7 +10,7 @@ import { ROUTES } from '@/lib/routes';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const DashboardSkeleton = () => (
-  <div className="min-h-screen bg-surface p-4">
+  <div className="min-h-screen bg-background p-4">
     <div className="max-w-6xl mx-auto">
       <div className="mb-8">
         <div className="flex items-center justify-center mb-4">
@@ -88,19 +88,19 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-surface p-3 sm:p-4">
+    <div className="min-h-screen bg-background p-3 sm:p-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-6 sm:mb-8">
           <div className="flex items-center justify-center mb-3 sm:mb-4">
             <SiYoutubemusic className="text-youtube text-2xl sm:text-3xl mr-2 sm:mr-3" />
-            <ArrowRight className="text-gray-400 mx-2 sm:mx-3" size={20} />
+            <ArrowRight className="text-muted-foreground mx-2 sm:mx-3" size={20} />
             <SiSpotify className="text-spotify text-2xl sm:text-3xl ml-2 sm:ml-3" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-center text-foreground mb-2">
             {t('dashboard.title', 'Dashboard')}
           </h1>
-          <p className="text-center text-gray-600 text-sm sm:text-base">
+          <p className="text-center text-muted-foreground text-sm sm:text-base">
             {t('dashboard.subtitle', 'Convert and manage your music links')}
           </p>
         </div>
@@ -131,32 +131,29 @@ export default function Dashboard() {
               <CardContent className="space-y-2 sm:space-y-3 p-4 sm:p-6 pt-0">
                 <button
                   onClick={() => setLocation(ROUTES.HISTORY)}
-                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors touch-target"
+                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-accent dark:hover:bg-white/5 rounded-lg transition-colors touch-target group"
                 >
-                  <History className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500 flex-shrink-0" />
+                  <History className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground group-hover:text-foreground flex-shrink-0 transition-colors" />
                   <div className="min-w-0">
-                    <div className="font-medium text-sm sm:text-base">
+                    <div className="font-medium text-sm sm:text-base text-foreground">
                       {t('dashboard.viewHistory', 'View History')}
                     </div>
-                    <div className="text-xs sm:text-sm text-gray-500">
-                      {t(
-                        'dashboard.viewHistoryDesc',
-                        'See your past conversions',
-                      )}
+                    <div className="text-xs sm:text-sm text-muted-foreground">
+                      {t('dashboard.viewHistoryDesc', 'See your past conversions')}
                     </div>
                   </div>
                 </button>
 
                 <button
                   onClick={() => setLocation(ROUTES.PROFILE)}
-                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors touch-target"
+                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-accent dark:hover:bg-white/5 rounded-lg transition-colors touch-target group"
                 >
-                  <User className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500 flex-shrink-0" />
+                  <User className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground group-hover:text-foreground flex-shrink-0 transition-colors" />
                   <div className="min-w-0">
-                    <div className="font-medium text-sm sm:text-base">
+                    <div className="font-medium text-sm sm:text-base text-foreground">
                       {t('dashboard.profile', 'Profile')}
                     </div>
-                    <div className="text-xs sm:text-sm text-gray-500">
+                    <div className="text-xs sm:text-sm text-muted-foreground">
                       {t('dashboard.profileDesc', 'Manage your account')}
                     </div>
                   </div>
@@ -164,14 +161,14 @@ export default function Dashboard() {
 
                 <button
                   onClick={() => setLocation(ROUTES.SETTINGS)}
-                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors touch-target"
+                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-accent dark:hover:bg-white/5 rounded-lg transition-colors touch-target group"
                 >
-                  <Settings className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500 flex-shrink-0" />
+                  <Settings className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground group-hover:text-foreground flex-shrink-0 transition-colors" />
                   <div className="min-w-0">
-                    <div className="font-medium text-sm sm:text-base">
+                    <div className="font-medium text-sm sm:text-base text-foreground">
                       {t('dashboard.settings', 'Settings')}
                     </div>
-                    <div className="text-xs sm:text-sm text-gray-500">
+                    <div className="text-xs sm:text-sm text-muted-foreground">
                       {t('dashboard.settingsDesc', 'App preferences')}
                     </div>
                   </div>

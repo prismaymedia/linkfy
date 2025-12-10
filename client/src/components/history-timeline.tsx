@@ -277,7 +277,7 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
           <p className="text-red-500 mb-2">
             {t('history.loadError', 'Failed to load history')}
           </p>
-          <p className="text-sm text-gray-500 mb-4">
+          <p className="text-sm text-muted-foreground mb-4">
             {error instanceof Error ? error.message : 'Unknown error'}
           </p>
           <Button
@@ -309,7 +309,7 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
         <CardContent className="space-y-4">
           {/* Search Input */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder={t('history.searchPlaceholder', 'Search by URL...')}
               value={searchQuery}
@@ -319,7 +319,7 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -412,8 +412,8 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
       ) : entries.length === 0 ? (
         <Card>
           <CardContent className="p-6 sm:p-8 text-center">
-            <HistoryIcon className="h-10 w-10 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-3 sm:mb-4" />
-            <p className="text-gray-500 text-sm sm:text-base">
+            <HistoryIcon className="h-10 w-10 sm:h-12 sm:w-12 text-muted-foreground mx-auto mb-3 sm:mb-4" />
+            <p className="text-muted-foreground text-sm sm:text-base">
               {hasActiveFilters
                 ? t('history.noResults', 'No results found')
                 : t('history.noHistory', 'No conversion history yet')}
@@ -444,8 +444,8 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
                             className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg object-cover shadow-sm flex-shrink-0"
                           />
                         ) : (
-                          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg bg-gray-200 flex items-center justify-center flex-shrink-0">
-                            <HistoryIcon className="h-6 w-6 sm:h-7 sm:w-7 text-gray-400" />
+                          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg bg-accent flex items-center justify-center flex-shrink-0">
+                            <HistoryIcon className="h-6 w-6 sm:h-7 sm:w-7 text-muted-foreground" />
                           </div>
                         )}
 
@@ -454,7 +454,7 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
                           {/* Platform Icons */}
                           <div className="flex items-center gap-1 sm:gap-2 mb-1">
                             {getPlatformIcon(entry.sourcePlatform)}
-                            <span className="text-gray-400 text-sm">→</span>
+                            <span className="text-muted-foreground text-sm">→</span>
                             {entry.targetPlatform &&
                               getPlatformIcon(entry.targetPlatform)}
                           </div>
@@ -466,101 +466,101 @@ export default function HistoryTimeline({ userId }: HistoryTimelineProps) {
 
                           {/* Artist Name */}
                           {payload?.artistName && (
-                            <p className="text-xs sm:text-sm text-gray-600 truncate">
+                            <p className="text-xs sm:text-sm text-muted-foreground truncate">
                               {payload.artistName}
                             </p>
                           )}
 
                           {/* Album Name */}
                           {payload?.albumName && (
-                            <p className="text-xs text-gray-500 truncate">
+                            <p className="text-xs text-muted-foreground truncate">
                               {payload.albumName}
                             </p>
                           )}
 
-                        {/* Timestamp */}
-                        <div className="flex items-center gap-1 mt-1">
-                          <Clock className="h-3 w-3 text-gray-400" />
-                          <p className="text-xs text-gray-500">
-                            {formatDate(
-                              typeof entry.createdAt === 'string'
-                                ? entry.createdAt
-                                : entry.createdAt.toISOString(),
+                          {/* Timestamp */}
+                          <div className="flex items-center gap-1 mt-1">
+                            <Clock className="h-3 w-3 text-muted-foreground" />
+                            <p className="text-xs text-muted-foreground">
+                              {formatDate(
+                                typeof entry.createdAt === 'string'
+                                  ? entry.createdAt
+                                  : entry.createdAt.toISOString(),
+                              )}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Right Side: Status Badge and Action Icons */}
+                        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+                          {getStatusBadge(entry.status)}
+                          <div className="flex items-center gap-1 sm:gap-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => openUrl(entry.sourceUrl)}
+                              title={t('history.openSource', 'Open Source URL')}
+                              className="touch-target-sm p-2"
+                            >
+                              <ExternalLink className="h-3 w-3 sm:h-4 sm:w-4" />
+                            </Button>
+
+                            {entry.targetUrl && (
+                              <>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() =>
+                                    openUrl(entry.targetUrl!)
+                                  }
+                                  title={t(
+                                    'history.openTarget',
+                                    'Open Target URL',
+                                  )}
+                                  className="touch-target-sm p-2"
+                                >
+                                  {getPlatformIcon(entry.targetPlatform || '')}
+                                </Button>
+
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() =>
+                                    copyToClipboard(entry.targetUrl!)
+                                  }
+                                  title={t('history.copyUrl', 'Copy URL')}
+                                  className="touch-target-sm p-2"
+                                >
+                                  <Copy className="h-3 w-3 sm:h-4 sm:w-4" />
+                                </Button>
+                              </>
                             )}
-                          </p>
+
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => deleteMutation.mutate(entry.id)}
+                              disabled={deleteMutation.isPending}
+                              title={t('history.delete', 'Delete')}
+                              className="text-red-500 hover:text-red-700 touch-target-sm p-2"
+                            >
+                              <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
+                            </Button>
+                          </div>
                         </div>
                       </div>
-
-                      {/* Right Side: Status Badge and Action Icons */}
-                      <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-                        {getStatusBadge(entry.status)}
-                        <div className="flex items-center gap-1 sm:gap-2">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => openUrl(entry.sourceUrl)}
-                            title={t('history.openSource', 'Open Source URL')}
-                            className="touch-target-sm p-2"
-                          >
-                            <ExternalLink className="h-3 w-3 sm:h-4 sm:w-4" />
-                          </Button>
-
-                          {entry.targetUrl && (
-                            <>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() =>
-                                  openUrl(entry.targetUrl!)
-                                }
-                                title={t(
-                                  'history.openTarget',
-                                  'Open Target URL',
-                                )}
-                                className="touch-target-sm p-2"
-                              >
-                                {getPlatformIcon(entry.targetPlatform || '')}
-                              </Button>
-
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() =>
-                                  copyToClipboard(entry.targetUrl!)
-                                }
-                                title={t('history.copyUrl', 'Copy URL')}
-                                className="touch-target-sm p-2"
-                              >
-                                <Copy className="h-3 w-3 sm:h-4 sm:w-4" />
-                              </Button>
-                            </>
-                          )}
-
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => deleteMutation.mutate(entry.id)}
-                            disabled={deleteMutation.isPending}
-                            title={t('history.delete', 'Delete')}
-                            className="text-red-500 hover:text-red-700 touch-target-sm p-2"
-                          >
-                            <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            );
-          })}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
           </AnimatePresence>
         </div>
       )}
 
       {/* Total Count */}
       {historyData && historyData.total > 0 && (
-        <div className="text-center text-sm text-gray-500">
+        <div className="text-center text-sm text-muted-foreground">
           {t('history.showing', 'Showing')} {entries.length}{' '}
           {t('history.of', 'of')} {historyData.total}{' '}
           {t('history.entries', 'entries')}

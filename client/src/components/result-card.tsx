@@ -27,7 +27,7 @@ export function ResultCardSkeleton() {
         <CardContent className="p-5 md:p-6 flex flex-col gap-5">
           <div className="flex items-center gap-2">
             <SiSpotify className="text-spotify text-xl" />
-            <h3 className="text-base md:text-lg font-semibold text-gray-800">
+            <h3 className="text-base md:text-lg font-semibold text-foreground">
               {t('result.trackFound')}
             </h3>
           </div>
@@ -82,13 +82,13 @@ export default function ResultCard({ result }: ResultCardProps) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <Card className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 ease-in-out">
+      <Card className="bg-card rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 ease-in-out">
         <CardContent className="p-4 sm:p-5 md:p-6 flex flex-col gap-4 sm:gap-5">
 
           {/* Header */}
           <div className="flex items-center gap-2">
             <SiSpotify className="text-spotify text-lg sm:text-xl" />
-            <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800">
+            <h3 className="text-sm sm:text-base md:text-lg font-semibold text-foreground">
               {t('result.trackFound')}
             </h3>
           </div>
@@ -101,13 +101,13 @@ export default function ResultCard({ result }: ResultCardProps) {
               className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-lg object-cover shadow-sm flex-shrink-0"
             />
             <div className="flex-1 min-w-0 space-y-0.5">
-              <h4 className="font-medium text-gray-900 text-xs sm:text-sm md:text-base truncate">
+              <h4 className="font-medium text-foreground text-xs sm:text-sm md:text-base truncate">
                 {result.trackName}
               </h4>
-              <p className="text-xs sm:text-sm text-gray-600 truncate">
+              <p className="text-xs sm:text-sm text-muted-foreground truncate">
                 {result.artistName}
               </p>
-              <p className="text-xs text-gray-500 truncate">
+              <p className="text-xs text-muted-foreground truncate">
                 {result.albumName}
               </p>
             </div>
@@ -117,14 +117,14 @@ export default function ResultCard({ result }: ResultCardProps) {
           <div className="flex flex-col gap-2">
             <label
               htmlFor="spotify-url"
-              className="text-xs font-medium text-gray-600"
+              className="text-xs font-medium text-muted-foreground"
             >
               {t('result.spotifyUrl')}
             </label>
             <Input
               value={result.spotifyUrl}
               readOnly
-              className="w-full bg-gray-50 border-gray-200 text-xs sm:text-sm text-gray-700 cursor-default"
+              className="w-full bg-muted border-input text-xs sm:text-sm text-foreground cursor-default"
             />
           </div>
 

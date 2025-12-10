@@ -25,7 +25,7 @@ const historyStatsSchema = z.object({
 type HistoryStats = z.infer<typeof historyStatsSchema>;
 
 const HistorySkeleton = () => (
-  <div className="min-h-screen bg-surface p-4">
+  <div className="min-h-screen bg-background p-4">
     <div className="max-w-6xl mx-auto">
       <div className="mb-8">
         <Skeleton className="h-9 w-1/3 mb-2" />
@@ -126,14 +126,14 @@ export default function History() {
 
   if (statsError) {
     return (
-      <div className="min-h-screen bg-surface p-4">
+      <div className="min-h-screen bg-background p-4">
         <div className="max-w-6xl mx-auto">
           <Card>
             <CardContent className="p-6 text-center">
               <p className="text-red-500 mb-4">
                 {t('history.loadError', 'Failed to load history')}
               </p>
-              <p className="text-sm text-gray-500 mb-4">
+              <p className="text-sm text-muted-foreground mb-4">
                 {statsError instanceof Error
                   ? statsError.message
                   : 'Unknown error'}
@@ -147,20 +147,19 @@ export default function History() {
       </div>
     );
   }
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
-      className="min-h-screen bg-surface p-3 sm:p-4"
+      className="min-h-screen bg-background p-3 sm:p-4"
     >
       <div className="max-w-6xl mx-auto">
         <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
             {t('history.title', 'Conversion History')}
           </h1>
-          <p className="text-gray-600 text-sm sm:text-base">
+          <p className="text-muted-foreground text-sm sm:text-base">
             {t('history.subtitle', 'View and manage your past conversions')}
           </p>
         </div>
@@ -174,7 +173,7 @@ export default function History() {
                   <p className="text-xl sm:text-2xl font-bold">
                     {stats?.total || 0}
                   </p>
-                  <p className="text-xs sm:text-sm text-gray-600">
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     {t('history.totalConversions', 'Total Conversions')}
                   </p>
                 </div>
@@ -190,7 +189,7 @@ export default function History() {
                   <p className="text-xl sm:text-2xl font-bold">
                     {stats?.successful || 0}
                   </p>
-                  <p className="text-xs sm:text-sm text-gray-600">
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     {t('history.successful', 'Successful')}
                   </p>
                 </div>
@@ -206,7 +205,7 @@ export default function History() {
                   <p className="text-xl sm:text-2xl font-bold">
                     {successRate}%
                   </p>
-                  <p className="text-xs sm:text-sm text-gray-600">
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     {t('history.successRate', 'Success Rate')}
                   </p>
                 </div>

@@ -32,7 +32,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 overflow-x-hidden">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <Header />
 
       <main className="container mx-auto px-4 py-8 sm:py-12 sm:px-6 lg:px-8">
@@ -40,13 +40,13 @@ export default function Home() {
         <div className="text-center mb-12 sm:mb-16 pt-4 sm:pt-8">
           <div className="flex items-center justify-center mb-4 sm:mb-6">
             <SiYoutubemusic className="text-youtube text-3xl sm:text-4xl md:text-5xl mr-2 sm:mr-3" />
-            <ArrowRight className="text-gray-400 mx-2 sm:mx-3" size={24} />
+            <ArrowRight className="text-muted-foreground mx-2 sm:mx-3" size={24} />
             <SiSpotify className="text-spotify text-3xl sm:text-4xl md:text-5xl ml-2 sm:ml-3" />
           </div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 px-2">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-3 sm:mb-4 px-2">
             {t('home.title', 'Convert Music Links Instantly')}
           </h1>
-          <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto px-4">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto px-4">
             {t(
               'home.subtitle',
               'Convert YouTube Music links to Spotify seamlessly. Fast, accurate, and free.',
@@ -62,13 +62,13 @@ export default function Home() {
           <Card>
             <CardContent className="pt-4 sm:pt-6 p-4 sm:p-6">
               <div className="flex flex-col items-center text-center">
-                <div className="mb-3 sm:mb-4 p-2 sm:p-3 bg-blue-100 rounded-full">
+                <div className="mb-3 sm:mb-4 p-2 sm:p-3 bg-blue-500/10 rounded-full">
                   <Zap className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600" />
                 </div>
-                <h3 className="text-lg sm:text-xl font-semibold mb-2">
+                <h3 className="text-lg sm:text-xl font-semibold mb-2 text-foreground">
                   {t('home.feature1.title', 'Lightning Fast')}
                 </h3>
-                <p className="text-sm sm:text-base text-gray-600">
+                <p className="text-sm sm:text-base text-muted-foreground">
                   {t(
                     'home.feature1.desc',
                     'Convert your music links in seconds with our optimized conversion engine.',
@@ -81,13 +81,13 @@ export default function Home() {
           <Card>
             <CardContent className="pt-4 sm:pt-6 p-4 sm:p-6">
               <div className="flex flex-col items-center text-center">
-                <div className="mb-3 sm:mb-4 p-2 sm:p-3 bg-green-100 rounded-full">
+                <div className="mb-3 sm:mb-4 p-2 sm:p-3 bg-green-500/10 rounded-full">
                   <Music className="h-6 w-6 sm:h-8 sm:w-8 text-green-600" />
                 </div>
-                <h3 className="text-lg sm:text-xl font-semibold mb-2">
+                <h3 className="text-lg sm:text-xl font-semibold mb-2 text-foreground">
                   {t('home.feature2.title', 'High Accuracy')}
                 </h3>
-                <p className="text-sm sm:text-base text-gray-600">
+                <p className="text-sm sm:text-base text-muted-foreground">
                   {t(
                     'home.feature2.desc',
                     'Advanced matching algorithms ensure you get the right track every time.',
@@ -100,13 +100,13 @@ export default function Home() {
           <Card className="sm:col-span-2 lg:col-span-1">
             <CardContent className="pt-4 sm:pt-6 p-4 sm:p-6">
               <div className="flex flex-col items-center text-center">
-                <div className="mb-3 sm:mb-4 p-2 sm:p-3 bg-purple-100 rounded-full">
+                <div className="mb-3 sm:mb-4 p-2 sm:p-3 bg-purple-500/10 rounded-full">
                   <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-purple-600" />
                 </div>
-                <h3 className="text-lg sm:text-xl font-semibold mb-2">
+                <h3 className="text-lg sm:text-xl font-semibold mb-2 text-foreground">
                   {t('home.feature3.title', 'Privacy Focused')}
                 </h3>
-                <p className="text-sm sm:text-base text-gray-600">
+                <p className="text-sm sm:text-base text-muted-foreground">
                   {t(
                     'home.feature3.desc',
                     "We don't store your URLs or personal data. Your privacy is our priority.",
@@ -119,7 +119,7 @@ export default function Home() {
 
         {/* How It Works Section */}
         <div className="max-w-4xl mx-auto mb-12 sm:mb-16">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12 px-4">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12 px-4 text-foreground">
             {t('home.howItWorks', 'How It Works')}
           </h2>
           <div className="space-y-6 sm:space-y-8 px-4">
@@ -128,10 +128,10 @@ export default function Home() {
                 1
               </div>
               <div>
-                <h3 className="text-lg sm:text-xl font-semibold mb-2">
+                <h3 className="text-lg sm:text-xl font-semibold mb-2 text-foreground">
                   {t('home.step1.title', 'Copy YouTube Music URL')}
                 </h3>
-                <p className="text-sm sm:text-base text-gray-600">
+                <p className="text-sm sm:text-base text-muted-foreground">
                   {t(
                     'home.step1.desc',
                     'Find the song on YouTube Music and copy its URL from your browser.',
@@ -145,10 +145,10 @@ export default function Home() {
                 2
               </div>
               <div>
-                <h3 className="text-lg sm:text-xl font-semibold mb-2">
+                <h3 className="text-lg sm:text-xl font-semibold mb-2 text-foreground">
                   {t('home.step2.title', 'Paste and Convert')}
                 </h3>
-                <p className="text-sm sm:text-base text-gray-600">
+                <p className="text-sm sm:text-base text-muted-foreground">
                   {t(
                     'home.step2.desc',
                     'Paste the URL into Linkfy and click the convert button.',
@@ -162,10 +162,10 @@ export default function Home() {
                 3
               </div>
               <div>
-                <h3 className="text-lg sm:text-xl font-semibold mb-2">
+                <h3 className="text-lg sm:text-xl font-semibold mb-2 text-foreground">
                   {t('home.step3.title', 'Get Spotify Link')}
                 </h3>
-                <p className="text-sm sm:text-base text-gray-600">
+                <p className="text-sm sm:text-base text-muted-foreground">
                   {t(
                     'home.step3.desc',
                     'Copy the generated Spotify URL and enjoy your music on Spotify.',

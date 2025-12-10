@@ -24,7 +24,7 @@ export default function Header({ className }: HeaderProps) {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-sm ${className || ''}`}
+      className={`sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-sm ${className || ''}`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-14 sm:h-16 items-center justify-between">
@@ -35,10 +35,10 @@ export default function Header({ className }: HeaderProps) {
           >
             <div className="flex items-center">
               <SiYoutubemusic className="text-youtube text-lg sm:text-xl" />
-              <ArrowRight className="text-gray-400 mx-0.5 sm:mx-1" size={16} />
+              <ArrowRight className="text-muted-foreground mx-0.5 sm:mx-1" size={16} />
               <SiSpotify className="text-spotify text-lg sm:text-xl" />
             </div>
-            <span className="font-bold text-lg sm:text-xl text-gray-800">
+            <span className="font-bold text-lg sm:text-xl text-foreground">
               Linkfy
             </span>
           </button>

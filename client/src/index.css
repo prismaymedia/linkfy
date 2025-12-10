@@ -7,7 +7,7 @@
   --foreground: hsl(20, 14.3%, 4.1%);
   --muted: hsl(60, 4.8%, 95.9%);
   --muted-foreground: hsl(25, 5.3%, 44.7%);
-  --popover: hsl(0, 0%, 100%);
+  --popover: hsl(240, 5.9%, 10%, 0.95);
   --popover-foreground: hsl(20, 14.3%, 4.1%);
   --card: hsl(0, 0%, 100%);
   --card-foreground: hsl(20, 14.3%, 4.1%);
@@ -35,7 +35,7 @@
   --foreground: hsl(0, 0%, 98%);
   --muted: hsl(240, 3.7%, 15.9%);
   --muted-foreground: hsl(240, 5%, 64.9%);
-  --popover: hsl(240, 10%, 3.9%);
+  --popover: hsl(240, 10%, 10%);
   --popover-foreground: hsl(0, 0%, 98%);
   --card: hsl(240, 10%, 3.9%);
   --card-foreground: hsl(0, 0%, 98%);
@@ -59,6 +59,7 @@
   }
 
   body {
+    transition: background-color 0.3s ease, color 0.3s ease;
     font-family:
       'Inter',
       -apple-system,
@@ -70,7 +71,7 @@
     color: var(--foreground);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden; /* Prevent horizontal scroll */
+    overflow-x: hidden;
   }
 
   /* Ensure all containers respect viewport width */
@@ -97,6 +98,7 @@
 
   /* Hover effects for desktop */
   @media (hover: hover) and (pointer: fine) {
+
     button:hover,
     a:hover,
     input[type='button']:hover,
@@ -127,6 +129,7 @@
 
   /* Enhanced touch feedback for mobile */
   @media (hover: none) and (pointer: coarse) {
+
     button:active,
     a:active,
     input[type='button']:active,
@@ -142,6 +145,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
+
     button,
     a,
     input[type='button'],
@@ -212,11 +216,11 @@
       padding-left: 1rem;
       padding-right: 1rem;
     }
-    
+
     .mobile-text-sm {
       font-size: 0.875rem;
     }
-    
+
     .mobile-text-xs {
       font-size: 0.75rem;
     }

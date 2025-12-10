@@ -104,7 +104,7 @@ export default function Navigation({ className }: NavigationProps) {
   return (
     <nav
       className={cn(
-        'bg-white border-b border-gray-200 sticky top-0 z-50',
+        'bg-background/80 backdrop-blur-md border-b border-border sticky top-0 z-50',
         className,
       )}
     >
@@ -119,12 +119,12 @@ export default function Navigation({ className }: NavigationProps) {
               <div className="flex items-center">
                 <SiYoutubemusic className="text-youtube text-lg sm:text-xl" />
                 <ArrowRight
-                  className="text-gray-400 mx-0.5 sm:mx-1"
+                  className="text-muted-foreground mx-0.5 sm:mx-1"
                   size={16}
                 />
                 <SiSpotify className="text-spotify text-lg sm:text-xl" />
               </div>
-              <span className="font-bold text-lg sm:text-xl text-gray-800">
+              <span className="font-bold text-lg sm:text-xl text-foreground">
                 Linkfy
               </span>
             </button>
@@ -166,12 +166,12 @@ export default function Navigation({ className }: NavigationProps) {
                     {t('navigation.account', 'Account')}
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <div className="grid gap-3 p-4 w-[280px] sm:w-[320px] bg-white">
-                      <div className="space-y-1 bg-gray-50 p-3 rounded-md">
-                        <p className="text-sm font-medium leading-none text-gray-900 truncate">
+                    <div className="grid gap-3 p-4 w-[280px] sm:w-[320px] bg-popover backdrop-blur-xl text-popover-foreground">
+                      <div className="space-y-1 bg-accent/50 p-3 rounded-md">
+                        <p className="text-sm font-medium leading-none text-foreground truncate">
                           {session?.user?.email}
                         </p>
-                        <p className="text-xs leading-none text-gray-500">
+                        <p className="text-xs leading-none text-muted-foreground">
                           {t('navigation.signedIn', 'Signed in')}
                         </p>
                       </div>
@@ -179,13 +179,13 @@ export default function Navigation({ className }: NavigationProps) {
                         <NavigationMenuLink asChild>
                           <Link
                             href={ROUTES.PROFILE}
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-50 hover:text-gray-900 focus:bg-gray-50 focus:text-gray-900 cursor-pointer group"
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground dark:hover:bg-white/5 cursor-pointer group"
                           >
                             <div className="text-sm font-medium leading-none flex items-center">
                               <User className="h-4 w-4 mr-2" />
                               {t('navigation.profile', 'Profile')}
                             </div>
-                            <p className="text-xs leading-none text-gray-500 mt-1">
+                            <p className="text-xs leading-none text-muted-foreground mt-1">
                               {t(
                                 'navigation.profileDesc',
                                 'Manage your account',
@@ -196,13 +196,13 @@ export default function Navigation({ className }: NavigationProps) {
                         <NavigationMenuLink asChild>
                           <Link
                             href={ROUTES.SETTINGS}
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-50 hover:text-gray-900 focus:bg-gray-50 focus:text-gray-900 cursor-pointer group"
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground dark:hover:bg-white/5 cursor-pointer group"
                           >
                             <div className="text-sm font-medium leading-none flex items-center">
                               <Settings className="h-4 w-4 mr-2 " />
                               {t('navigation.settings', 'Settings')}
                             </div>
-                            <p className="text-xs leading-none text-gray-500 mt-1">
+                            <p className="text-xs leading-none text-muted-foreground mt-1">
                               {t('navigation.settingsDesc', 'App preferences')}
                             </p>
                           </Link>
@@ -277,7 +277,7 @@ export default function Navigation({ className }: NavigationProps) {
                 initial="closed"
                 animate="open"
                 exit="closed"
-                className="fixed top-0 right-0 h-full w-4/5 max-w-xs bg-white z-50 md:hidden p-4 sm:p-6"
+                className="fixed top-0 right-0 h-full w-4/5 max-w-xs bg-background/90 backdrop-blur-xl z-50 md:hidden p-4 sm:p-6 border-l border-border"
               >
                 <div className="flex justify-between items-center mb-4 sm:mb-6">
                   <span className="font-bold text-base sm:text-lg">Menu</span>
@@ -321,8 +321,8 @@ export default function Navigation({ className }: NavigationProps) {
                         className={cn(
                           'w-full flex items-center px-3 py-3 text-left rounded-md text-sm sm:text-base font-medium transition-colors touch-target',
                           isActive
-                            ? 'bg-gray-100 text-gray-900'
-                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+                            ? 'bg-accent/50 text-foreground'
+                            : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground dark:hover:bg-white/5',
                         )}
                       >
                         <Icon className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
@@ -334,19 +334,19 @@ export default function Navigation({ className }: NavigationProps) {
                     );
                   })}
 
-                  <div className="border-t border-gray-200 pt-3 sm:pt-4 mt-3 sm:mt-4 space-y-1 sm:space-y-2">
-                    <div className="px-3 py-3 bg-gray-50 rounded-md">
-                      <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">
+                  <div className="border-t border-border pt-3 sm:pt-4 mt-3 sm:mt-4 space-y-1 sm:space-y-2">
+                    <div className="px-3 py-3 bg-popover backdrop-blur-md rounded-md">
+                      <p className="text-xs sm:text-sm font-medium text-foreground truncate">
                         {session?.user?.email}
                       </p>
-                      <p className="text-xs text-gray-500 mt-0.5">
+                      <p className="text-xs text-muted-foreground mt-0.5">
                         {t('navigation.signedIn', 'Signed in')}
                       </p>
                     </div>
 
                     <button
                       onClick={() => navigateToRoute(ROUTES.PROFILE)}
-                      className="w-full flex items-center px-3 py-3 text-left rounded-md text-sm sm:text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors touch-target"
+                      className="w-full flex items-center px-3 py-3 text-left rounded-md text-sm sm:text-base font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground dark:hover:bg-white/5 transition-colors touch-target"
                     >
                       <User className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
                       <span>{t('navigation.profile', 'Profile')}</span>
@@ -354,7 +354,7 @@ export default function Navigation({ className }: NavigationProps) {
 
                     <button
                       onClick={() => navigateToRoute(ROUTES.SETTINGS)}
-                      className="w-full flex items-center px-3 py-3 text-left rounded-md text-sm sm:text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors touch-target"
+                      className="w-full flex items-center px-3 py-3 text-left rounded-md text-sm sm:text-base font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground dark:hover:bg-white/5 transition-colors touch-target"
                     >
                       <Settings className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
                       <span>{t('navigation.settings', 'Settings')}</span>

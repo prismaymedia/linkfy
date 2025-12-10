@@ -55,7 +55,9 @@
     "convertSingle": "Convert",
     "urlAlreadyConverted": "URL already converted",
     "convertButton": "Convert",
+    "dismissMessage": "Dismiss message",
     "clearInput": "Clear input",
+    "closeError": "Close message",
     "inputCleared": "Input cleared",
     "urlValidationError": "URL validation error",
     "urlInvalidFormat": "Invalid URL format. Make sure the URL starts with http:// or https://",
@@ -70,6 +72,23 @@
       "apple": "Apple Music icon",
       "deezer": "Deezer icon",
       "unknown": "Music service icon"
+    },
+    "errors": {
+      "urlRequired": "Please enter a URL to get started",
+      "invalidUrlFormat": "The URL format is invalid. Make sure it starts with https://",
+      "unsupportedPlatform": "This URL is from an unsupported platform. Supported services: YouTube Music, Spotify, Apple Music, and Deezer",
+      "invalidTrackUrl": "This URL doesn’t appear to be valid. Check the link and try again",
+      "emptyUrl": "The URL field cannot be empty",
+      "malformedUrl": "This doesn't look like a valid URL. Check the format and try again"
+    },
+    "hints": {
+      "urlExample": "Example: track or playlist links from YouTube Music, Spotify, Apple Music, or Deezer",
+      "supportedServices": "YouTube Music, Spotify, Apple Music, Deezer"
+    },
+    "validation": {
+      "checking": "Validating URL...",
+      "valid": "URL is valid and ready to convert",
+      "invalid": "This URL cannot be processed"
     }
   },
   "preview": {

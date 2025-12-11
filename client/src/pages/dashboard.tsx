@@ -10,7 +10,7 @@ import { ROUTES } from '@/lib/routes';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const DashboardSkeleton = () => (
-  <div className="min-h-screen bg-surface p-4">
+  <div className="bg-surface p-4">
     <div className="max-w-6xl mx-auto">
       <div className="mb-8">
         <div className="flex items-center justify-center mb-4">
@@ -88,7 +88,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-surface p-3 sm:p-4">
+    <div className="bg-surface p-3 sm:p-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-6 sm:mb-8">

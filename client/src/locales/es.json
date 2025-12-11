@@ -128,6 +128,16 @@
     "copyFailedTitle": "Error al copiar",
     "copyFailedDescription": "Por favor, inténtalo de nuevo."
   },
+  "common": {
+    "copied": "¡Copiado!",
+    "copiedItem": "¡{{item}} copiado al portapapeles!",
+    "copiedGeneric": "¡Copiado al portapapeles!",
+    "copyErrorTitle": "Error al copiar",
+    "copyErrorDesc": "No se pudo copiar al portapapeles. Por favor, inténtalo de nuevo.",
+    "deletedTitle": "Eliminado",
+    "deletedItem": "Se eliminó {{item}}",
+    "deleted": "Eliminado correctamente"
+  },
   "navigation": {
     "home": "Inicio",
     "dashboard": "Panel",
@@ -213,9 +223,9 @@
     "selectLanguage": "Seleccionar Idioma",
     "languageDesc": "Elige tu idioma preferido para la interfaz",
     "notifications": "Notificaciones",
-    "notificationsDesc": "Gestionar preferencias de notificaciones",
+    "notificationsDesc": "Recibir notificaciones sobre resultados de conversión",
     "enableNotifications": "Habilitar Notificaciones",
-    "enableNotificationsDesc": "Recibir notificaciones sobre resultados de conversión",
+    "savedTitle": "Configuración guardada",
     "extension": "Permisos de Extensión",
     "extensionDesc": "Gestionar permisos de la extensión del navegador",
     "clipboardAccess": "Acceso al Portapapeles",
@@ -259,7 +269,8 @@
     "copySpotifyUrl": "Copiar URL de Spotify",
     "delete": "Eliminar",
     "backToDashboard": "Volver al Panel",
-    "settings": "Configuración"
+    "settings": "Configuración",
+    "deletedDesc": "Registro de conversión eliminado exitosamente"
   },
   "help": {
     "title": "Ayuda y Soporte",

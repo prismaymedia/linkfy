@@ -128,6 +128,16 @@
     "copyFailedTitle": "Failed to copy",
     "copyFailedDescription": "Please try again."
   },
+  "common": {
+    "copied": "Copied!",
+    "copiedItem": "{{item}} copied to clipboard!",
+    "copiedGeneric": "Copied to clipboard!",
+    "copyErrorTitle": "Failed to copy",
+    "copyErrorDesc": "Unable to copy to clipboard. Please try again.",
+    "deletedTitle": "Deleted",
+    "deletedItem": "{{item}} deleted",
+    "deleted": "Deleted successfully"
+  },
   "navigation": {
     "home": "Home",
     "dashboard": "Dashboard",
@@ -213,9 +223,9 @@
     "selectLanguage": "Select Language",
     "languageDesc": "Choose your preferred language for the interface",
     "notifications": "Notifications",
-    "notificationsDesc": "Manage notification preferences",
+    "notificationsDesc": "Get notified about conversion results",
     "enableNotifications": "Enable Notifications",
-    "enableNotificationsDesc": "Get notified about conversion results",
+    "savedTitle": "Settings saved",
     "extension": "Extension Permissions",
     "extensionDesc": "Manage browser extension permissions",
     "clipboardAccess": "Clipboard Access",
@@ -259,7 +269,8 @@
     "copySpotifyUrl": "Copy Spotify URL",
     "delete": "Delete",
     "backToDashboard": "Back to Dashboard",
-    "settings": "Settings"
+    "settings": "Settings",
+    "deletedDesc": "Conversion record deleted successfully"
   },
   "help": {
     "title": "Help & Support",

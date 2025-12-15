@@ -1,5 +1,72 @@
 # Changelog
 
+## [2.6.0](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.5.0...linkfy-v2.6.0) (2025-12-15)
+
+
+### Features
+
+* **auth:** implement frictionless login modal and fix auth redirect flow ([305fb1c](https://github.com/prismaymedia/linkfy/commit/305fb1c0475080109a52341d5847ff1d1c02b082))
+* **backend/config:** move CORS to config file with whitelist ([2c59762](https://github.com/prismaymedia/linkfy/commit/2c597629afc9560b45fb0ecf275df89d8b49c45b))
+* **config:** improve CORS config and whitelist handling ([f7d5b91](https://github.com/prismaymedia/linkfy/commit/f7d5b919c13a87c84d7821a920fade9d71a493f9))
+* **db:** implement persistent storage for history and favorites ([abd74dc](https://github.com/prismaymedia/linkfy/commit/abd74dc8b81d62c8749f92e2348d8dd4faa0c25d))
+* Enhanced Toast Notification System ([7b9bbf0](https://github.com/prismaymedia/linkfy/commit/7b9bbf069aff6e63bac6c51503c377ec1406c0a3))
+* **extension:** add environment configuration ([c584e35](https://github.com/prismaymedia/linkfy/commit/c584e35103aa954a368afd06002124790a720042))
+* **extension:** add environment configuration ([8831a65](https://github.com/prismaymedia/linkfy/commit/8831a6598308fb90aa4534bf21b02ef9de97fa07))
+* **extension:** implement full URL detection workflow and suggestion popup ([7cf6ebb](https://github.com/prismaymedia/linkfy/commit/7cf6ebbdcc21a80d4c4944a967758cd4cd059c98))
+* **favorites:** add full favorites system for quick access to saved conversions ([3b1226e](https://github.com/prismaymedia/linkfy/commit/3b1226ea7ebb1dbfb7a1c681b7056f2868adcd2d))
+* **Frontend/UI:** add header repo link, enable user dashboard access, and remove unused UI elements ([63b9d1e](https://github.com/prismaymedia/linkfy/commit/63b9d1e032c750ba7802ae530844d994b1f51579))
+* **history:** store, display, search and clear user conversion history ([1f6aa47](https://github.com/prismaymedia/linkfy/commit/1f6aa47b0dc14bd7e788a539e8be1a42c43b6677))
+* Implement comprehensive version synchronization system ([2202204](https://github.com/prismaymedia/linkfy/commit/220220490f2141f36a9aa4d150c96ac7db84da28))
+* **security:** add external URL sanitization and validation ([24c4f57](https://github.com/prismaymedia/linkfy/commit/24c4f5730fe741b736114646d0358f8cc4f6f0c7))
+* **settings:** implement complete Settings Panel with all configuration options ([2c52388](https://github.com/prismaymedia/linkfy/commit/2c523880b483df8fbc8b9c361b6f2021f86041fc))
+* **ui:** add input error handling system ([e18081c](https://github.com/prismaymedia/linkfy/commit/e18081c293396c959ed45e84668727beb79a9e07))
+
+
+### Bug Fixes
+
+* align failed-history recording with validated convert flag ([dfdca61](https://github.com/prismaymedia/linkfy/commit/dfdca61a44dcd792df2db2e570de483f73cf319b))
+* apply code quality improvements ([c19750c](https://github.com/prismaymedia/linkfy/commit/c19750c44ce53af74fd952f7818cc8bfc6ef173c))
+* apply ESLint/Prettier formatting and replace hardcoded text with i18n ([d415c78](https://github.com/prismaymedia/linkfy/commit/d415c785c0e9bbfa24df1919027dbac47f4eb6ce))
+* **ci:** correct file_pattern in format workflow ([a6ade4c](https://github.com/prismaymedia/linkfy/commit/a6ade4c8ffaff8e286942cca66b17f1e1ccd2d7b))
+* **client:** safely handle createdAt and payload fields in history timeline ([28e21be](https://github.com/prismaymedia/linkfy/commit/28e21bee9bb2c1ac09a44b0780e3ec1bd5a8e22d))
+* code improvements and better error handling ([e25ebaf](https://github.com/prismaymedia/linkfy/commit/e25ebaf63620f5c605895d74bae7286e63504246))
+* code improvements in favorites module ([4289d97](https://github.com/prismaymedia/linkfy/commit/4289d9799fa5d80c8d05288480132413450367ea))
+* CodeRabbit suggestions for ErrorMessage accessibility and duplicate URL warning ([ed0e2a9](https://github.com/prismaymedia/linkfy/commit/ed0e2a99ac0f302e2c75f7f9a4fb2a9e3bfbfa89))
+* Correct alignment and formatting issues in README.md ([5330888](https://github.com/prismaymedia/linkfy/commit/5330888908f67f73aa5079c204a31c1b6891ccca))
+* correct API decorator for favorites remove endpoint ([cc6ff74](https://github.com/prismaymedia/linkfy/commit/cc6ff7432568813436ffe3f2a89bfe819294e05b))
+* **database:** apply formatting suggestions for imports and custom error class ([6d7b0ea](https://github.com/prismaymedia/linkfy/commit/6d7b0ea38e9f1507cd7bd0b1404604a5985dc3d0))
+* **database:** Improve history update and fix imports ([e8f9be7](https://github.com/prismaymedia/linkfy/commit/e8f9be7db149f742ebeffc8aa8930e8e2bc95277))
+* **database:** prevent unintended overwrite in history sync conflict updates ([d7a6689](https://github.com/prismaymedia/linkfy/commit/d7a668989c709e2e3d1c058841a0cc4db7f80e51))
+* **extension:** wrap switch-case scope and update Deezer match patterns ([664afbf](https://github.com/prismaymedia/linkfy/commit/664afbfc0554dc4c9eddea67ed7b423f13bf0c2b))
+* **history:** fix i18n interpolation and clean up unused error variable ([19f5558](https://github.com/prismaymedia/linkfy/commit/19f5558870c2613b3cc3470792efb457c95e8695))
+* **history:** replace template literals with proper i18n interpolation ([234793f](https://github.com/prismaymedia/linkfy/commit/234793fad7f726a8005a9bcd83a398b4277846c3))
+* implement improvements and apply final updates ([aef9b31](https://github.com/prismaymedia/linkfy/commit/aef9b3168cb3cf0c8bde160a649d24bcb66f8c90))
+* implement suggested updates and missing i18n keys ([fb0c776](https://github.com/prismaymedia/linkfy/commit/fb0c7767d0a1c11ad45264acc165528f08941aeb))
+* improve user menu responsive positioning and prevent overflow on mobile ([d05bace](https://github.com/prismaymedia/linkfy/commit/d05bace9cc581a8d14c92bf655124eaea09d901f))
+* **manifest, background:** wrap case blocks to prevent scope leakage and update manifest accordingly ([9667986](https://github.com/prismaymedia/linkfy/commit/9667986d58494e9020d52ff19eef05e8684db926))
+* **manifest:** remove unnecessary utils.js entry from web_accessible_resources ([ee75c65](https://github.com/prismaymedia/linkfy/commit/ee75c65d4a04f28456c699a70ddd5359deb273ae))
+* remove orphan functions in history page and resolve duplicate translation key ([b2ca5ab](https://github.com/prismaymedia/linkfy/commit/b2ca5aba9319652b8c5b5091a785b501aca53912))
+* remove push trigger and exclude workflow files from auto-format ([3837c3e](https://github.com/prismaymedia/linkfy/commit/3837c3efa7a10b45ef079b8968c5065814f20cad))
+* remove redundant auth check and improve favorites controller flow ([a31ba2b](https://github.com/prismaymedia/linkfy/commit/a31ba2b5c17ce93546db176f7562c7a3c7974c15))
+* resolve header overflow on mobile and tablet devices ([3207a1b](https://github.com/prismaymedia/linkfy/commit/3207a1b4bfbb2bbe7e18b1c07c93000b5f5d524f))
+* secure external GitHub links in header and navigation ([a015450](https://github.com/prismaymedia/linkfy/commit/a0154503c858aa2f84cbd676383bef1b8536bfcb))
+* **url-sanitizer:** add locale support to Deezer path regex ([3fd197d](https://github.com/prismaymedia/linkfy/commit/3fd197dae34e782a2af333ce381126dcf8ae8af0))
+* **url-sanitizer:** correct error message to match supported URL patterns ([69bd039](https://github.com/prismaymedia/linkfy/commit/69bd039cd7fbeaf867c8993deedf453ce609e991))
+* **url-sanitizer:** correct HTTPS validation and improve XSS detection ([5fdb262](https://github.com/prismaymedia/linkfy/commit/5fdb262dd4a03900d6c9489601793aca297d3ed7))
+* **url-schema:** enhance URL validation and XSS filtering ([d1d4514](https://github.com/prismaymedia/linkfy/commit/d1d451476d555dc373ae86f7a9d8166365f54cf9))
+
+
+### Code Refactoring
+
+* apply UI review improvements and enhance component consistency ([9cdce92](https://github.com/prismaymedia/linkfy/commit/9cdce927d504d3c7c5483046a7e876ada3aebbd5))
+* **auth:** apply Copilot and CodeRabbit recommendations ([0646f54](https://github.com/prismaymedia/linkfy/commit/0646f54be58c268229a37560935d770e63619b18))
+* **chrome-addon:** code improvements and optimizations ([f9a6991](https://github.com/prismaymedia/linkfy/commit/f9a6991f757e4b40d8ca4691634fbb561c24fa00))
+* **chrome-addon:** improve background script and config ([de6bd84](https://github.com/prismaymedia/linkfy/commit/de6bd84f59943701fb9ee0ece5aeebdc47b2b310))
+* **preferences:** unify settings management and migrate components to usePreferences ([bc64c97](https://github.com/prismaymedia/linkfy/commit/bc64c97a5f11ba80045859c6eb4d1a82f8cf93c6))
+* switch server database driver from Neon serverless to node-postgres and adjust client provider order ([742840d](https://github.com/prismaymedia/linkfy/commit/742840d05764972c5d8f0cb4e35ca3d6ad1b9a5b))
+* **toast:** improve toast variants and cleanup unused error variable ([2f782c7](https://github.com/prismaymedia/linkfy/commit/2f782c77f0d1eb7cc51a01f1db6a25e571aa3c31))
+* **toasts:** apply CodeRabbit suggestions, reorganize toast manager, and fix variant typing ([cb5b2e8](https://github.com/prismaymedia/linkfy/commit/cb5b2e870c080f3ad353601072bf42665ed603df))
+
 ## [2.5.0](https://github.com/prismaymedia/linkfy/compare/linkfy-v2.4.0...linkfy-v2.5.0) (2025-11-11)
 
 

@@ -2,11 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePreferences } from '@/contexts/PreferencesContext';
 import type { Theme } from '@/contexts/PreferencesContext';
-import clsx from 'clsx';
 import { Sun, Moon, Monitor } from 'lucide-react';
+import clsx from 'clsx';
 
 type ThemeOption = {
-  value: string;
+  value: Theme;
   label: string;
   icon: React.ReactNode;
 };
@@ -24,8 +24,19 @@ interface ThemeSwitcherProps {
 export default function ThemeSwitcher({ variant = 'settings' }: ThemeSwitcherProps) {
   const { t } = useTranslation();
   const { theme, setTheme } = usePreferences();
+
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [dropdownLeft, setDropdownLeft] = useState(0);
+
+  // Calculate dropdown position dynamically for header variant
+  useEffect(() => {
+    if (variant === 'header' && buttonRef.current && open) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setDropdownLeft(rect.left);
+    }
+  }, [open, variant]);
 
   // Close dropdown if clicking outside
   useEffect(() => {
@@ -38,76 +49,80 @@ export default function ThemeSwitcher({ variant = 'settings' }: ThemeSwitcherPro
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleThemeChange = (themeValue: string) => {
-    setTheme(themeValue as Theme);
-    setOpen(false);
-  };
+  const currentTheme =
+    THEME_OPTIONS.find(option => option.value === theme) || THEME_OPTIONS[0];
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-      setOpen(true);
-      e.preventDefault();
-    }
-    if (e.key === 'Escape') setOpen(false);
-  };
-
-  const currentTheme = THEME_OPTIONS.find(t => t.value === theme) || THEME_OPTIONS[0];
-
-  // Different styles based on variant
   const containerClasses = clsx(
-    "relative inline-block text-left w-full",
-    variant === "header" ? "sm:w-auto" : "max-w-xs"
+    'relative inline-block text-left w-full',
+    variant === 'header' ? 'sm:w-auto' : 'max-w-xs'
   );
 
   const buttonClasses = clsx(
-    "flex items-center font-medium text-foreground bg-background dark:bg-white/10 backdrop-blur-md border border-border dark:border-white/30 rounded-md hover:bg-accent/50 dark:hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-border transition-colors w-full",
-    variant === "header"
-      ? "gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 text-xs sm:text-sm touch-target-sm sm:w-auto min-w-0"
-      : "gap-2 px-3 py-2 text-sm justify-between"
+    'flex items-center font-medium text-foreground bg-background backdrop-blur-md border-2 border-border rounded-md hover:bg-accent/50 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-border transition-colors w-full',
+    variant === 'header'
+      ? 'px-2 sm:px-3 py-1.5 touch-target-sm justify-center sm:w-auto min-w-0'
+      : 'gap-2 px-3 py-2 text-sm justify-between'
   );
 
   const dropdownClasses = clsx(
-    "absolute z-50 mt-1 bg-popover backdrop-blur-md text-popover-foreground border border-border dark:border-white/30 rounded-md shadow-lg",
-    variant === "header"
-      ? "right-0 sm:right-0 w-40"
-      : "left-0 w-full"
+    variant === 'header' ? 'fixed z-[101] top-14' : 'absolute z-50',
+    'mt-1 bg-popover backdrop-blur-md text-foreground border border-border rounded-md shadow-lg',
+    variant === 'header'
+      ? 'w-auto min-w-fit'
+      : 'left-0 w-full'
   );
+
+  const iconOnly = variant === 'header';
 
   return (
     <div className={containerClasses} ref={dropdownRef}>
       <button
-        onClick={() => setOpen(prev => !prev)}
-        onKeyDown={handleKeyDown}
+        ref={buttonRef}
+        onClick={() => setOpen(o => !o)}
         className={buttonClasses}
         aria-haspopup="true"
         aria-expanded={open}
       >
-        <div className="flex items-center gap-2">
-          {currentTheme.icon}
-          <span className="text-sm">{t(`settings.${currentTheme.value}`, currentTheme.label)}</span>
-        </div>
-        <svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        {iconOnly ? (
+          currentTheme.icon
+        ) : (
+          <>
+            <div className="flex items-center gap-2">
+              {currentTheme.icon}
+              <span className="text-sm">
+                {t(`settings.${currentTheme.value}`, currentTheme.label)}
+              </span>
+            </div>
+
+            <svg className="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24">
+              <path d="M19 9l-7 7-7-7" />
+            </svg>
+          </>
+        )}
       </button>
 
       {open && (
         <ul
           className={dropdownClasses}
+          style={variant === 'header' ? { left: `${dropdownLeft}px` } : undefined}
           role="menu"
         >
-          {THEME_OPTIONS.map((themeOption) => (
-            <li key={themeOption.value}>
+          {THEME_OPTIONS.map(option => (
+            <li key={option.value}>
               <button
-                onClick={() => handleThemeChange(themeOption.value)}
+                onClick={() => {
+                  setTheme(option.value);
+                  setOpen(false);
+                }}
                 className={clsx(
-                  'w-full text-left px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground dark:hover:bg-white/5 flex items-center gap-2 touch-target-sm',
-                  theme === themeOption.value && 'bg-accent/50 font-semibold'
+                  'w-full px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground flex items-center gap-2 touch-target-sm',
+                  iconOnly ? 'justify-center' : 'justify-start',
+                  theme === option.value && 'bg-accent/50 font-semibold'
                 )}
-                role="menuitem"
+                title={iconOnly ? option.label : undefined}
               >
-                {themeOption.icon}
-                <span className="truncate">{t(`settings.${themeOption.value}`, themeOption.label)}</span>
+                {option.icon}
+                {!iconOnly && <span>{t(`settings.${option.value}`, option.label)}</span>}
               </button>
             </li>
           ))}

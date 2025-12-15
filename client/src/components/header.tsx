@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@/lib/routes';
 import { useLoginModal } from '@/contexts/LoginModalContext';
 import { useAuth } from '@/contexts/AuthContext';
+import ThemeSwitcher from '@/components/theme-switcher';
 
 interface HeaderProps {
   className?: string;
@@ -43,11 +44,11 @@ export default function Header({ className }: HeaderProps) {
             </span>
           </button>
 
+
           {/* Actions */}
           <div className="flex items-center space-x-1 sm:space-x-3">
-            <div className="w-auto relative">
-              <LanguageSwitcher />
-            </div>
+            <ThemeSwitcher variant="header" />
+            <LanguageSwitcher variant="header" />
             <Button
               asChild
               variant="ghost"
@@ -83,7 +84,7 @@ export default function Header({ className }: HeaderProps) {
               aria-label={t('header.login', 'Login')}
             >
               <LogIn className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="hidden xs:inline">
+              <span className="hidden sm:inline">
                 {t('header.login', 'Login')}
               </span>
             </Button>

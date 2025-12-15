@@ -23,6 +23,16 @@ export default function LanguageSwitcher({ variant = 'header' }: LanguageSwitche
     const { language, setLanguage } = usePreferences();
     const [open, setOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const buttonRef = useRef<HTMLButtonElement>(null);
+    const [dropdownLeft, setDropdownLeft] = useState(0);
+
+    // Calculate dropdown position dynamically for header variant
+    useEffect(() => {
+        if (variant === "header" && buttonRef.current && open) {
+            const rect = buttonRef.current.getBoundingClientRect();
+            setDropdownLeft(rect.left);
+        }
+    }, [open, variant]);
 
     // Close dropdown if clicking outside
     useEffect(() => {
@@ -65,16 +75,17 @@ export default function LanguageSwitcher({ variant = 'header' }: LanguageSwitche
     );
 
     const buttonClasses = clsx(
-        "flex items-center font-medium text-foreground bg-background dark:bg-white/10 backdrop-blur-md border-2 border-border dark:border-white/30 rounded-md hover:bg-accent/50 dark:hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-border transition-colors w-full",
+        "flex items-center font-medium text-foreground bg-background backdrop-blur-md border-2 border-border rounded-md hover:bg-accent/50 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-border transition-colors w-full",
         variant === "header"
             ? "gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 text-xs sm:text-sm touch-target-sm sm:w-auto min-w-0"
             : "gap-2 px-3 py-2 text-sm justify-between"
     );
 
     const dropdownClasses = clsx(
-        "absolute z-50 mt-1 bg-popover backdrop-blur-md text-popover-foreground border-2 border-border dark:border-white/30 rounded-md shadow-lg",
+        variant === "header" ? "fixed z-[101] top-14" : "absolute z-50",
+        "mt-1 bg-popover backdrop-blur-md text-foreground border border-border rounded-md shadow-lg",
         variant === "header"
-            ? "right-0 sm:right-0 w-40"
+            ? "w-auto min-w-fit"
             : "left-0 w-full"
     );
 
@@ -83,6 +94,7 @@ export default function LanguageSwitcher({ variant = 'header' }: LanguageSwitche
     return (
         <div className={containerClasses} ref={dropdownRef}>
             <button
+                ref={buttonRef}
                 onClick={() => setOpen(prev => !prev)}
                 onKeyDown={handleKeyDown}
                 className={buttonClasses}
@@ -114,16 +126,24 @@ export default function LanguageSwitcher({ variant = 'header' }: LanguageSwitche
                             <button
                                 onClick={() => handleLanguageChange(lang)}
                                 className={clsx(
-                                    'w-full text-left px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground dark:hover:bg-white/5 flex items-center gap-2 touch-target-sm',
+                                    'w-full px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground flex items-center gap-2 touch-target-sm',
+                                    variant === 'header' ? 'justify-center' : 'text-left',
                                     language === lang.code && 'bg-accent/50 font-semibold'
                                 )}
                                 role="menuitem"
+                                title={variant === 'header' ? lang.label : undefined}
                             >
-                                <span className={clsx('fi', `fi-${lang.flag}`, 'text-sm flex-shrink-0')}></span>
-                                <span className="truncate">{lang.label}</span>
+                                <span className={clsx('fi', `fi-${lang.flag}`, 'text-sm flex-shrink-0')} />
+
+                                {variant === 'header' ? (
+                                    <span className="uppercase text-xs">{lang.code}</span>
+                                ) : (
+                                    <span className="truncate">{lang.label}</span>
+                                )}
                             </button>
                         </li>
                     ))}
+
                 </ul>
             )}
         </div>

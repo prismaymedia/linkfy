@@ -179,7 +179,7 @@ export default function Navigation({ className }: NavigationProps) {
                         <NavigationMenuLink asChild>
                           <Link
                             href={ROUTES.PROFILE}
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground dark:hover:bg-white/5 cursor-pointer group"
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer group"
                           >
                             <div className="text-sm font-medium leading-none flex items-center">
                               <User className="h-4 w-4 mr-2" />
@@ -196,7 +196,7 @@ export default function Navigation({ className }: NavigationProps) {
                         <NavigationMenuLink asChild>
                           <Link
                             href={ROUTES.SETTINGS}
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground dark:hover:bg-white/5 cursor-pointer group"
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer group"
                           >
                             <div className="text-sm font-medium leading-none flex items-center">
                               <Settings className="h-4 w-4 mr-2 " />
@@ -322,7 +322,7 @@ export default function Navigation({ className }: NavigationProps) {
                           'w-full flex items-center px-3 py-3 text-left rounded-md text-sm sm:text-base font-medium transition-colors touch-target',
                           isActive
                             ? 'bg-accent/50 text-foreground'
-                            : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground dark:hover:bg-white/5',
+                            : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
                         )}
                       >
                         <Icon className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
@@ -346,7 +346,7 @@ export default function Navigation({ className }: NavigationProps) {
 
                     <button
                       onClick={() => navigateToRoute(ROUTES.PROFILE)}
-                      className="w-full flex items-center px-3 py-3 text-left rounded-md text-sm sm:text-base font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground dark:hover:bg-white/5 transition-colors touch-target"
+                      className="w-full flex items-center px-3 py-3 text-left rounded-md text-sm sm:text-base font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors touch-target"
                     >
                       <User className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
                       <span>{t('navigation.profile', 'Profile')}</span>
@@ -354,7 +354,7 @@ export default function Navigation({ className }: NavigationProps) {
 
                     <button
                       onClick={() => navigateToRoute(ROUTES.SETTINGS)}
-                      className="w-full flex items-center px-3 py-3 text-left rounded-md text-sm sm:text-base font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground dark:hover:bg-white/5 transition-colors touch-target"
+                      className="w-full flex items-center px-3 py-3 text-left rounded-md text-sm sm:text-base font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors touch-target"
                     >
                       <Settings className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
                       <span>{t('navigation.settings', 'Settings')}</span>

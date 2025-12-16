@@ -20,7 +20,6 @@ import {
   FormMessage,
   FormDescription,
 } from '@/components/ui/form';
-import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -29,50 +28,11 @@ import { Loader2, AlertCircle, CheckCircle2, Trash2 } from 'lucide-react';
 import DynamicServiceIcon from './dynamic-service-icon';
 import ResultCard, { ResultCardSkeleton } from './result-card';
 import { useTranslation } from 'react-i18next';
-import { Skeleton } from '@/components/ui/skeleton';
 import { motion, AnimatePresence } from 'framer-motion';
 import { detectMusicService } from '@/components/music-service-detector';
-import { ErrorMessage } from '@/components/ui/error-message';
+import ConversionPreview from './conversion-preview';
 
-const PreviewCardSkeleton = ({
-  url,
-  getPreviewTranslationKey,
-}: {
-  url?: string;
-  getPreviewTranslationKey: (
-    url: string,
-    contentType?: 'track' | 'playlist' | 'album',
-  ) => string;
-}) => {
-  const { t } = useTranslation();
-  return (
-    <Card className="bg-white rounded-2xl shadow-lg mb-4 sm:mb-6">
-      <CardHeader className="pb-3 p-4 sm:p-6">
-        <div className="flex items-center">
-          <DynamicServiceIcon
-            url={url || ''}
-            className="text-lg sm:text-xl mr-2"
-          />
-          <h3 className="text-base sm:text-lg font-semibold text-gray-800">
-            {t(getPreviewTranslationKey(url || '', 'track'), {
-              defaultValue: t('preview.unknownTrack'),
-            })}
-          </h3>
-        </div>
-      </CardHeader>
-      <CardContent className="pt-0 p-4 sm:p-6">
-        <div className="flex items-center space-x-3 sm:space-x-4">
-          <Skeleton className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg flex-shrink-0" />
-          <div className="flex-1 space-y-2 min-w-0">
-            <Skeleton className="h-4 sm:h-5 w-3/4" />
-            <Skeleton className="h-3 sm:h-4 w-1/2" />
-            <Skeleton className="h-3 w-2/4" />
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
+
 
 interface MusicConverterProps {
   size?: 'compact' | 'full';
@@ -86,6 +46,7 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
     null,
   );
   const [isLoadingPreview, setIsLoadingPreview] = useState(false);
+  const [previewError, setPreviewError] = useState<string | null>(null);
   const [lastProcessedUrl, setLastProcessedUrl] = useState<string>('');
   const [isInputHovered, setIsInputHovered] = useState(false);
   const [singleTrackResult, setSingleTrackResult] =
@@ -159,6 +120,7 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
   const fetchYouTubePreview = async (url: string) => {
     if (!url || url.trim() === '') {
       setYoutubePreview(null);
+      setPreviewError(null);
       return;
     }
 
@@ -190,16 +152,13 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
         }
       }
 
-      toast({
-        title: t('form.urlValidationError', 'URL Validation Error'),
-        description: errorMessage,
-        variant: 'destructive',
-      });
       setYoutubePreview(null);
+      setPreviewError(errorMessage);
       return;
     }
 
     setIsLoadingPreview(true);
+    setPreviewError(null);
     try {
       const response = await apiRequest('POST', '/api/convert', {
         url,
@@ -227,30 +186,28 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
               'form.serviceError',
               'Service error. The music service may be temporarily unavailable',
             );
+          } else {
+            errorMessage = errorData.message;
           }
         }
 
-        toast({
-          title: t('conversion.errorTitle'),
-          description: errorMessage,
-          variant: 'destructive',
-        });
+        setPreviewError(errorMessage);
         setYoutubePreview(null);
+        // Don't show toast for preview errors, let the preview component handle it
         return;
       }
       const json = await response.json();
       setYoutubePreview(json as YouTubeTrackInfo);
+      setPreviewError(null);
     } catch (error) {
       console.error('Preview fetch error:', error);
-      toast({
-        title: t('conversion.errorTitle'),
-        description: t(
-          'form.networkError',
-          'Network error. Please check your connection and try again',
-        ),
-        variant: 'destructive',
-      });
+      const errorMessage = t(
+        'form.networkError',
+        'Network error. Please check your connection and try again',
+      );
+      setPreviewError(errorMessage);
       setYoutubePreview(null);
+      // Don't show toast for preview errors, let the preview component handle it
     } finally {
       setIsLoadingPreview(false);
     }
@@ -267,8 +224,13 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
       ) {
         setSpotifyResult(null);
         setSingleTrackResult(null);
+        setPreviewError(null);
         fetchYouTubePreview(watchedUrl);
         setConvertedTracks([]);
+      } else if (!watchedUrl || watchedUrl.trim() === '') {
+        // Clear preview when URL is empty
+        setYoutubePreview(null);
+        setPreviewError(null);
       }
     }, 500);
     return () => clearTimeout(timeoutId);
@@ -278,6 +240,7 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
     form.reset();
     setSpotifyResult(null);
     setYoutubePreview(null);
+    setPreviewError(null);
     setIsLoadingPreview(false);
     setLastProcessedUrl('');
     toast({
@@ -388,15 +351,7 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                 name="url"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel
-                      className={cn(
-                        'text-sm font-medium',
-                        fieldState.error && 'text-red-600',
-                        fieldState.isDirty && isFieldValid && 'text-green-600',
-                        !fieldState.error && !(fieldState.isDirty && isFieldValid) && 'text-gray-700',
-                      )}
-
-                    >
+                    <FormLabel className="text-sm font-medium text-gray-700">
                       {t('form.youtubeUrlLabel')}
                     </FormLabel>
                     <FormControl>
@@ -421,12 +376,14 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                           disabled={
                             convertMutation.isPending || isLoadingPreview
                           }
-                          className={cn(
-                            'w-full px-3 sm:px-4 py-3 sm:py-4 border rounded-lg focus:ring-2 focus:ring-offset-2 transition-all duration-200 pr-10 text-sm sm:text-base',
-                            fieldState.error && 'border-red-500 bg-red-50 focus:ring-red-500 focus:border-red-500 focus:ring-offset-red-50',
-                            isFieldValid && 'border-green-500 bg-green-50 focus:ring-green-500 focus:border-green-500 focus:ring-offset-green-50',
-                            !fieldState.error && !isFieldValid && 'border-gray-300 focus:ring-spotify focus:border-spotify focus:ring-offset-blue-50'
-                          )}
+                          className={`w-full px-3 sm:px-4 py-3 sm:py-4 border rounded-lg focus:ring-2 focus:ring-spotify focus:border-spotify transition-colors duration-200 pr-10 text-sm sm:text-base ${fieldState.error
+                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500 pr-10'
+                            : isFieldValid
+                              ? 'border-green-500 focus:ring-green-500 focus:border-green-500 pr-10'
+                              : isInputHovered && fieldState.isDirty
+                                ? 'border-gray-300 pr-[52px]'
+                                : 'border-gray-300 pr-10'
+                            }`}
                         />
                         {!isLoadingPreview &&
                           isInputHovered &&
@@ -451,9 +408,7 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                             </motion.button>
                           </AnimatePresence>
                         ) : isLoadingPreview ? (
-                          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-500">
-                            <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
-                          </div>
+                          <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 animate-spin text-gray-400" />
                         ) : isFieldValid ? (
                           <CheckCircle2
                             className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-green-500"
@@ -474,48 +429,24 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
                         )}
                       </div>
                     </FormControl>
-                    {/* Hint y Error Messages mejorados */}
-                    <div className="space-y-2 mt-2">
-                      {!fieldState.error && (
-                        <FormDescription
-                          id="url-hint"
-                          className={cn(
-                            'text-xs text-gray-500 flex items-center gap-1',
-                            isCompact && 'sr-only'
-                          )}
-                        >
-                          {isFieldValid ? (
-                            <>
-                              <CheckCircle2 className="h-3 w-3 text-green-500" />
-                              <span className="text-green-600">
-                                {t('form.validation.valid')}
-                              </span>
-                            </>
-                          ) : (
-                            <>{t('form.youtubeUrlHint')}</>
-                          )}
-                        </FormDescription>
-                      )}
-                      {fieldState.error && (
-                        <ErrorMessage
-                          variant="error"
-                          message={fieldState.error.message}
-                          show={true}
-                          dismissible={false}
-                        />
-                      )}
-                    </div>
+                    <FormDescription
+                      id="url-hint"
+                      className={`text-xs text-gray-500 ${isCompact ? 'sr-only' : ''}`}
+                    >
+                      {t('form.youtubeUrlHint')}
+                    </FormDescription>
+                    <FormMessage role="alert" />
                   </FormItem>
                 )}
               />
 
               {!!cachedResultForWatchedUrl && (
-                <ErrorMessage
-                  variant="warning"
-                  message={t('form.duplicateUrlWarning')}
-                  show={true}
-                  dismissible={false}
-                />
+                <div className="flex items-center space-x-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                  <AlertCircle className="h-4 w-4 text-amber-600 flex-shrink-0" />
+                  <span className="text-sm text-amber-700">
+                    {t('form.duplicateUrlWarning')}
+                  </span>
+                </div>
               )}
 
               {/* Only show conversion button for individual tracks */}
@@ -546,135 +477,17 @@ export default function MusicConverter({ size = 'full' }: MusicConverterProps) {
         </CardContent>
       </Card>
 
-      {/* Preview de YouTube con AnimatePresence */}
-      <AnimatePresence mode="wait">
-        {isLoadingPreview && (
-          <motion.div
-            key="preview-loading"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <PreviewCardSkeleton
-              url={watchedUrl}
-              getPreviewTranslationKey={getPreviewTranslationKey}
-            />
-          </motion.div>
-        )}
-
-        {!isLoadingPreview && youtubePreview && (
-          <motion.div
-            key="preview-card"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Card
-              className={`bg-white rounded-2xl shadow-lg ${isCompact ? 'mb-4' : 'mb-4 sm:mb-6'}`}
-            >
-              <CardHeader
-                className={`pb-3 ${isCompact ? 'p-4' : 'p-4 sm:p-6'}`}
-              >
-                <div className="flex items-center">
-                  <DynamicServiceIcon
-                    url={watchedUrl || ''}
-                    className="text-xl mr-2"
-                  />
-                  <h3 className="text-lg font-semibold text-gray-800">
-                    {t('preview.youtubeTrack', {
-                      defaultValue: 'YouTube Preview',
-                    })}
-                  </h3>
-                </div>
-                {youtubePreview.type !== 'track' &&
-                  youtubePreview.playlistTitle && (
-                    <p className="text-sm text-gray-500">
-                      {youtubePreview.playlistTitle}
-                    </p>
-                  )}
-              </CardHeader>
-
-              <CardContent className="pt-0">
-                {youtubePreview.type === 'playlist' ||
-                  youtubePreview.type === 'album' ? (
-                  <div className="max-h-[400px] overflow-y-auto space-y-3 pr-2 custom-scrollbar">
-                    {youtubePreview.tracks.map((track) => (
-                      <div
-                        key={track.videoId}
-                        className="flex items-center justify-between space-x-4 border-b border-gray-100 pb-2 last:border-none"
-                      >
-                        <div className="flex items-center space-x-4">
-                          <img
-                            src={track.thumbnailUrl}
-                            alt={track.trackName}
-                            className="w-12 h-12 rounded-md object-cover shadow-sm"
-                          />
-                          <div className="flex-1 min-w-0">
-                            <h4 className="font-medium text-gray-900 truncate">
-                              {track.trackName}
-                            </h4>
-                            <p className="text-sm text-gray-600 truncate">
-                              {track.artistName}
-                            </p>
-                          </div>
-                        </div>
-
-                        <Button
-                          onClick={() => handleSingleTrackConversion(track)}
-                          disabled={
-                            convertingTracks.includes(track.videoId) ||
-                            convertedTracks.includes(track.videoId)
-                          }
-                          size="sm"
-                          className={cn(
-                            'text-white font-medium py-1 px-3 rounded-md transition-colors duration-200',
-                            convertedTracks.includes(track.videoId) && 'bg-gray-400 opacity-70 cursor-not-allowed',
-                            convertingTracks.includes(track.videoId) && !convertedTracks.includes(track.videoId) && 'bg-spotify/80 cursor-wait',
-                            !convertedTracks.includes(track.videoId) && !convertingTracks.includes(track.videoId) && 'bg-spotify hover:bg-green-600'
-                          )}
-                        >
-                          {convertedTracks.includes(track.videoId)
-                            ? t('form.converted', { defaultValue: 'Converted' })
-                            : convertingTracks.includes(track.videoId)
-                              ? t('form.converting', {
-                                defaultValue: 'Converting...',
-                              })
-                              : t('form.convertSingle', {
-                                defaultValue: 'Convert',
-                              })}
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                ) : youtubePreview.type === 'track' ? (
-                  <div className="flex items-center space-x-4">
-                    <img
-                      src={youtubePreview.thumbnailUrl ?? ''}
-                      alt="YouTube thumbnail"
-                      className="w-16 h-16 rounded-lg object-cover shadow-md"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-gray-900 truncate">
-                        {youtubePreview.trackName}
-                      </h4>
-                      <p className="text-sm text-gray-600 truncate">
-                        {youtubePreview.artistName}
-                      </p>
-                      <p className="text-xs text-gray-500 truncate">
-                        {youtubePreview.originalTitle
-                          ? `${t('preview.original')}: ${youtubePreview.originalTitle}`
-                          : ''}
-                      </p>
-                    </div>
-                  </div>
-                ) : null}
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Preview de YouTube */}
+      <ConversionPreview
+        previewData={youtubePreview}
+        isLoading={isLoadingPreview}
+        url={watchedUrl}
+        size={size}
+        onConvertTrack={handleSingleTrackConversion}
+        convertingTracks={convertingTracks}
+        convertedTracks={convertedTracks}
+        error={previewError}
+      />
 
       {/* Result with AnimatePresence */}
       <AnimatePresence mode="wait">

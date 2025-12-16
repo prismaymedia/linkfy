@@ -151,6 +151,7 @@ export interface PlaylistTrack {
   videoId: string;
   trackName: string;
   artistName: string;
+  duration?: string;
   thumbnailUrl: string;
   originalTitle: string;
   position: number;

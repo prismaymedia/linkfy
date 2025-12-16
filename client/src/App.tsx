@@ -3,13 +3,14 @@ import { queryClient } from './lib/queryClient';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { AuthProvider } from '@/contexts/AuthContext';
+import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import { LoginModalProvider } from '@/contexts/LoginModalContext';
 import { PreferencesProvider } from '@/contexts/PreferencesContext';
 import LoginModal from '@/components/login-modal';
 import RouteGuard from '@/components/route-guard';
 import Navigation from '@/components/navigation';
 import BreadcrumbNav from '@/components/breadcrumb-nav';
+import { FavoritesSidebar } from '@/components/favorites-sidebar';
 import Home from '@/pages/home';
 import AuthPage from '@/pages/auth';
 import Dashboard from '@/pages/dashboard';
@@ -19,9 +20,11 @@ import History from '@/pages/history';
 import Help from '@/pages/help';
 import NotFound from '@/pages/not-found';
 import { ROUTES } from './lib/routes';
+import { cn } from '@/lib/utils';
 import { Analytics } from '@vercel/analytics/react';
 
 function AppRouter() {
+  const { user } = useAuth();
   return (
     <Switch>
       {/* Home route - landing page, redirects to dashboard if authenticated */}
@@ -47,8 +50,12 @@ function AppRouter() {
         {(params) => (
           <RouteGuard path={ROUTES.DASHBOARD}>
             <Navigation />
-            <BreadcrumbNav />
-            <Dashboard />
+            <div
+              className={cn('transition-all duration-300', user && 'lg:pr-80')}
+            >
+              <BreadcrumbNav />
+              <Dashboard />
+            </div>
           </RouteGuard>
         )}
       </Route>
@@ -57,8 +64,12 @@ function AppRouter() {
         {(params) => (
           <RouteGuard path={ROUTES.PROFILE}>
             <Navigation />
-            <BreadcrumbNav />
-            <Profile />
+            <div
+              className={cn('transition-all duration-300', user && 'lg:pr-80')}
+            >
+              <BreadcrumbNav />
+              <Profile />
+            </div>
           </RouteGuard>
         )}
       </Route>
@@ -67,8 +78,12 @@ function AppRouter() {
         {(params) => (
           <RouteGuard path={ROUTES.SETTINGS}>
             <Navigation />
-            <BreadcrumbNav />
-            <Settings />
+            <div
+              className={cn('transition-all duration-300', user && 'lg:pr-80')}
+            >
+              <BreadcrumbNav />
+              <Settings />
+            </div>
           </RouteGuard>
         )}
       </Route>
@@ -77,8 +92,12 @@ function AppRouter() {
         {(params) => (
           <RouteGuard path={ROUTES.HISTORY}>
             <Navigation />
-            <BreadcrumbNav />
-            <History />
+            <div
+              className={cn('transition-all duration-300', user && 'lg:pr-80')}
+            >
+              <BreadcrumbNav />
+              <History />
+            </div>
           </RouteGuard>
         )}
       </Route>
@@ -87,8 +106,12 @@ function AppRouter() {
         {(params) => (
           <RouteGuard path={ROUTES.HELP}>
             <Navigation />
-            <BreadcrumbNav />
-            <Help />
+            <div
+              className={cn('transition-all duration-300', user && 'lg:pr-80')}
+            >
+              <BreadcrumbNav />
+              <Help />
+            </div>
           </RouteGuard>
         )}
       </Route>
@@ -107,6 +130,7 @@ function App() {
           <LoginModalProvider>
             <TooltipProvider>
               <Toaster />
+              <FavoritesSidebar />
               <AppRouter />
               <LoginModal />
               <Analytics />

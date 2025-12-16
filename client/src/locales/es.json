@@ -55,7 +55,9 @@
     "convertSingle": "Convertir",
     "urlAlreadyConverted": "URL ya convertida",
     "convertButton": "Convertir",
+    "dismissMessage": "Cerrar mensaje",
     "clearInput": "Limpiar campo",
+    "closeError": "Cerrar mensaje",
     "inputCleared": "Campo borrado",
     "urlValidationError": "Error de Validación de URL",
     "urlInvalidFormat": "Formato de URL inválido. Asegúrate de que la URL comience con http:// o https://",
@@ -70,6 +72,23 @@
       "apple": "Icono de Apple Music",
       "deezer": "Icono de Deezer",
       "unknown": "Icono de servicio de música"
+    },
+    "errors": {
+      "urlRequired": "Por favor, ingresa una URL para comenzar",
+      "invalidUrlFormat": "El formato de URL es inválido. Asegúrate de que comience con https://",
+      "unsupportedPlatform": "Esta URL es de una plataforma no compatible. Servicios soportados: YouTube Music, Spotify, Apple Music y Deezer",
+      "invalidTrackUrl": "Esta URL no parece ser válida. Verifica el enlace e inténtalo de nuevo",
+      "emptyUrl": "El campo de URL no puede estar vacío",
+      "malformedUrl": "Esto no parece ser una URL válida. Verifica el formato e inténtalo de nuevo"
+    },
+    "hints": {
+      "urlExample": "Ejemplo: enlaces de canciones o listas de reproducción de YouTube Music, Spotify, Apple Music o Deezer",
+      "supportedServices": "YouTube Music, Spotify, Apple Music, Deezer"
+    },
+    "validation": {
+      "checking": "Validando URL...",
+      "valid": "La URL es válida y lista para convertir",
+      "invalid": "Esta URL no puede ser procesada"
     }
   },
   "preview": {
@@ -108,6 +127,16 @@
     "copiedDescription": "¡Enlace copiado al portapapeles!",
     "copyFailedTitle": "Error al copiar",
     "copyFailedDescription": "Por favor, inténtalo de nuevo."
+  },
+  "common": {
+    "copied": "¡Copiado!",
+    "copiedItem": "¡{{item}} copiado al portapapeles!",
+    "copiedGeneric": "¡Copiado al portapapeles!",
+    "copyErrorTitle": "Error al copiar",
+    "copyErrorDesc": "No se pudo copiar al portapapeles. Por favor, inténtalo de nuevo.",
+    "deletedTitle": "Eliminado",
+    "deletedItem": "Se eliminó {{item}}",
+    "deleted": "Eliminado correctamente"
   },
   "navigation": {
     "home": "Inicio",
@@ -194,9 +223,9 @@
     "selectLanguage": "Seleccionar Idioma",
     "languageDesc": "Elige tu idioma preferido para la interfaz",
     "notifications": "Notificaciones",
-    "notificationsDesc": "Gestionar preferencias de notificaciones",
+    "notificationsDesc": "Recibir notificaciones sobre resultados de conversión",
     "enableNotifications": "Habilitar Notificaciones",
-    "enableNotificationsDesc": "Recibir notificaciones sobre resultados de conversión",
+    "savedTitle": "Configuración guardada",
     "extension": "Permisos de Extensión",
     "extensionDesc": "Gestionar permisos de la extensión del navegador",
     "clipboardAccess": "Acceso al Portapapeles",
@@ -240,7 +269,8 @@
     "copySpotifyUrl": "Copiar URL de Spotify",
     "delete": "Eliminar",
     "backToDashboard": "Volver al Panel",
-    "settings": "Configuración"
+    "settings": "Configuración",
+    "deletedDesc": "Registro de conversión eliminado exitosamente"
   },
   "help": {
     "title": "Ayuda y Soporte",
@@ -278,5 +308,23 @@
     "title": "URLs de Música Detectadas",
     "convert": "Convertir",
     "openLink": "Abrir en nueva pestaña"
+  },
+  "favorites": {
+    "title": "Favoritos",
+    "empty": "No hay favoritos aún",
+    "emptyDescription": "Haz clic en el icono de estrella para guardar tus conversiones favoritas",
+    "addButton": "Agregar a favoritos",
+    "removeButton": "Quitar de favoritos",
+    "addedTitle": "Agregado a favoritos",
+    "addedDescription": "Esta conversión ha sido guardada.",
+    "removedTitle": "Removido de favoritos",
+    "removedDescription": "Esta conversión ha sido removida.",
+    "notAuthenticatedTitle": "No autenticado",
+    "notAuthenticatedDescription": "Por favor, inicia sesión para usar favoritos.",
+    "favorited": "Favorito",
+    "copyUrl": "Copiar URL",
+    "errorTitle": "Error",
+    "addErrorDescription": "No se pudo agregar a favoritos. Por favor, inténtalo de nuevo.",
+    "removeErrorDescription": "No se pudo quitar de favoritos. Por favor, inténtalo de nuevo."
   }
 }

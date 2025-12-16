@@ -3,6 +3,7 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { SentryModule, SentryGlobalFilter } from '@sentry/nestjs/setup';
 import { AppController } from './controllers/app.controller';
+import { FavoritesController } from './controllers/favorites.controller';
 import { HistoryController } from './controllers/history.controller';
 import { ConversionService } from './services/conversion.service';
 import { HistoryService } from './services/history.service';
@@ -26,7 +27,7 @@ import grafanaConfig from './config/grafana.config';
     PrometheusModule,
     UserModule,
   ],
-  controllers: [AppController, HistoryController],
+  controllers: [AppController, HistoryController, FavoritesController],
   providers: [
     ConversionService,
     HistoryService,

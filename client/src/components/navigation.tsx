@@ -84,10 +84,16 @@ export default function Navigation({ className }: NavigationProps) {
     };
   }, []);
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    setLocation(ROUTES.AUTH);
-    setMobileMenuOpen(false);
+  const handleSignOut = async (e?: React.MouseEvent) => {
+    e?.preventDefault();
+    e?.stopPropagation();
+    try {
+      await supabase.auth.signOut();
+      setMobileMenuOpen(false);
+      setLocation(ROUTES.AUTH);
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
 
   const navigateToRoute = (path: RoutePath) => {
@@ -131,7 +137,7 @@ export default function Navigation({ className }: NavigationProps) {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:block">
+          <div className="hidden xl:block">
             <NavigationMenu>
               <NavigationMenuList className="justify-end">
                 {navigationRoutes.map((route) => {
@@ -242,7 +248,7 @@ export default function Navigation({ className }: NavigationProps) {
               </a>
             </Button>
             <LanguageSwitcher />
-            <div className="md:hidden">
+            <div className="xl:hidden">
               <Button
                 variant="ghost"
                 size="sm"
@@ -268,7 +274,7 @@ export default function Navigation({ className }: NavigationProps) {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="fixed inset-0 bg-black/60 z-40 md:hidden"
+                className="fixed inset-0 bg-black/60 z-40 xl:hidden"
                 onClick={() => setMobileMenuOpen(false)}
               />
               <motion.div
@@ -277,9 +283,10 @@ export default function Navigation({ className }: NavigationProps) {
                 initial="closed"
                 animate="open"
                 exit="closed"
-                className="fixed top-0 right-0 h-full w-4/5 max-w-xs bg-background/90 backdrop-blur-xl z-50 md:hidden p-4 sm:p-6 border-l border-border"
+                className="fixed top-0 right-0 h-full max-h-screen w-4/5 max-w-xs sm:max-w-sm md:max-w-md bg-background/90 backdrop-blur-xl z-50 xl:hidden flex flex-col overflow-y-auto p-4 sm:p-6 border-l border-border"
               >
-                <div className="flex justify-between items-center mb-4 sm:mb-6">
+                {/* Header */}
+                <div className="flex justify-between items-center p-4 sm:p-6 border-b border-border flex-shrink-0">
                   <span className="font-bold text-base sm:text-lg">Menu</span>
                   <div className="flex items-center space-x-2">
                     <Button
@@ -308,66 +315,55 @@ export default function Navigation({ className }: NavigationProps) {
                   </div>
                 </div>
 
-                <nav className="flex flex-col space-y-1 sm:space-y-2">
-                  {navigationRoutes.map((route) => {
-                    const Icon =
-                      iconMap[route.icon as keyof typeof iconMap] || Home;
-                    const isActive = location === route.path;
+                {/* Scrollable Content */}
+                <nav className="flex flex-col flex-1 overflow-y-auto p-4 sm:p-6">
+                  {/* Main Navigation Routes */}
+                  <div className="flex flex-col space-y-1">
+                    {navigationRoutes.map((route) => {
+                      const Icon =
+                        iconMap[route.icon as keyof typeof iconMap] || Home;
+                      const isActive = location === route.path;
 
-                    return (
-                      <button
-                        key={route.path}
-                        onClick={() => navigateToRoute(route.path)}
-                        className={cn(
-                          'w-full flex items-center px-3 py-3 text-left rounded-md text-sm sm:text-base font-medium transition-colors touch-target',
-                          isActive
-                            ? 'bg-accent/50 text-foreground'
-                            : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
-                        )}
-                      >
-                        <Icon className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
-                        {t(
-                          `navigation.${route.title.toLowerCase()}`,
-                          route.title,
-                        )}
-                      </button>
-                    );
-                  })}
-
-                  <div className="border-t border-border pt-3 sm:pt-4 mt-3 sm:mt-4 space-y-1 sm:space-y-2">
-                    <div className="px-3 py-3 bg-popover backdrop-blur-md rounded-md">
-                      <p className="text-xs sm:text-sm font-medium text-foreground truncate">
-                        {session?.user?.email}
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-0.5">
-                        {t('navigation.signedIn', 'Signed in')}
-                      </p>
-                    </div>
-
-                    <button
-                      onClick={() => navigateToRoute(ROUTES.PROFILE)}
-                      className="w-full flex items-center px-3 py-3 text-left rounded-md text-sm sm:text-base font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors touch-target"
-                    >
-                      <User className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
-                      <span>{t('navigation.profile', 'Profile')}</span>
-                    </button>
-
-                    <button
-                      onClick={() => navigateToRoute(ROUTES.SETTINGS)}
-                      className="w-full flex items-center px-3 py-3 text-left rounded-md text-sm sm:text-base font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors touch-target"
-                    >
-                      <Settings className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
-                      <span>{t('navigation.settings', 'Settings')}</span>
-                    </button>
-
-                    <button
-                      onClick={handleSignOut}
-                      className="w-full flex items-center px-3 py-3 text-left rounded-md text-sm sm:text-base font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors touch-target"
-                    >
-                      <LogOut className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
-                      <span>{t('navigation.signOut', 'Sign Out')}</span>
-                    </button>
+                      return (
+                        <button
+                          key={route.path}
+                          onClick={() => navigateToRoute(route.path)}
+                          className={cn(
+                            'w-full flex items-center px-3 py-3 text-left rounded-md text-sm sm:text-base font-medium transition-colors touch-target',
+                            isActive
+                              ? 'bg-accent/50 text-foreground'
+                              : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                          )}
+                        >
+                          <Icon className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
+                          {t(`navigation.${route.title.toLowerCase()}`, route.title)}
+                        </button>
+                      );
+                    })}
                   </div>
+
+                  {/* Separator */}
+                  <div className="border-t border-border my-3" />
+
+                  {/* User Info */}
+                  <div className="px-3 py-3 bg-accent/10 rounded-md mb-3">
+                    <p className="text-sm font-medium text-foreground truncate">
+                      {session?.user?.email}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {t('navigation.signedIn', 'Signed in')}
+                    </p>
+                  </div>
+
+                  {/* Sign Out */}
+                  <button
+                    type="button"
+                    onClick={handleSignOut}
+                    className="w-full flex items-center px-3 py-3 text-left rounded-md text-sm sm:text-base font-medium text-red-600 hover:bg-red-50 hover:text-red-700 active:bg-red-100 transition-colors touch-target cursor-pointer"
+                  >
+                    <LogOut className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
+                    <span>{t('navigation.signOut', 'Sign Out')}</span>
+                  </button>
                 </nav>
               </motion.div>
             </>

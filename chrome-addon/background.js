@@ -1,9 +1,8 @@
-const API_BASE_URL = 'https://linkfy-production.up.railway.app';
+importScripts('config.js');
 
 let jwtToken = null;
 let tokenExpiry = null;
 
-// Load token from storage
 async function loadTokenFromStorage() {
   try {
     const result = await chrome.storage.local.get([
@@ -13,7 +12,6 @@ async function loadTokenFromStorage() {
     jwtToken = result.jwt_token || null;
     tokenExpiry = result.token_expiry || null;
 
-    // Log only if token exists
     console.log(
       '[Auth] Token loaded from storage:',
       jwtToken ? 'Exists' : 'None',
@@ -64,7 +62,6 @@ async function makeAPIRequest(endpoint, options = {}) {
   return await response.json();
 }
 
-// Store detected URLs per tab (in-memory cache)
 const detectedUrlsByTab = new Map();
 
 // Load detected URLs from storage on startup
@@ -72,13 +69,11 @@ async function loadDetectedUrlsFromStorage() {
   try {
     const result = await chrome.storage.local.get('detected_urls_by_tab');
     if (result.detected_urls_by_tab) {
-      // Verify tabs still exist before restoring
       const allTabs = await chrome.tabs.query({});
       const existingTabIds = new Set(allTabs.map((tab) => tab.id));
 
       Object.entries(result.detected_urls_by_tab).forEach(([tabId, data]) => {
         const tabIdNum = Number(tabId);
-        // Only restore if tab still exists
         if (existingTabIds.has(tabIdNum)) {
           detectedUrlsByTab.set(tabIdNum, data);
           updateBadge(tabIdNum, data.urls.length);
@@ -124,7 +119,6 @@ function updateBadge(tabId, urlCount) {
       chrome.action.setBadgeText({ tabId, text: '' });
     }
   } catch (err) {
-    // Tab may not exist anymore, ignore error
     console.debug('[BG] Could not update badge for tab:', tabId);
   }
 }
@@ -181,7 +175,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
               data: tabData || { urls: [], pageUrl: '', pageTitle: '' },
             });
           } else {
-            // Get active tab when message comes from popup
+
             chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
               if (tabs[0]) {
                 const tabData = detectedUrlsByTab.get(tabs[0].id);
@@ -196,7 +190,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 });
               }
             });
-            return true; // Keep channel open for async response
+            return true;
           }
           break;
         }
@@ -208,7 +202,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             await saveDetectedUrlsToStorage();
             sendResponse({ success: true });
           } else {
-            // Get active tab when message comes from popup
+
             const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
             if (tabs[0]) {
               detectedUrlsByTab.delete(tabs[0].id);
@@ -236,11 +230,15 @@ chrome.tabs.onRemoved.addListener(async (tabId) => {
   await saveDetectedUrlsToStorage();
 });
 
-chrome.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
-  if (changeInfo.status === 'loading') {
-    detectedUrlsByTab.delete(tabId);
-    updateBadge(tabId, 0);
-    await saveDetectedUrlsToStorage();
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+
+  if (changeInfo.url) {
+    const storedData = detectedUrlsByTab.get(tabId);
+    if (storedData && changeInfo.url !== storedData.pageUrl) {
+      detectedUrlsByTab.delete(tabId);
+      updateBadge(tabId, 0);
+      await saveDetectedUrlsToStorage();
+    }
   }
 });
 
@@ -249,9 +247,153 @@ chrome.runtime.onStartup.addListener(() => {
   loadTokenFromStorage();
   loadDetectedUrlsFromStorage();
 });
+
 chrome.runtime.onInstalled.addListener(() => {
   loadTokenFromStorage();
   loadDetectedUrlsFromStorage();
+
+  // Create context menu
+  chrome.contextMenus.create(
+    {
+      id: 'quickConvert',
+      title: 'Convert Music',
+      contexts: ['link'],
+    },
+    () => {
+      if (chrome.runtime.lastError) {
+        console.log('[BG] Context menu error (ignored):', chrome.runtime.lastError.message);
+      }
+    }
+  );
+});
+
+const conversionResults = new Map();
+
+// Function to handle URL conversion
+async function convertUrl(url) {
+  const notificationId = `conversion-${Date.now()}`;
+
+  chrome.notifications.create(notificationId, {
+    type: 'basic',
+    iconUrl: 'icons/icon48.png',
+    title: 'Linkfy',
+    message: 'Converting link...',
+    priority: 1
+  });
+
+  try {
+    const result = await makeAPIRequest('/api/convert', {
+      method: 'POST',
+      body: JSON.stringify({ url, targetPlatform: 'spotify' })
+    });
+
+    // Clear progress notification
+    chrome.notifications.clear(notificationId);
+
+    // Show success notification
+    const successNotificationId = `success-${Date.now()}`;
+
+    if (!result.spotifyUrl) {
+      throw new Error('No Spotify URL returned from conversion');
+    }
+
+    // Store result for potential click handling
+    conversionResults.set(successNotificationId, result);
+
+    chrome.notifications.create(successNotificationId, {
+      type: 'basic',
+      iconUrl: 'icons/icon48.png',
+      title: 'Conversion Successful',
+      message: `Opening: ${result.trackName || 'Unknown'} - ${result.artistName || 'Unknown'}`,
+      priority: 1
+    });
+
+    // Open tab after 500ms
+    setTimeout(() => {
+      chrome.tabs.create({ url: result.spotifyUrl });
+    }, 500);
+    // Clear notification after 2500ms (from notification shown)
+    setTimeout(() => {
+      chrome.notifications.clear(successNotificationId);
+    }, 2500);
+
+  } catch (error) {
+    // Log full error details for debugging
+    console.error('[BG] Conversion error:', error, error && error.stack ? error.stack : '');
+    chrome.notifications.clear(notificationId);
+
+    const errorNotificationId = `error-${Date.now()}`;
+    // Map error to user-friendly message
+    let errorMsg = 'An error occurred while converting the link.';
+    if (error) {
+      if (typeof error === 'string') {
+        errorMsg = error;
+      } else if (error.message) {
+        // Check for common error scenarios
+        if (/auth/i.test(error.message) || /token/i.test(error.message)) {
+          errorMsg = 'Authentication required. Please log in again.';
+        } else if (/network/i.test(error.message) || error.message === 'Failed to fetch') {
+          errorMsg = 'Network error. Please check your internet connection.';
+        } else if (/not found/i.test(error.message) || /404/.test(error.message)) {
+          errorMsg = 'Link not found or unsupported.';
+        } else {
+          errorMsg = error.message;
+        }
+      } else if (error.status === 401 || error.code === 'AUTH') {
+        errorMsg = 'Authentication required. Please log in again.';
+      } else if (error.status === 404) {
+        errorMsg = 'Link not found or unsupported.';
+      } else if (error.status === 0) {
+        errorMsg = 'Network error. Please check your internet connection.';
+      } else {
+        // Fallback: show stringified error
+        errorMsg = JSON.stringify(error);
+      }
+    }
+    chrome.notifications.create(errorNotificationId, {
+      type: 'basic',
+      iconUrl: 'icons/icon48.png',
+      title: 'Conversion Error',
+      message: errorMsg,
+      priority: 2
+    });
+    setTimeout(() => {
+      chrome.notifications.clear(errorNotificationId);
+    }, 5000);
+  }
+}
+
+// Clean up conversion results when notifications are closed
+chrome.notifications.onClosed.addListener((notificationId) => {
+  if (notificationId.startsWith('success-')) {
+    conversionResults.delete(notificationId);
+  }
+});
+
+// Handle context menu clicks
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId === 'quickConvert') {
+    const url = info.linkUrl;
+    console.log('[BG] Context menu clicked. URL:', url);
+
+    if (url && isValidMusicUrl(url)) {
+      // Call convertUrl directly
+      convertUrl(url);
+    } else {
+      console.log('[BG] Invalid music URL:', url);
+      const invalidNotificationId = `invalid-${Date.now()}`;
+      chrome.notifications.create(invalidNotificationId, {
+        type: 'basic',
+        iconUrl: 'icons/icon48.png',
+        title: 'Invalid Link',
+        message: 'The selected link is not a supported music link.',
+        priority: 1
+      });
+      setTimeout(() => {
+        chrome.notifications.clear(invalidNotificationId);
+      }, 5000);
+    }
+  }
 });
 
 console.log('[BG] Background script loaded');

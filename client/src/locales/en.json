@@ -55,7 +55,9 @@
     "convertSingle": "Convert",
     "urlAlreadyConverted": "URL already converted",
     "convertButton": "Convert",
+    "dismissMessage": "Dismiss message",
     "clearInput": "Clear input",
+    "closeError": "Close message",
     "inputCleared": "Input cleared",
     "urlValidationError": "URL validation error",
     "urlInvalidFormat": "Invalid URL format. Make sure the URL starts with http:// or https://",
@@ -70,6 +72,23 @@
       "apple": "Apple Music icon",
       "deezer": "Deezer icon",
       "unknown": "Music service icon"
+    },
+    "errors": {
+      "urlRequired": "Please enter a URL to get started",
+      "invalidUrlFormat": "The URL format is invalid. Make sure it starts with https://",
+      "unsupportedPlatform": "This URL is from an unsupported platform. Supported services: YouTube Music, Spotify, Apple Music, and Deezer",
+      "invalidTrackUrl": "This URL doesn’t appear to be valid. Check the link and try again",
+      "emptyUrl": "The URL field cannot be empty",
+      "malformedUrl": "This doesn't look like a valid URL. Check the format and try again"
+    },
+    "hints": {
+      "urlExample": "Example: track or playlist links from YouTube Music, Spotify, Apple Music, or Deezer",
+      "supportedServices": "YouTube Music, Spotify, Apple Music, Deezer"
+    },
+    "validation": {
+      "checking": "Validating URL...",
+      "valid": "URL is valid and ready to convert",
+      "invalid": "This URL cannot be processed"
     }
   },
   "preview": {
@@ -108,6 +127,16 @@
     "copiedDescription": "Link copied to clipboard!",
     "copyFailedTitle": "Failed to copy",
     "copyFailedDescription": "Please try again."
+  },
+  "common": {
+    "copied": "Copied!",
+    "copiedItem": "{{item}} copied to clipboard!",
+    "copiedGeneric": "Copied to clipboard!",
+    "copyErrorTitle": "Failed to copy",
+    "copyErrorDesc": "Unable to copy to clipboard. Please try again.",
+    "deletedTitle": "Deleted",
+    "deletedItem": "{{item}} deleted",
+    "deleted": "Deleted successfully"
   },
   "navigation": {
     "home": "Home",
@@ -194,9 +223,9 @@
     "selectLanguage": "Select Language",
     "languageDesc": "Choose your preferred language for the interface",
     "notifications": "Notifications",
-    "notificationsDesc": "Manage notification preferences",
+    "notificationsDesc": "Get notified about conversion results",
     "enableNotifications": "Enable Notifications",
-    "enableNotificationsDesc": "Get notified about conversion results",
+    "savedTitle": "Settings saved",
     "extension": "Extension Permissions",
     "extensionDesc": "Manage browser extension permissions",
     "clipboardAccess": "Clipboard Access",
@@ -240,7 +269,8 @@
     "copySpotifyUrl": "Copy Spotify URL",
     "delete": "Delete",
     "backToDashboard": "Back to Dashboard",
-    "settings": "Settings"
+    "settings": "Settings",
+    "deletedDesc": "Conversion record deleted successfully"
   },
   "help": {
     "title": "Help & Support",
@@ -300,5 +330,23 @@
     "title": "Music URLs Detected",
     "convert": "Convert",
     "openLink": "Open in new tab"
+  },
+  "favorites": {
+    "title": "Favorites",
+    "empty": "No favorites yet",
+    "emptyDescription": "Click the star icon to save your favorite conversions",
+    "addButton": "Add to favorites",
+    "removeButton": "Remove from favorites",
+    "addedTitle": "Added to favorites",
+    "addedDescription": "This conversion has been saved.",
+    "removedTitle": "Removed from favorites",
+    "removedDescription": "This conversion has been removed.",
+    "notAuthenticatedTitle": "Not authenticated",
+    "notAuthenticatedDescription": "Please log in to use favorites.",
+    "favorited": "Favorited",
+    "copyUrl": "Copy URL",
+    "errorTitle": "Error",
+    "addErrorDescription": "Failed to add to favorites. Please try again.",
+    "removeErrorDescription": "Failed to remove from favorites. Please try again."
   }
 }

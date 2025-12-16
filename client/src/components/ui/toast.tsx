@@ -34,11 +34,11 @@ const toastVariants = cva(
   {
     variants: {
       variant: {
-        default: 'border-gray-100 bg-gray-50 text-gray-900 shadow-md',
-        destructive: 'destructive group border-red-100 bg-red-50 text-red-900',
-        success: 'border-green-100 bg-green-50 text-green-900',
-        warning: 'border-amber-100 bg-amber-50 text-amber-900',
-        info: 'border-blue-100 bg-blue-50 text-blue-900',
+        default: 'border-gray-200 bg-gray-50 text-gray-900 shadow-md',
+        destructive: 'destructive group border-red-300 bg-red-50 text-red-900 shadow-md',
+        success: 'border-green-300 bg-green-50 text-green-900 shadow-md',
+        warning: 'border-amber-300 bg-amber-50 text-amber-900 shadow-md',
+        info: 'border-blue-300 bg-blue-50 text-blue-900 shadow-md',
       },
     },
     defaultVariants: {
@@ -52,10 +52,17 @@ const Toast = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> &
   VariantProps<typeof toastVariants>
 >(({ className, variant, ...props }, ref) => {
+  // Map variant to ARIA role for accessibility
+  const role = variant === 'destructive' ? 'alert' : 'status';
+  const ariaLive = variant === 'destructive' ? 'assertive' : 'polite';
+
   return (
     <ToastPrimitives.Root
       ref={ref}
       className={cn(toastVariants({ variant }), className)}
+      role={role}
+      aria-live={ariaLive}
+      aria-atomic="true"
       {...props}
     />
   );
@@ -84,7 +91,12 @@ const ToastClose = React.forwardRef<
   <ToastPrimitives.Close
     ref={ref}
     className={cn(
-      'absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600',
+      'absolute right-2 top-2 rounded-md p-1.5 transition-all duration-200 focus:outline-none focus:ring-2',
+      'text-gray-600 hover:text-gray-900 hover:bg-gray-200/60 focus:ring-gray-400',
+      'group-[.destructive]:text-red-700 group-[.destructive]:hover:text-red-900 group-[.destructive]:hover:bg-red-200/60 group-[.destructive]:focus:ring-red-400',
+      'group-[.success]:text-green-700 group-[.success]:hover:text-green-900 group-[.success]:hover:bg-green-200/60 group-[.success]:focus:ring-green-400',
+      'group-[.warning]:text-amber-700 group-[.warning]:hover:text-amber-900 group-[.warning]:hover:bg-amber-200/60 group-[.warning]:focus:ring-amber-400',
+      'group-[.info]:text-blue-700 group-[.info]:hover:text-blue-900 group-[.info]:hover:bg-blue-200/60 group-[.info]:focus:ring-blue-400',
       className,
     )}
     toast-close=""
